@@ -8,6 +8,7 @@ namespace PIBLib
 {
     public enum PibVersion : uint
     {
+        Kenzan = 8,
         Y3 = 19,
         Y5 = 21,
         Ishin = 25,

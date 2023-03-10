@@ -9,7 +9,7 @@ using Yarhl.IO;
 
 namespace PIBLib
 {
-    internal class PibEmitterv19 : BasePibEmitter
+    public class PibEmitterv19 : BasePibEmitter
     {
         internal override void Read(DataReader reader, PibVersion version)
         {

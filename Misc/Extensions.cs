@@ -1,4 +1,7 @@
-﻿using System.Text;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using Yarhl.IO;
 
 namespace PIBLib
@@ -77,6 +80,19 @@ namespace PIBLib
             writer.Write(rgb.B);
         }
 
+        //Slow, shit, but its good enough for my needs
+        public static void Insert(this DataWriter writer, int amount)
+        {
+            long pos = writer.Stream.Position;
+
+            List<byte> dat = new List<byte>(writer.Stream.ToArray());
+            dat.InsertRange((int)writer.Stream.Position, new byte[amount]);
+
+            writer.Stream.Position = 0;
+            writer.Write(dat.ToArray());
+            writer.Stream.Position = pos;
+        }
+
         public static string ToLength(this string self, int length)
         {
             if (self == null)
@@ -96,6 +112,37 @@ namespace PIBLib
                 str.Append('\0');
 
             return str.ToString();
+        }
+
+        public static byte[] ToArray(this DataStream stream)
+        {
+            long pos = stream.Position;
+            stream.Position = 0;
+
+            byte[] buf = new byte[stream.Length];
+            stream.Read(buf, 0, buf.Length);
+
+            stream.Position = pos;
+            
+            return buf;
+        }
+    }
+}
+
+
+namespace System.Reflection
+{
+    internal static class ReflectionExtensions
+    {
+        public static void CopyFields(this object source, Object destination)
+        {
+            // copy base class properties.
+
+            foreach (FieldInfo prop in source.GetType().GetFields())
+            {
+                FieldInfo prop2 = source.GetType().GetField(prop.Name);
+                prop2.SetValue(destination, prop.GetValue(source));
+            }
         }
     }
 }

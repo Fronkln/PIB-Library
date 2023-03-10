@@ -3,7 +3,8 @@ using Yarhl.IO;
 
 namespace PIBLib
 {
-    public class PibEmitterv25 : BasePibEmitter
+    //No change to the data at all, only the way some stuff are written
+    public class PibEmitterv25 : PibEmitterv21
     {
         internal override void Read(DataReader reader, PibVersion version)
         {
@@ -18,7 +19,7 @@ namespace PIBLib
 
             int unknownCount1 = reader.ReadInt32();
 
-            byte[] unkDat2 = reader.ReadBytes(344);
+            UnknownMainData = reader.ReadBytes(344);
 
             int data1Size = reader.ReadInt32(); //Includes DDS header
 
@@ -50,6 +51,41 @@ namespace PIBLib
 
             ReadUnknownData1(reader, Type, unknownCount1);
             Source.Read(reader, this, (int)Flags, unknownCount2, (uint)version);
+        }
+
+        internal override void Write(DataWriter writer)
+        {
+            writer.Write(Flags);
+
+            writer.Write(Unknown_0x4);
+            writer.Write(UnknownCount_0xC);
+            writer.Write(Type);
+            writer.WriteTimes(0, 2);
+
+            writer.Write(Unknown0x10);
+
+            writer.Write(GetUnknownDataCount());
+            writer.Write(UnknownMainData);
+            writer.Write(896);
+
+            writer.Endianness = EndiannessMode.LittleEndian;
+            writer.Write(DDSHeader);
+
+            foreach (float f in UnknownSection1)
+                writer.Write(f);
+
+            writer.Endianness = EndiannessMode.BigEndian;
+
+            writer.Write(Textures.Count);
+
+            foreach(string str in Textures)
+                writer.Write(str.ToLength(32));
+
+            writer.WriteTimes(0, 8);
+            writer.Write(Source.GetDataCount());
+
+            writer.Write(UnknownData1);
+            Source.Write(writer);
         }
 
 

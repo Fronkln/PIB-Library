@@ -1,22 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using Yarhl.IO;
 
 namespace PIBLib
 {
     //Changed from v19: Emitter core data
-    internal class PibEmitterv21 : PibEmitterv19
+    public class PibEmitterv21 : PibEmitterv19
     {
         internal override void Read(DataReader reader, PibVersion version)
         {
             Flags = reader.ReadUInt32();
 
             Unknown_0x4 = reader.ReadBytes(8);
-
             UnknownCount_0xC = reader.ReadByte();
             Type = reader.ReadByte();
             reader.ReadBytes(2);

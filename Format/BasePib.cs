@@ -57,12 +57,17 @@ namespace PIBLib
         }
 
 
-        internal virtual void Write(DataWriter writer)
+        protected void WriteHeader(DataWriter writer)
         {
             writer.Write("PIBX", false);
             writer.Write(Version < PibVersion.Y6 ? 0x2010000 : 0x2000000);
             writer.Write((uint)Version);
             writer.WriteTimes(0, 4);
+        }
+
+        internal virtual void Write(DataWriter writer)
+        {
+            WriteHeader(writer);
         }
     }
 }

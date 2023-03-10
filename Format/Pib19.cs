@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
-using System.Net;
-using System.Runtime.CompilerServices;
+﻿using PIBLib.Conversions;
 using Yarhl.IO;
 
 namespace PIBLib
@@ -62,7 +59,7 @@ namespace PIBLib
 
         internal override void Write(DataWriter writer)
         {
-            base.Write(writer);
+            WriteHeader(writer);
 
             writer.Write(ParticleID);
             writer.Write(Emitters.Count);
@@ -93,6 +90,14 @@ namespace PIBLib
 
             foreach(var emitter in Emitters)
                 emitter.Write(writer);
+        }
+
+        /// <summary>
+        /// Convert to PIB version 21 (Yakuza 5)
+        /// </summary>
+        public Pib21 ToV21()
+        {
+            return Pib19To21.Convert(this);
         }
     }
 }
