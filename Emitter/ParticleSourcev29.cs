@@ -23,5 +23,13 @@ namespace PIBLib
         {
 
         }
+
+        internal override void Write(DataWriter writer)
+        {
+            writer.Write(Data);
+
+            if (UnkFloatData != null)
+                writer.Write(UnkFloatData);
+        }
     }
 }

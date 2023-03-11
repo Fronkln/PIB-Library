@@ -13,5 +13,10 @@ namespace PIBLib
         {
             Data = reader.ReadBytes(144 * count);
         }
+
+        internal override int GetDataCount()
+        {
+            return Data.Length / 144;
+        }
     }
 }

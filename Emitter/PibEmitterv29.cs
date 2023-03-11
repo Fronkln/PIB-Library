@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
 using Yarhl.IO;
@@ -70,6 +71,44 @@ namespace PIBLib
                 return EmitterType.Billboard;
 
             return EmitterType.Model;
+        }
+
+        internal override void Write(DataWriter writer)
+        {
+            writer.Write(Flags);
+            writer.Write(Unknown_0x4);
+            writer.WriteTimes(0, 4);
+            
+            writer.Write(UnknownCount_0xC);
+            writer.Write(Type);
+            writer.WriteTimes(0, 2);
+
+            writer.Write(Unknown0x10);
+
+            writer.Write(GetUnknownDataCount());
+            writer.Write(UnknownMainData);
+            writer.Write(128 + UnknownSection1.Length * 4);
+            writer.Write(DDSHeader);
+
+            foreach (float f in UnknownSection1)
+                writer.Write(f);
+
+            writer.Write(Textures.Count);
+
+            foreach (string str in Textures)
+                writer.Write(str.ToLength(32));
+
+            writer.WriteTimes(0, 4);
+
+            writer.Write(ExtraTextures.Count);
+
+            foreach (string str in ExtraTextures)
+                writer.Write(str.ToLength(32));
+
+            writer.Write(Source.GetDataCount());
+
+            writer.Write(UnknownData1);
+            Source.Write(writer);
         }
     }
 }
