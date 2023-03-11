@@ -15,6 +15,7 @@ namespace PIBLib
         Y0 = 27,
         Y6 = 29,
         YK2 = 43,
+        JE = 45,
         YLAD = 52,
         LJ = 58,
     }

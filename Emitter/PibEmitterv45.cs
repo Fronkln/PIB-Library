@@ -7,10 +7,10 @@ using Yarhl.IO;
 
 namespace PIBLib
 {
-    public class PibEmitterv29 : BasePibEmitter
+    //Changed:
+    //Main data increase (564 > 596)
+    public class PibEmitterv45 : PibEmitterv43
     {
-        public List<string> ExtraTextures = new List<string>();
-
         internal override void Read(DataReader reader, PibVersion version)
         {
             Flags = reader.ReadUInt32();
@@ -23,11 +23,11 @@ namespace PIBLib
             Type = reader.ReadByte();
             reader.ReadBytes(2);
 
-            Unknown0x10 = reader.ReadBytes(40);
+            Unknown0x10 = reader.ReadBytes(48);
 
             int unknownCount1 = reader.ReadInt32();
 
-            UnknownMainData = reader.ReadBytes(356);
+            UnknownMainData = reader.ReadBytes(596);
 
             int data1Size = reader.ReadInt32(); //Includes DDS header
 
@@ -46,6 +46,10 @@ namespace PIBLib
             Source = emitterType == EmitterType.Model ? new ParticleModelv29() : new ParticleBillboardv29();
 
             int textureCount = reader.ReadInt32();
+            UnkNumbers_TextureTable_V42 = new int[textureCount];
+
+            for (int i = 0; i < textureCount; i++)
+                UnkNumbers_TextureTable_V42[i] = reader.ReadInt32();
 
             for (int i = 0; i < textureCount; i++)
                 Textures.Add(reader.ReadString(32).Split(new[] { '\0' }, 2)[0]);
@@ -59,17 +63,7 @@ namespace PIBLib
             int unknownCount2 = reader.ReadInt32();
 
             ReadUnknownData1(reader, Type, unknownCount1);
-            Source.Read(reader,this, (int)Flags, unknownCount2, (uint)version);
-        }
-
-        public override EmitterType GetEmitterType()
-        {
-            byte bit = (byte)(Flags >> 6);
-
-            if ((bit & 1) == 1 || (bit & 0x40) == 1)
-                return EmitterType.Billboard;
-
-            return EmitterType.Model;
+            Source.Read(reader, this, (int)Flags, unknownCount2, (uint)version);
         }
     }
 }

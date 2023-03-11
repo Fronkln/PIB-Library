@@ -72,6 +72,10 @@ namespace PIBLib
                     return new Pib27();
                 case 29:
                     return new Pib29();
+                case 43:
+                    return new Pib43();
+                case 45:
+                    return new Pib45();
             }
         }
     }
