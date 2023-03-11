@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PIBLib.Conversions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,6 +19,11 @@ namespace PIBLib
                 emitter.Read(reader, Version);
                 Emitters.Add(emitter);
             }
+        }
+
+        public Pib43 ToV43()
+        {
+            return Pib45to43.Convert(this);
         }
     }
 }
