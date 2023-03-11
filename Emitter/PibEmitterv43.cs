@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Yarhl.IO;
@@ -8,13 +9,14 @@ using Yarhl.IO;
 namespace PIBLib
 {
     //Changed:
+    //Area that used to be padding after Type seems to be used
     //Massive emitter main data increase (356 > 564)
-    //Texture table area
     //New unknown count (after texture count)
     //Unknown_0x10 (40 > 48)
     public class PibEmitterv43 : PibEmitterv29
     {
-        //not related to unknowncount_texturetable_v42
+        public short TypeUnk;
+
         public int[] UnkNumbers_TextureTable_V42;
 
         internal override void Read(DataReader reader, PibVersion version)
@@ -27,7 +29,7 @@ namespace PIBLib
 
             UnknownCount_0xC = reader.ReadByte();
             Type = reader.ReadByte();
-            reader.ReadBytes(2);
+            TypeUnk = reader.ReadInt16();
 
             Unknown0x10 = reader.ReadBytes(48);
 
@@ -36,7 +38,6 @@ namespace PIBLib
             UnknownMainData = reader.ReadBytes(564);
 
             int data1Size = reader.ReadInt32(); //Includes DDS header
-
 
             DDSHeader = reader.ReadBytes(128);
 
@@ -70,6 +71,47 @@ namespace PIBLib
 
             ReadUnknownData1(reader, Type, unknownCount1);
             Source.Read(reader, this, (int)Flags, unknownCount2, (uint)version);
+        }
+
+        internal override void Write(DataWriter writer)
+        {
+            writer.Write(Flags);
+            writer.Write(Unknown_0x4);
+            writer.WriteTimes(0, 4);
+
+            writer.Write(UnknownCount_0xC);
+            writer.Write(Type);
+            writer.Write(TypeUnk);
+
+            writer.Write(Unknown0x10);
+
+            writer.Write(GetUnknownDataCount());
+            writer.Write(UnknownMainData);
+            writer.Write(128 + UnknownSection1.Length * 4);
+            writer.Write(DDSHeader);
+
+            foreach (float f in UnknownSection1)
+                writer.Write(f);
+
+            writer.Write(Textures.Count);
+
+            for (int i = 0; i < Textures.Count; i++)
+                writer.Write(UnkNumbers_TextureTable_V42[i]);
+
+            foreach (string str in Textures)
+                writer.Write(str.ToLength(32));
+
+            writer.WriteTimes(0, 4);
+
+            writer.Write(ExtraTextures.Count);
+
+            foreach (string str in ExtraTextures)
+                writer.Write(str.ToLength(32));
+
+            writer.Write(Source.GetDataCount());
+
+            writer.Write(UnknownData1);
+            Source.Write(writer);
         }
 
         public override EmitterType GetEmitterType()

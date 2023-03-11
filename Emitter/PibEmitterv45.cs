@@ -21,7 +21,7 @@ namespace PIBLib
 
             UnknownCount_0xC = reader.ReadByte();
             Type = reader.ReadByte();
-            reader.ReadBytes(2);
+            TypeUnk = reader.ReadInt16();
 
             Unknown0x10 = reader.ReadBytes(48);
 
