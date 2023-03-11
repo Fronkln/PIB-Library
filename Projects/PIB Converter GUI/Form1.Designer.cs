@@ -77,6 +77,7 @@
             this.pathBox.Name = "pathBox";
             this.pathBox.Size = new System.Drawing.Size(521, 23);
             this.pathBox.TabIndex = 0;
+            this.pathBox.TextChanged += new System.EventHandler(this.pathBox_TextChanged);
             // 
             // fileButton
             // 

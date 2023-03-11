@@ -220,5 +220,15 @@ namespace PIB_Converter_GUI
         {
             changeIdTextbox.Enabled = idChangeCheck.Checked;
         }
+
+        private void pathBox_TextChanged(object sender, EventArgs e)
+        {
+            m_pibPath = pathBox.Text;
+
+            if (File.Exists(m_pibPath) && m_pibPath.EndsWith(".pib"))
+                convertButton.Enabled = true;
+            else
+                convertButton.Enabled = false;
+        }
     }
 }

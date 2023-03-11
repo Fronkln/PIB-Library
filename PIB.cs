@@ -60,6 +60,8 @@ namespace PIBLib
             {
                 default:
                     throw new Exception("Unknown PIB Version: " + version);
+                case 8:
+                    return new Pib8();
                 case 19:
                     return new Pib19();
                 case 21:
