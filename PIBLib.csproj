@@ -5,6 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Projects\**" />
+    <EmbeddedResource Remove="Projects\**" />
+    <None Remove="Projects\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Yarhl" Version="3.1.0" />
   </ItemGroup>
 </Project>

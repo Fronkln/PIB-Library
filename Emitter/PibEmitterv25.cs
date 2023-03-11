@@ -66,7 +66,7 @@ namespace PIBLib
 
             writer.Write(GetUnknownDataCount());
             writer.Write(UnknownMainData);
-            writer.Write(896);
+            writer.Write(128 + UnknownSection1.Length * 4);
 
             writer.Endianness = EndiannessMode.LittleEndian;
             writer.Write(DDSHeader);

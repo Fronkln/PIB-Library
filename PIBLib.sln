@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PIBLib", "PIBLib.csproj", "{01C4A953-E20A-4674-9BC5-AC6BAF1974DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PIBLib", "PIBLib.csproj", "{01C4A953-E20A-4674-9BC5-AC6BAF1974DE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PibLibTest", "..\PibLibTest\PibLibTest.csproj", "{171445B8-C4BC-4734-A5A6-A417F872C7A0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PIB Converter GUI", "Projects\PIB Converter GUI\PIB Converter GUI.csproj", "{FA359972-1F52-4264-ABC6-20812B667111}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{171445B8-C4BC-4734-A5A6-A417F872C7A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{171445B8-C4BC-4734-A5A6-A417F872C7A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{171445B8-C4BC-4734-A5A6-A417F872C7A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA359972-1F52-4264-ABC6-20812B667111}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA359972-1F52-4264-ABC6-20812B667111}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA359972-1F52-4264-ABC6-20812B667111}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA359972-1F52-4264-ABC6-20812B667111}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
