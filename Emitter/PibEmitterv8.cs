@@ -47,9 +47,7 @@ namespace PIBLib
             int textureCount = reader.ReadInt32();
 
             for (int i = 0; i < textureCount; i++)
-                Textures.Add(reader.ReadString(32).Split(new[] { '\0' }, 2)[0]);
-
-            reader.Stream.Position += 32;
+                Textures.Add(reader.ReadString(64).Split(new[] { '\0' }, 2)[0]);
 
             int unknownCount2 = reader.ReadInt32();
 
@@ -83,10 +81,8 @@ namespace PIBLib
             writer.Write(Textures.Count);
 
             for (int i = 0; i < Textures.Count; i++)
-                writer.Write(Textures[i].ToLength(32), false);
+                writer.Write(Textures[i].ToLength(64), false);
 
-
-            writer.WriteTimes(0, 32);
             writer.Write(Source.GetDataCount());
 
             writer.Write(UnknownData1);

@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using PIBLib.Conversions;
+using System.Drawing;
 using Yarhl.IO;
 
 namespace PIBLib
@@ -56,6 +57,11 @@ namespace PIBLib
 
             foreach (var emitter in Emitters)
                 emitter.Write(writer);
+        }
+
+        public Pib19 ToV19()
+        {
+            return Pib8To19.Convert(this);
         }
     }
 }

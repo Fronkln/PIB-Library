@@ -131,6 +131,9 @@ namespace PIB_Converter_GUI
 
                 switch (inputVersion)
                 {
+                    case PibVersion.Kenzan:
+                        ConvertFromKenzan(pib, outputVersion);
+                        break;
                     case PibVersion.Y3:
                         ConvertFromY3(pib, outputVersion);
                         break;
@@ -168,6 +171,27 @@ namespace PIB_Converter_GUI
             catch(Exception ex)
             {
                 MessageBox.Show("Error converting\n\n" + ex.Message + "\n\n" + ex.InnerException);
+            }
+        }
+
+        private void ConvertFromKenzan(BasePib basePib, PibVersion outputVersion)
+        {
+            Pib8 pib = (Pib8)basePib;
+
+            switch (outputVersion)
+            {
+                case PibVersion.Y3:
+                    PIB.Write(pib.ToV19(), m_outputPath);
+                    break;
+                case PibVersion.Y5:
+                    PIB.Write(pib.ToV19().ToV21(), m_outputPath);
+                    break;
+                case PibVersion.Ishin:
+                    PIB.Write(pib.ToV19().ToV21().ToV25(), m_outputPath);
+                    break;
+                case PibVersion.Y0:
+                    PIB.Write(pib.ToV19().ToV21().ToV25().ToV27(), m_outputPath);
+                    break;
             }
         }
 
