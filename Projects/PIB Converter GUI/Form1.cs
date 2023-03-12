@@ -143,6 +143,9 @@ namespace PIB_Converter_GUI
                     case PibVersion.Ishin:
                         ConvertFromIshin(pib, outputVersion);
                         break;
+                    case PibVersion.JE:
+                        ConvertFromJE(pib, outputVersion);
+                        break;
                 }
 
                 if(copyTexturesCheck.Checked)
@@ -236,6 +239,18 @@ namespace PIB_Converter_GUI
             {
                 case PibVersion.Y0:
                     PIB.Write(pib.ToV27(), m_outputPath);
+                    break;
+            }
+        }
+
+        private void ConvertFromJE(BasePib basePib, PibVersion outputVersion)
+        {
+            Pib45 pib = (Pib45)basePib;
+
+            switch (outputVersion)
+            {
+                case PibVersion.YK2:
+                    PIB.Write(pib.ToV43(), m_outputPath);
                     break;
             }
         }
