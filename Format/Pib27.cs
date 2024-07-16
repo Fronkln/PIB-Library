@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PIBLib.Conversions;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -19,5 +20,25 @@ namespace PIBLib
                 Emitters.Add(emitter);
             }
         }
+
+        internal override void Write(DataWriter writer)
+        {
+            WriteHeader(writer);
+
+            foreach (var emitter in Emitters)
+                emitter.Write(writer, Version);
+        }
+
+        public Pib25 ToV25()
+        {
+            return Pib27To25.Convert(this);
+        }
+
+        /*
+        public Pib29 ToV29()
+        {
+            return Pib27To29.Convert(this);
+        }
+        */
     }
 }

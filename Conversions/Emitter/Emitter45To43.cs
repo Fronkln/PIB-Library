@@ -7,28 +7,27 @@ namespace PIBLib.Conversions
 {
     internal static class Emitter45To43
     {
-        public static PibEmitterv43 Convert(PibEmitterv45 emitterv45)
+        public static PibEmitterv43 Convert(PibEmitterv45 emitter45)
         {
             PibEmitterv43 emitter = new PibEmitterv43();
-            emitterv45.CopyFields(emitter);
+            emitter45.CopyFields(emitter);
 
+            emitter.VAT = new DEPibBaseVAT();
+            emitter45.VAT.CopyFields(emitter.VAT);
 
-            //PERFORMING SURGERY ON A PIB (NO WAY!) (realigning data to not crash YK2)
-            List<byte> trimmedDatList = new List<byte>(emitterv45.UnknownMainData);
-            trimmedDatList.RemoveRange(208, 4);
-            trimmedDatList.RemoveRange(216, 4);
-            trimmedDatList.RemoveRange(220, 16);
-            trimmedDatList.RemoveRange(244, 8);
+            EmitterFlag1v45 flags = (EmitterFlag1v45)emitter45.Flags;
+            uint v43Flags = 0;
 
-            using (DataStream stream = DataStreamFactory.FromMemory())
+            //Convert old flags to v45 flags
+            foreach (Enum flag in flags.GetFlags())
             {
-                DataWriter writer = new DataWriter(stream) { Endianness = EndiannessMode.LittleEndian };
-                writer.Write(trimmedDatList.ToArray());
-                writer.Stream.Position = 132;
-                writer.Write(1f);
+                string flagStr = flag.ToString();
+                uint de2Value = System.Convert.ToUInt32(Enum.Parse(typeof(EmitterFlag1v43), flagStr));
 
-                emitter.UnknownMainData = writer.Stream.ToArray();
+                v43Flags |= de2Value;
             }
+
+            emitter.Flags = (int)v43Flags;
 
             return emitter;
         }

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
 using Yarhl.IO;
@@ -9,27 +10,96 @@ using Yarhl.IO;
 namespace PIBLib
 {
     //Changed:
-    //Unknown Vector got shifted back by 8 bytes
     //Emitter main data (564 > 596 bytes)
     public class Pib45 : Pib43
     {
-        internal override void Read(DataReader reader)
+        protected override void ReadCorePibData(DataReader reader)
         {
-            ReadCorePibData(reader);
+            ParticleID = reader.ReadUInt32();
+            EmitterCount = reader.ReadUInt32();
+            Duration = reader.ReadUInt32();
+            DurationOffset = reader.ReadInt32();
 
-            for (int i = 0; i < 5; i++)
-                for (int j = 0; j < 26; j++)
-                    UnkFloats[i, j] = reader.ReadSingle();
+            Speed = reader.ReadSingle();
+            ForwardOffset = reader.ReadSingle();
+            MaxIntensity = reader.ReadSingle();
 
-            Unknown_0x23C = reader.ReadBytes(20);
+            Radius = reader.ReadInt32();
+            Range = reader.ReadInt32();
+
+            EVCorrect = reader.ReadSingle();
+
+            for (int i = 0; i < ColorAnimationR.Length; i++)
+                ColorAnimationR[i] = reader.ReadSingle();
+
+            for (int i = 0; i < ColorAnimationG.Length; i++)
+                ColorAnimationG[i] = reader.ReadSingle();
+
+            for (int i = 0; i < ColorAnimationB.Length; i++)
+                ColorAnimationB[i] = reader.ReadSingle();
+
+            for (int i = 0; i < ColorAnimationI.Length; i++)
+                ColorAnimationI[i] = reader.ReadSingle();
+
+            ColorTime = reader.ReadSingle();
+            IntensityTime = reader.ReadSingle();
+            Flags = reader.ReadUInt32();
+            SoundCuesheet = reader.ReadUInt32();
+
+            reader.Stream.Position += 8;
 
             BaseMatrix = reader.ReadMatrix4x4();
             Scale = reader.ReadVector3();
+            Fade = reader.Read<PibFadeModule>();
 
-            Unknown_0x29C = reader.ReadBytes(16);
-            Unknown0x2B4 = reader.ReadVector2();
-            reader.ReadBytes(12);
+            reader.Stream.Position += 12;
+        }
 
+        protected override void WriteHeader(DataWriter writer)
+        {
+            writer.Write(ParticleID);
+            writer.Write(EmitterCount);
+            writer.Write(Duration);
+            writer.Write(DurationOffset);
+
+            writer.Write(Speed);
+            writer.Write(ForwardOffset);
+            writer.Write(MaxIntensity);
+
+            writer.Write(Radius);
+            writer.Write(Range);
+
+            writer.Write(EVCorrect);
+
+            foreach (float f in ColorAnimationR)
+                writer.Write(f);
+
+            foreach (float f in ColorAnimationG)
+                writer.Write(f);
+
+            foreach (float f in ColorAnimationB)
+                writer.Write(f);
+
+            foreach (float f in ColorAnimationI)
+                writer.Write(f);
+
+            writer.Write(ColorTime);
+            writer.Write(IntensityTime);
+            writer.Write(Flags);
+            writer.Write(SoundCuesheet);
+
+            writer.WriteTimes(0, 8);
+
+            writer.Write(BaseMatrix);
+            writer.Write(Scale);
+            writer.WriteOfType(Fade);
+
+            writer.WriteTimes(0, 12);
+        }
+
+        internal override void Read(DataReader reader)
+        {
+            ReadCorePibData(reader);
             ReadEmitters(reader, (int)EmitterCount);
         }
 
@@ -47,38 +117,17 @@ namespace PIBLib
         {
             WriteHeader(writer);
 
-            writer.Write(ParticleID);
-            writer.Write(Emitters.Count);
-            writer.Write(Duration);
-            writer.Write(Unknown1);
-
-            writer.Write(Speed);
-            writer.Write(Unknown2);
-            writer.Write(Unknown3);
-
-            writer.Write(Unknown4);
-            writer.Write(Unknown5);
-
-            for (int i = 0; i < 5; i++)
-                for (int j = 0; j < 26; j++)
-                    writer.Write(UnkFloats[i, j]);
-
-            writer.Write(Unknown_0x23C);
-
-            writer.Write(BaseMatrix);
-            writer.Write(Scale);
-
-            writer.Write(Unknown_0x29C);
-            writer.Write(Unknown0x2B4);
-            writer.WriteTimes(0, 8);
-
             foreach (BasePibEmitter emitter in Emitters)
-                emitter.Write(writer);
+                emitter.Write(writer, Version);
         }
-
+        
         public Pib43 ToV43()
         {
             return Pib45to43.Convert(this);
+        }
+        public Pib52 ToV52()
+        {
+            return Pib45To52.Convert(this);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PIBLib.Conversions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,6 @@ namespace PIBLib
     //Inherited from 29: Identical header
     public class Pib43 : Pib29
     {
-
         protected override void ReadEmitters(DataReader reader, int count)
         {
             for (int i = 0; i < count; i++)
@@ -19,6 +19,17 @@ namespace PIBLib
                 emitter.Read(reader, Version);
                 Emitters.Add(emitter);
             }
+        }
+
+
+        public Pib45 ToV45()
+        {
+            return Pib43To45.Convert(this);
+        }
+      
+        public Pib29 ToV29()
+        {
+            return Pib43To29.Convert(this);
         }
     }
 }

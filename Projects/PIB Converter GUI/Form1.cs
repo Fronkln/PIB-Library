@@ -60,7 +60,7 @@ namespace PIB_Converter_GUI
             outputBox.SelectedIndex = (int)m_prefs.GetValue("output_game");
             copyTexturesCheck.Checked = (int)m_prefs.GetValue("copy_texture") == 1;
             idChangeCheck.Checked = (int)m_prefs.GetValue("change_id") == 1;
-            
+
             m_pibPath = (string)m_prefs.GetValue("last_path");
             pathBox.Text = m_pibPath;
             convertButton.Enabled = !string.IsNullOrEmpty(m_pibPath) && File.Exists(m_pibPath);
@@ -76,7 +76,7 @@ namespace PIB_Converter_GUI
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.Filter = "Yakuza Particle (*.pib)|*.pib";
 
-            if(dialog.ShowDialog() == DialogResult.OK)
+            if (dialog.ShowDialog() == DialogResult.OK)
             {
                 m_pibPath = dialog.FileName;
                 pathBox.Text = dialog.FileName;
@@ -99,7 +99,7 @@ namespace PIB_Converter_GUI
             SaveFileDialog dialog = new SaveFileDialog();
             dialog.Filter = "Yakuza Particle (*.pib)|*.pib";
 
-            if(!string.IsNullOrEmpty(startDir) && Directory.Exists(startDir))
+            if (!string.IsNullOrEmpty(startDir) && Directory.Exists(startDir))
                 dialog.InitialDirectory = m_outputPath;
 
             dialog.FileName += Path.GetFileName(m_pibPath);
@@ -115,144 +115,139 @@ namespace PIB_Converter_GUI
             PibVersion inputVersion = (PibVersion)Enum.Parse(typeof(PibVersion), inputBox.Items[inputBox.SelectedIndex].ToString());
             PibVersion outputVersion = (PibVersion)Enum.Parse(typeof(PibVersion), outputBox.Items[outputBox.SelectedIndex].ToString());
 
+#if !DEBUG
             try
             {
+#endif
 
-                BasePib pib = PIB.Read(m_pibPath);
+            BasePib pib = PIB.Read(m_pibPath);
 
-                
-                if (changeIdTextbox.Enabled)
-                    pib.ParticleID = uint.Parse(changeIdTextbox.Text);
 
-                if(pib == null)
-                {
-                    throw new Exception("Error reading pib. Invalid or missing file");
-                }
+            if (changeIdTextbox.Enabled)
+                pib.ParticleID = uint.Parse(changeIdTextbox.Text);
 
-                switch (inputVersion)
-                {
-                    case PibVersion.Kenzan:
-                        ConvertFromKenzan(pib, outputVersion);
-                        break;
-                    case PibVersion.Y3:
-                        ConvertFromY3(pib, outputVersion);
-                        break;
-                    case PibVersion.Y5:
-                        ConvertFromY5(pib, outputVersion);
-                        break;
-                    case PibVersion.Ishin:
-                        ConvertFromIshin(pib, outputVersion);
-                        break;
-                    case PibVersion.JE:
-                        ConvertFromJE(pib, outputVersion);
-                        break;
-                }
-
-                if(copyTexturesCheck.Checked)
-                {
-                    string inpDir = new FileInfo(m_pibPath).Directory.FullName;
-                    string outputDir = new FileInfo(m_outputPath).Directory.FullName;
-
-                    foreach(BasePibEmitter emitter in pib.Emitters)
-                        foreach(string texture in emitter.Textures)
-                        {
-                            string ddsPath = Path.Combine(inpDir, texture);
-
-                            if (File.Exists(ddsPath))
-                                File.Copy(ddsPath, Path.Combine(outputDir, texture), true);
-                        }
-                }
-
-                m_prefs.SetValue("input_game", inputBox.SelectedIndex);
-                m_prefs.SetValue("output_game", outputBox.SelectedIndex);
-                m_prefs.SetValue("last_path", m_pibPath);
-                m_prefs.SetValue("last_output_path", new FileInfo(m_outputPath).Directory.FullName);
-                m_prefs.Flush();
-
-                MessageBox.Show("Conversion complete");
+            if (pib == null)
+            {
+                throw new Exception("Error reading pib. Invalid or missing file");
             }
+
+
+            BasePib converted = PIB.Convert(pib, outputVersion);
+            PIB.Write(converted, m_outputPath);
+
+            if (copyTexturesCheck.Checked)
+            {
+                string inpDir = new FileInfo(m_pibPath).Directory.FullName;
+                string outputDir = new FileInfo(m_outputPath).Directory.FullName;
+
+                foreach (BasePibEmitter emitter in pib.Emitters)
+                {
+                    foreach (string texture in emitter.Textures)
+                    {
+                        string ddsPath = TryFetchTexture(inpDir, texture); //Path.Combine(inpDir, texture);
+
+                        if (!string.IsNullOrEmpty(ddsPath))
+                        {
+                            string ddsName = new FileInfo(ddsPath).Name;
+                            try
+                            {
+                                File.Copy(ddsPath, Path.Combine(outputDir, ddsName), true);
+                            }
+                            catch
+                            {
+
+                            }
+                        }
+                    }
+
+                    if(inputVersion >= PibVersion.YLAD)
+                    {
+                        if(emitter.GetEmitterType() == EmitterType.Model)
+                        {
+                            PibEmitterv52 emitterv52 = emitter as PibEmitterv52;
+
+
+                            foreach (TextureImportInfo inf in emitterv52.TextureImports)
+                            {
+                                foreach (TextureImportResource resource in inf.Resources)
+                                {
+                                    string gmdPath = TryFetchModel(inpDir, resource.Name); //Path.Combine(inpDir, texture);
+
+                                    if (!string.IsNullOrEmpty(gmdPath))
+                                    {
+                                        string gmdName = new FileInfo(gmdPath).Name;
+                                        File.Copy(gmdPath, Path.Combine(outputDir, gmdName), true);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            m_prefs.SetValue("input_game", inputBox.SelectedIndex);
+            m_prefs.SetValue("output_game", outputBox.SelectedIndex);
+            m_prefs.SetValue("last_path", m_pibPath);
+            m_prefs.SetValue("last_output_path", new FileInfo(m_outputPath).Directory.FullName);
+            m_prefs.Flush();
+
+            MessageBox.Show("Conversion complete");
+        }
+#if !DEBUG
             catch(Exception ex)
             {
                 MessageBox.Show("Error converting\n\n" + ex.Message + "\n\n" + ex.InnerException);
             }
+    }
+#endif
+
+     
+        public static string TryFetchTexture(string startDir, string textureName)
+        {
+            DirectoryInfo dirInf = new DirectoryInfo(startDir);
+            string path = "";
+
+            if (!textureName.EndsWith(".dds"))
+                textureName += ".dds";
+
+            path = Path.Combine(startDir, textureName);
+
+            if (File.Exists(path))
+                return path;
+
+            if (dirInf.Name == "pib")
+            {
+                path = Path.Combine(dirInf.Parent.FullName, "tex", textureName);
+
+                if (File.Exists(path))
+                    return path;
+            }
+
+            return "";
         }
 
-        private void ConvertFromKenzan(BasePib basePib, PibVersion outputVersion)
+        public static string TryFetchModel(string startDir, string modelName)
         {
-            Pib8 pib = (Pib8)basePib;
+            DirectoryInfo dirInf = new DirectoryInfo(startDir);
+            string path = "";
 
-            switch (outputVersion)
+            if (!modelName.EndsWith(".gmd"))
+                modelName += ".gmd";
+
+            path = Path.Combine(startDir, modelName);
+
+            if (File.Exists(path))
+                return path;
+
+            if (dirInf.Name == "pib")
             {
-                case PibVersion.Y3:
-                    PIB.Write(pib.ToV19(), m_outputPath);
-                    break;
-                case PibVersion.Y5:
-                    PIB.Write(pib.ToV19().ToV21(), m_outputPath);
-                    break;
-                case PibVersion.Ishin:
-                    PIB.Write(pib.ToV19().ToV21().ToV25(), m_outputPath);
-                    break;
-                case PibVersion.Y0:
-                    PIB.Write(pib.ToV19().ToV21().ToV25().ToV27(), m_outputPath);
-                    break;
+                path = Path.Combine(dirInf.Parent.FullName, "mesh", modelName);
+
+                if (File.Exists(path))
+                    return path;
             }
-        }
 
-        private void ConvertFromY3(BasePib basePib, PibVersion outputVersion)
-        {
-            Pib19 pib = (Pib19)basePib;
-
-            switch(outputVersion)
-            {
-                case PibVersion.Y5:
-                    PIB.Write(pib.ToV21(), m_outputPath);
-                    break;
-                case PibVersion.Ishin:
-                    PIB.Write(pib.ToV21().ToV25(), m_outputPath);
-                    break;
-                case PibVersion.Y0:
-                    PIB.Write(pib.ToV21().ToV25().ToV27(), m_outputPath);
-                    break;
-            }
-        }
-
-        private void ConvertFromY5(BasePib basePib, PibVersion outputVersion)
-        {
-            Pib21 pib = (Pib21)basePib;
-
-            switch (outputVersion)
-            {
-                case PibVersion.Ishin:
-                    PIB.Write(pib.ToV25(), m_outputPath);
-                    break;
-                case PibVersion.Y0:
-                    PIB.Write(pib.ToV25().ToV27(), m_outputPath);
-                    break;
-            }
-        }
-
-        private void ConvertFromIshin(BasePib basePib, PibVersion outputVersion)
-        {
-            Pib25 pib = (Pib25)basePib;
-
-            switch (outputVersion)
-            {
-                case PibVersion.Y0:
-                    PIB.Write(pib.ToV27(), m_outputPath);
-                    break;
-            }
-        }
-
-        private void ConvertFromJE(BasePib basePib, PibVersion outputVersion)
-        {
-            Pib45 pib = (Pib45)basePib;
-
-            switch (outputVersion)
-            {
-                case PibVersion.YK2:
-                    PIB.Write(pib.ToV43(), m_outputPath);
-                    break;
-            }
+            return "";
         }
 
         private void idChangeBox_CheckedChanged(object sender, EventArgs e)
@@ -268,6 +263,17 @@ namespace PIB_Converter_GUI
                 convertButton.Enabled = true;
             else
                 convertButton.Enabled = false;
+        }
+
+        private void justOpenPIBToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Filter = "Yakuza Particle (*.pib)|*.pib";
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                BasePib pibbers = PIB.Read(dialog.FileName);
+            }
         }
     }
 }

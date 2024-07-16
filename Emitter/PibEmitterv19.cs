@@ -9,37 +9,75 @@ using Yarhl.IO;
 
 namespace PIBLib
 {
-    public class PibEmitterv19 : BasePibEmitter
+    public class PibEmitterv19 : BaseOOEPibEmitter
     {
+
         internal override void Read(DataReader reader, PibVersion version)
         {
-            Flags = reader.ReadUInt32();
+            Flags = reader.ReadInt32();
+            Flags2 = reader.ReadInt32();
+            Flags3 = reader.ReadInt32();
 
-            Unknown_0x4 = reader.ReadBytes(8);
-
-            UnknownCount_0xC = reader.ReadByte();
+            Blend = reader.ReadByte();
             Type = reader.ReadByte();
-            reader.ReadBytes(2);
+            //reader.Stream.Position += 1;
+            //MetaballBlend = reader.ReadByte();
 
-            Unknown0x10 = reader.ReadBytes(36);
+            reader.Stream.Position += 14;
 
-            int unknownCount1 = reader.ReadInt32();
+            AABoxCenter = reader.ReadVector3();
+            AABoxExtent = reader.ReadVector3();
 
-            UnknownMainData = reader.ReadBytes(328);
+            int geoVtxCount = reader.ReadInt32();
+
+            OOEUnkStructure6 = new OOEPibBaseUnkStructure6();
+            OOEUnkStructure6.Read(reader);
+
+            Metaball = new PibBaseMetaball();
+            Metaball.Read(reader);
+
+            AnimationData = new EmitterBaseAnimationData();
+            AnimationData.Read(reader);
+
+            OOEUnkStructure2 = new OOEPibBaseUnkStructure2();
+            OOEUnkStructure2.Read(reader);
+
+            MinSpread = reader.ReadVector3();
+            MaxSpread = reader.ReadVector3();
+
+            OEUnknown7 = reader.ReadSingle();
+            OEUnknown8 = reader.ReadSingle();
+            OEUnknown9 = reader.ReadSingle();
+            OEUnknown10 = reader.ReadSingle();
+            OEUnknown11 = reader.ReadSingle();
+            OEUnknown12 = reader.ReadSingle();
+
+            OOEUnkStructure3 = new OOEPibBaseUnkStructure3();
+            OOEUnkStructure3.Read(reader);
+
+            CommonUnkStructure2 = new PibBaseCommonUnkStructure2();
+            CommonUnkStructure2.Read(reader);
+
+            OEUnknown16 = reader.ReadSingle();
+
+            OOEUnkStructure4 = new OOEPibBaseUnkStructure4();
+            OOEUnkStructure4.Read(reader);
+
+            OOEUnkStructure5 = new OOEPibBaseUnkStructure5();
+            OOEUnkStructure5.Read(reader);
+
+            //End of main data
 
             int data1Size = reader.ReadInt32(); //Includes DDS header
 
             //Endian swapped section
             reader.Endianness = EndiannessMode.LittleEndian;
-            DDSHeader = reader.ReadBytes(128);
-
+            DDSHeader.Read(reader);
 
             int floatCount = (data1Size - 128) / 4;
+            int chunkCount = (data1Size - 128) / 256;
 
-            UnknownSection1 = new float[floatCount];
-
-            for (int i = 0; i < floatCount; i++)
-                UnknownSection1[i] = reader.ReadSingle();
+            ReadUnknownSection1(reader, data1Size - 128);
 
             reader.Endianness = EndiannessMode.BigEndian;
             //End of endian swapped section
@@ -60,47 +98,77 @@ namespace PIBLib
 
             int unknownCount2 = reader.ReadInt32();
 
-            ReadUnknownData1(reader, Type, unknownCount1);
+            ReadUnknownData1(reader, Type, geoVtxCount, version);
             Source.Read(reader, this, (int)Flags, unknownCount2, (uint)version);
         }
 
-        internal override void Write(DataWriter writer)
+        internal override void Write(DataWriter writer, PibVersion version)
         {
             writer.Write(Flags);
-            writer.Write(Unknown_0x4);
-            
-            writer.Write(UnknownCount_0xC);
-            writer.Write(Type);
-            writer.WriteTimes(0, 2);
+            writer.Write(Flags2);
+            writer.Write(Flags3);
 
-            writer.Write(Unknown0x10);
+            writer.Write(Blend);
+            writer.Write((byte)Type);
+
+            writer.WriteTimes(0, 14);
+
+            writer.Write(AABoxCenter);
+            writer.Write(AABoxExtent);
 
             writer.Write(GetUnknownDataCount());
-            writer.Write(UnknownMainData);
-            writer.Write(128 + UnknownSection1.Length * 4);
 
-            writer.Endianness = EndiannessMode.LittleEndian;
-            writer.Write(DDSHeader);
+            OOEUnkStructure6.Write(writer);
 
-            foreach (float f in UnknownSection1)
-                writer.Write(f);
+            Metaball.Write(writer);
 
-            writer.Endianness = EndiannessMode.BigEndian;
+            AnimationData.Write(writer);
+            OOEUnkStructure2.Write(writer);
+
+            writer.Write(MinSpread);
+            writer.Write(MaxSpread);
+
+            writer.Write(OEUnknown7);
+            writer.Write(OEUnknown8);
+            writer.Write(OEUnknown9);
+            writer.Write(OEUnknown10);
+            writer.Write(OEUnknown11);
+            writer.Write(OEUnknown12);
+
+            OOEUnkStructure3.Write(writer);
+            CommonUnkStructure2.Write(writer);
+
+            writer.Write(OEUnknown16);
+
+            OOEUnkStructure4.Write(writer);
+            OOEUnkStructure5.Write(writer);
+
+            //End of main data
+            WriteUnknownSection1(writer);
 
             writer.Write((byte)Textures.Count);
 
             for(int i = 0; i < Textures.Count; i++)
             {
-                if (i > 0)
-                    writer.Write((byte)0);
-
                 writer.Write(Textures[i].ToLength(32), false);
             }
             writer.WriteTimes(0, 2);
             writer.Write(Source.GetDataCount());
 
-            writer.Write(UnknownData1);
-            Source.Write(writer);
+            foreach (var chunk in UnknownData1)
+                chunk.Write(writer);
+
+            Source.Write(writer, version);
+        }
+
+        public override bool IsUseColorCurve()
+        {
+            return ((EmitterFlag1v19)Flags).HasFlag(EmitterFlag1v19.eFLG_COLOR_ANIM);
+        }
+
+        public override bool IsMetaball()
+        {
+            return ((EmitterFlag1v19)Flags).HasFlag(EmitterFlag1v19.eFLG_METABALL);
         }
     }
 }

@@ -14,7 +14,7 @@ namespace PIBLib.Conversions
             pib.Version = PibVersion.Y3;
             pib.Scale = new Vector3(1, 1, 1);
             pib.BaseMatrix = Matrix4x4.Default;
-            pib.Color = new RGB32(255, 255, 255);
+            pib.Color = new RGB(255, 255, 255);
             pib.Duration = pib8.Duration;
             pib.Speed = pib8.Speed;
            

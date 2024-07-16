@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
+using System.Reflection.Metadata;
 using System.Reflection.PortableExecutable;
 using Yarhl.IO;
 
@@ -16,41 +18,50 @@ namespace PIBLib
         /// <summary>
         /// Determines emitter type
         /// </summary>
-        public uint Flags;
-        /// <summary>
-        /// Determines type of data contained
-        /// </summary>
-        public byte Type;
+        public int Flags;
+        public int Flags2;
+        public int Flags3;
+
+        public byte Blend;
+        public byte MetaballBlend;
+
+        public Vector3 AABoxCenter;
+        public Vector3 AABoxExtent;
+
+        public PibBaseMetaball Metaball = new PibBaseMetaball();
+        public EmitterBaseAnimationData AnimationData = new EmitterBaseAnimationData();
+        public PibBaseUnkStructure1 UnkStructure1 = new PibBaseUnkStructure1();
+        public PibBaseCommonUnkStructure2 CommonUnkStructure2 = new PibBaseCommonUnkStructure2();
 
         /// <summary>
-        /// The DDS header for the texturess in the emitter.
+        /// The DDS header for the textures in the emitter.
         /// </summary>
-        public byte[] DDSHeader;
+        public DDS_HEADER DDSHeader;
 
-        /// <summary>
-        /// Constant size, never changes, checked on the smallest and biggest Yakuza 3 pib
-        /// </summary>
-        public float[] UnknownSection1;
+        public List<PibEmitterAnimationCurve> PropertyAnimationCurve = new List<PibEmitterAnimationCurve>();
 
         /// <summary>
         /// Textures used by the emitter.
         /// </summary>
         public List<string> Textures = new List<string>();
 
+        public Vector3 MinSpread = new Vector3(0, 0, 0);
+        public Vector3 MaxSpread = new Vector3(1, 0, 0);
+
         //Size varies depending on Type
-        public byte[] UnknownData1;
+        public List<EmitterBaseDataChunk> UnknownData1 = new List<EmitterBaseDataChunk>();
 
         public byte[] UnknownMainData;
         public ParticleSource Source;
 
-        public byte[] Unknown_0x4 = new byte[8];
+        public int UnknownFlags_0x8 = 64;
 
         /// <summary>
         /// On each pib that this isnt 1, reading goes wrong at texture table. FIX FIX FIX! (Count for texture tables?)
         /// <br></br>Responsible for the 7 failed pibs out of 656 on Yakuza 3
         /// </summary>
         public byte UnknownCount_0xC = 1;
-        public byte[] Unknown0x10 = new byte[36];
+        public byte[] Unknown0x10 = new byte[40];
 
 
         internal virtual void Read(DataReader reader, PibVersion version)
@@ -58,31 +69,52 @@ namespace PIBLib
             throw new System.Exception("Unimplemented read");
         }
 
-        protected virtual void ReadUnknownData1(DataReader reader, int type, int count)
+
+        protected virtual void ReadUnknownSection1(DataReader reader, int dataSize)
         {
-            switch (Type)
-            {
-                default:
-                    throw new System.Exception("Unknown data type: " + Type);
-                case 0:
-                    UnknownData1 = reader.ReadBytes(32 * count);
-                    break;
-                case 1:
-                    UnknownData1 = reader.ReadBytes(44 * count);
-                    break;
-                case 2:
-                    UnknownData1 = reader.ReadBytes(20 * count);
-                    break;
-                case 3:
-                    UnknownData1 = reader.ReadBytes(40 * count);
-                    break;
-                case 4:
-                    UnknownData1 = reader.ReadBytes(52 * count);
-                    break;
-                case 5:
-                    UnknownData1 = reader.ReadBytes(28 * count);
-                    break;
-            }
+            PropertyAnimationCurve = new List<PibEmitterAnimationCurve>();
+
+            int numFloats = (dataSize / 4) / GetPropertyAnimationCurveCount();
+
+            PibEmitterAnimationCurveGeneric curve1 = new PibEmitterAnimationCurveGeneric();
+            PibEmitterAnimationCurveGeneric curve2 = new PibEmitterAnimationCurveGeneric();
+            PibEmitterAnimationCurveGeneric curve3 = new PibEmitterAnimationCurveGeneric();
+            PibEmitterAnimationCurveGeneric curve4 = new PibEmitterAnimationCurveGeneric();
+            PibEmitterAnimationCurveColor colorCurve = new PibEmitterAnimationCurveColor();
+            PibEmitterAnimationCurveGeneric curve6 = new PibEmitterAnimationCurveGeneric();
+
+            curve1.Read(reader, numFloats);
+            curve2.Read(reader, numFloats);
+            curve3.Read(reader, numFloats);
+            curve4.Read(reader, numFloats);
+            colorCurve.Read(reader, numFloats);
+            curve6.Read(reader, numFloats);
+
+            PropertyAnimationCurve.Add(curve1);
+            PropertyAnimationCurve.Add(curve2);
+            PropertyAnimationCurve.Add(curve3);
+            PropertyAnimationCurve.Add(curve4);
+            PropertyAnimationCurve.Add(colorCurve);
+            PropertyAnimationCurve.Add(curve6);
+        }
+
+        internal virtual int GetPropertyAnimationCurveCount()
+        {
+            return 6;
+        }
+
+        protected virtual void WriteUnknownSection1(DataWriter writer)
+        {
+            writer.Write(128 + (PropertyAnimationCurve[0].GetDataSize() * PropertyAnimationCurve.Count));
+            DDSHeader.Write(writer);
+
+            foreach (PibEmitterAnimationCurve animCurve in PropertyAnimationCurve)
+                animCurve.Write(writer);
+        }
+
+        protected virtual void ReadUnknownData1(DataReader reader, int type, int count, PibVersion version)
+        {
+
         }
 
         public virtual EmitterType GetEmitterType()
@@ -95,31 +127,29 @@ namespace PIBLib
             return EmitterType.Model;
         }
 
-        internal virtual void Write(DataWriter writer)
+        internal virtual void Write(DataWriter writer, PibVersion version)
         {
 
         }
 
         internal virtual int GetUnknownDataCount()
         {
+            return UnknownData1.Count;
+        }
 
-            switch (Type)
-            {
-                default:
-                    throw new System.Exception("Unknown data type: " + Type);
-                case 0:
-                    return UnknownData1.Length / 32;
-                case 1:
-                    return UnknownData1.Length / 44;
-                case 2:
-                    return UnknownData1.Length / 20;
-                case 3:
-                    return UnknownData1.Length / 40;
-                case 4:
-                    return UnknownData1.Length / 52;
-                case 5:
-                    return UnknownData1.Length / 28;
-            }
+        public virtual bool IsMetaball()
+        {
+            return false;
+        }
+
+        public virtual bool IsUseColorCurve()
+        {
+            return false;
+        }
+        
+        public PibEmitterAnimationCurveColor GetColorCurve()
+        {
+            return (PibEmitterAnimationCurveColor)PropertyAnimationCurve.FirstOrDefault(x => x is PibEmitterAnimationCurveColor);
         }
     }
 }

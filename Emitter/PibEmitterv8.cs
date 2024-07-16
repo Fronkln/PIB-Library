@@ -11,9 +11,10 @@ namespace PIBLib
     {
         internal override void Read(DataReader reader, PibVersion version)
         {
-            Flags = reader.ReadUInt32();
+            Flags = reader.ReadInt32();
 
-            Unknown_0x4 = reader.ReadBytes(8);
+            Unknown_0x4 = reader.ReadInt32();
+            UnknownFlags_0x8 = reader.ReadInt32();
 
             UnknownCount_0xC = reader.ReadByte();
             Type = reader.ReadByte();
@@ -29,7 +30,7 @@ namespace PIBLib
 
             //Endian swapped section
             reader.Endianness = EndiannessMode.LittleEndian;
-            DDSHeader = reader.ReadBytes(128);
+            DDSHeader.Read(reader);
 
             int floatCount = (data1Size - 128) / 4;
 
@@ -51,17 +52,18 @@ namespace PIBLib
 
             int unknownCount2 = reader.ReadInt32();
 
-            ReadUnknownData1(reader, Type, unknownCount1);
+            ReadUnknownData1(reader, Type, unknownCount1, version);
             Source.Read(reader, this, (int)Flags, unknownCount2, (uint)version);
         }
 
-        internal override void Write(DataWriter writer)
+        internal override void Write(DataWriter writer, PibVersion version)
         {
             writer.Write(Flags);
             writer.Write(Unknown_0x4);
+            writer.Write(UnknownFlags_0x8);
 
             writer.Write(UnknownCount_0xC);
-            writer.Write(Type);
+            writer.Write((byte)Type);
             writer.WriteTimes(0, 2);
 
             writer.Write(Unknown0x10);
@@ -71,7 +73,7 @@ namespace PIBLib
             writer.Write(128 + UnknownSection1.Length * 4);
 
             writer.Endianness = EndiannessMode.LittleEndian;
-            writer.Write(DDSHeader);
+            DDSHeader.Write(writer);
 
             foreach (float f in UnknownSection1)
                 writer.Write(f);
@@ -85,8 +87,10 @@ namespace PIBLib
 
             writer.Write(Source.GetDataCount());
 
-            writer.Write(UnknownData1);
-            Source.Write(writer);
+            foreach (var chunk in UnknownData1)
+                chunk.Write(writer);
+
+            Source.Write(writer, version);
         }
     }
 }

@@ -5,7 +5,7 @@ namespace PIBLib
 {
     public class Pib19 : BasePib
     {
-        public RGB32 Color;
+        public RGB Color;
 
         public int Unknown_0x34;
         public uint UnknownFlag_0x38;
@@ -16,22 +16,17 @@ namespace PIBLib
             ParticleID = reader.ReadUInt32();
             EmitterCount = reader.ReadUInt32();
             Duration = reader.ReadUInt32();
-            Unknown1 = reader.ReadInt32();
+            DurationOffset = reader.ReadInt32();
 
             Speed = reader.ReadSingle();
-            Unknown2 = reader.ReadSingle();
-            Unknown3 = reader.ReadSingle();
-            Color = reader.ReadRGB32();
+            ForwardOffset = reader.ReadSingle();
+            MaxIntensity = reader.ReadSingle();
+            Color = reader.ReadRGB();
 
-            Unknown4 = reader.ReadByte();
-            Unknown5 = reader.ReadInt32();
-        }
+            reader.ReadByte();
 
-        internal override void Read(DataReader reader)
-        {
-            base.Read(reader);
-
-            Unknown_0x34 = reader.ReadInt32();
+            Radius = reader.ReadInt32();
+            Range = reader.ReadInt32();
 
             reader.Endianness = EndiannessMode.LittleEndian;
             UnknownFlag_0x38 = reader.ReadUInt32();
@@ -43,12 +38,17 @@ namespace PIBLib
             Scale = reader.ReadVector4();
 
             reader.ReadBytes(48);
+        }
 
+        internal override void Read(DataReader reader)
+        {
+            base.Read(reader);
             ReadEmitters(reader, (int)EmitterCount);
         }
 
         protected override void ReadEmitters(DataReader reader, int count)
         {
+           
             for (int i = 0; i < count; i++)
             {
                 PibEmitterv19 emitter = new PibEmitterv19();
@@ -61,21 +61,26 @@ namespace PIBLib
         {
             WriteHeader(writer);
 
+            foreach(var emitter in Emitters)
+                emitter.Write(writer, Version);
+        }
+
+        protected override void WriteHeader(DataWriter writer)
+        {
             writer.Write(ParticleID);
             writer.Write(Emitters.Count);
             writer.Write(Duration);
-            writer.Write(Unknown1);
+            writer.Write(DurationOffset);
 
             writer.Write(Speed);
-            writer.Write(Unknown2);
-            writer.Write(Unknown3);
+            writer.Write(ForwardOffset);
+            writer.Write(MaxIntensity);
             writer.Write(Color);
 
-            writer.Write((byte)Unknown4);
-            writer.Write(Unknown5);
-            
-            //End of core
-            writer.Write(Unknown_0x34);
+            writer.WriteTimes(0, 1);
+
+            writer.Write(Radius);
+            writer.Write(Range);
 
             writer.Endianness = EndiannessMode.LittleEndian;
             writer.Write(UnknownFlag_0x38);
@@ -87,14 +92,13 @@ namespace PIBLib
             writer.Write(Scale);
 
             writer.WriteTimes(0, 52);
-
-            foreach(var emitter in Emitters)
-                emitter.Write(writer);
         }
+
 
         /// <summary>
         /// Convert to PIB version 21 (Yakuza 5)
         /// </summary>
+        
         public Pib21 ToV21()
         {
             return Pib19To21.Convert(this);

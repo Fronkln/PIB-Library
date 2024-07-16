@@ -3,38 +3,87 @@ using Yarhl.IO;
 
 namespace PIBLib
 {
-    //32 bytes more than v25, 28 bytes at emitter data, a unknown int nearby the beginning
     public class PibEmitterv27 : PibEmitterv25
     {
+        public int UnknownV27 = 0;
+
+        public OEPibUnkStructure1v27 OEUnkStructure1 = new OEPibUnkStructure1v27();
+
         internal override void Read(DataReader reader, PibVersion version)
         {
-            Flags = reader.ReadUInt32();
+            Flags = reader.ReadInt32();
+            Flags2 = reader.ReadInt32();
+            Flags3 = reader.ReadInt32();
 
-            Unknown_0x4 = reader.ReadBytes(8);
-            reader.ReadBytes(4); //new
-            UnknownCount_0xC = reader.ReadByte();
+            UnknownV27 = reader.ReadInt32();
+            Blend = reader.ReadByte();
             Type = reader.ReadByte();
-            reader.ReadBytes(2);
+            reader.Stream.Position += 1;
+            MetaballBlend = reader.ReadByte();
 
-            Unknown0x10 = reader.ReadBytes(36);
+            UnkReg1 = new float[] { reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle() };
 
-            int unknownCount1 = reader.ReadInt32();
+            AABoxCenter = reader.ReadVector3();
+            AABoxExtent = reader.ReadVector3();
 
-            UnknownMainData =  reader.ReadBytes(372); //modified
+            int geoVtxCount = reader.ReadInt32();
 
+            OOEUnkStructure6 = new OOEPibBaseUnkStructure6();
+            OOEUnkStructure6.Read(reader);
+
+            Metaball = new PibBaseMetaball();
+            Metaball.Read(reader);
+
+            DirectivityH = reader.ReadSingle();
+            DirectivityV = reader.ReadSingle();
+            DirectivityPower = reader.ReadSingle();
+
+            Culling = reader.ReadUInt32();
+
+            OEUnkStructure1 = new OEPibUnkStructure1v27();
+            OEUnkStructure1.Read(reader);
+
+            AnimationData = new EmitterBaseAnimationData();
+            AnimationData.Read(reader);
+
+            OOEUnkStructure2 = new OOEPibBaseUnkStructure2();
+            OOEUnkStructure2.Read(reader);
+
+            MinSpread = reader.ReadVector3();
+            MaxSpread = reader.ReadVector3();
+
+            OEUnknown7 = reader.ReadSingle();
+            OEUnknown8 = reader.ReadSingle();
+            OEUnknown9 = reader.ReadSingle();
+            OEUnknown10 = reader.ReadSingle();
+            OEUnknown11 = reader.ReadSingle();
+            OEUnknown12 = reader.ReadSingle();
+
+            OOEUnkStructure3 = new OOEPibBaseUnkStructure3();
+            OOEUnkStructure3.Read(reader);
+
+            CommonUnkStructure2 = new PibBaseCommonUnkStructure2();
+            CommonUnkStructure2.Read(reader);
+
+            OEUnknown16 = reader.ReadSingle();
+
+            OOEUnkStructure4 = new OOEPibBaseUnkStructure4();
+            OOEUnkStructure4.Read(reader);
+
+            OOEUnkStructure5 = new OOEPibBaseUnkStructure5();
+            OOEUnkStructure5.Read(reader);
+
+            //End of main data
             int data1Size = reader.ReadInt32(); //Includes DDS header
 
             //Endian swapped section
             reader.Endianness = EndiannessMode.LittleEndian;
-            DDSHeader = reader.ReadBytes(128);
-
+            DDSHeader.Read(reader);
 
             int floatCount = (data1Size - 128) / 4;
+            int chunkCount = (data1Size - 128) / 256;
 
-            UnknownSection1 = new float[floatCount];
-
-            for (int i = 0; i < floatCount; i++)
-                UnknownSection1[i] = reader.ReadSingle();
+            ReadUnknownSection1(reader, data1Size - 128);
 
             reader.Endianness = EndiannessMode.BigEndian;
             //End of endian swapped section
@@ -45,50 +94,95 @@ namespace PIBLib
             int textureCount = reader.ReadInt32();
 
             for (int i = 0; i < textureCount; i++)
+            {
                 Textures.Add(reader.ReadString(32).Split(new[] { '\0' }, 2)[0]);
+            }
 
-            reader.Stream.Position += 8;
+            int extraTexCount = reader.ReadInt32();
+
+            for (int i = 0; i < extraTexCount; i++)
+                UnknownExtraTextures.Add(reader.ReadString(32));
+
+            reader.Stream.Position += 4;
 
             int unknownCount2 = reader.ReadInt32();
 
-            ReadUnknownData1(reader, Type, unknownCount1);
+            ReadUnknownData1(reader, Type, geoVtxCount, version);
             Source.Read(reader, this, (int)Flags, unknownCount2, (uint)version);
         }
 
-        internal override void Write(DataWriter writer)
+        internal override void Write(DataWriter writer, PibVersion version)
         {
             writer.Write(Flags);
+            writer.Write(Flags2);
+            writer.Write(Flags3);
 
-            writer.Write(Unknown_0x4);
-            writer.Write(0);
-            writer.Write(UnknownCount_0xC);
-            writer.Write(Type);
-            writer.WriteTimes(0, 2);
+            writer.Write(UnknownV27);
+            writer.Write(Blend);
+            writer.Write((byte)Type);
+            writer.WriteTimes(0, 1);
+            writer.Write(MetaballBlend);
 
-            writer.Write(Unknown0x10);
+            for (int i = 0; i < 3; i++)
+                writer.Write(UnkReg1[i]);
+
+            writer.Write(AABoxCenter);
+            writer.Write(AABoxExtent);
 
             writer.Write(GetUnknownDataCount());
-            writer.Write(UnknownMainData);
-            writer.Write(128 + UnknownSection1.Length * 4);
 
-            writer.Endianness = EndiannessMode.LittleEndian;
-            writer.Write(DDSHeader);
+            OOEUnkStructure6.Write(writer);
 
-            foreach (float f in UnknownSection1)
-                writer.Write(f);
+            Metaball.Write(writer);
 
-            writer.Endianness = EndiannessMode.BigEndian;
+            writer.Write(DirectivityH);
+            writer.Write(DirectivityV);
+            writer.Write(DirectivityPower);
+
+            writer.Write(Culling);
+
+            OEUnkStructure1.Write(writer);
+            AnimationData.Write(writer);
+            OOEUnkStructure2.Write(writer);
+
+            writer.Write(MinSpread);
+            writer.Write(MaxSpread);
+
+            writer.Write(OEUnknown7);
+            writer.Write(OEUnknown8);
+            writer.Write(OEUnknown9);
+            writer.Write(OEUnknown10);
+            writer.Write(OEUnknown11);
+            writer.Write(OEUnknown12);
+
+            OOEUnkStructure3.Write(writer);
+            CommonUnkStructure2.Write(writer);
+
+            writer.Write(OEUnknown16);
+
+            OOEUnkStructure4.Write(writer);
+            OOEUnkStructure5.Write(writer);
+
+            //End of main data
+            WriteUnknownSection1(writer);
 
             writer.Write(Textures.Count);
 
-            foreach (string str in Textures)
-                writer.Write(str.ToLength(32));
+            for (int i = 0; i < Textures.Count; i++)
+                writer.Write(Textures[i].ToLength(32), false);
 
-            writer.WriteTimes(0, 8);
+            writer.Write(UnknownExtraTextures.Count);
+
+            foreach (string str in UnknownExtraTextures)
+                writer.Write(str.ToLength(32), false);
+
+            writer.WriteTimes(0, 4);
             writer.Write(Source.GetDataCount());
 
-            writer.Write(UnknownData1);
-            Source.Write(writer);
+            foreach (var chunk in UnknownData1)
+                chunk.Write(writer);
+
+            Source.Write(writer, version);
         }
     }
 }

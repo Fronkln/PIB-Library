@@ -1,7 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,6 +13,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Conversions\Emitter\Emitter27To29.cs" />
+    <Compile Remove="Conversions\Emitter\Emitter8To19.cs" />
+    <Compile Remove="Conversions\Pib27To29.cs" />
+    <Compile Remove="Conversions\Pib8To19.cs" />
+    <Compile Remove="Emitter\PibEmitterv8.cs" />
+    <Compile Remove="Format\Pib8.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Memory" Version="4.5.5" />
     <PackageReference Include="Yarhl" Version="3.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Data Types\Header\OE\" />
   </ItemGroup>
 </Project>

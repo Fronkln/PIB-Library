@@ -31,6 +31,7 @@
             System.Windows.Forms.Label label1;
             System.Windows.Forms.Label label2;
             System.Windows.Forms.Label label3;
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.pathBox = new System.Windows.Forms.TextBox();
             this.fileButton = new System.Windows.Forms.Button();
             this.inputBox = new System.Windows.Forms.ComboBox();
@@ -39,9 +40,13 @@
             this.copyTexturesCheck = new System.Windows.Forms.CheckBox();
             this.idChangeCheck = new System.Windows.Forms.CheckBox();
             this.changeIdTextbox = new System.Windows.Forms.TextBox();
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.debugTab = new System.Windows.Forms.ToolStripDropDownButton();
+            this.justOpenPIBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             label1 = new System.Windows.Forms.Label();
             label2 = new System.Windows.Forms.Label();
             label3 = new System.Windows.Forms.Label();
+            this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -149,11 +154,40 @@
             this.changeIdTextbox.TabIndex = 10;
             this.changeIdTextbox.Text = "0";
             // 
+            // toolStrip1
+            // 
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.debugTab});
+            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Size = new System.Drawing.Size(581, 25);
+            this.toolStrip1.TabIndex = 11;
+            this.toolStrip1.Text = "toolStrip1";
+            // 
+            // debugTab
+            // 
+            this.debugTab.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.debugTab.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.justOpenPIBToolStripMenuItem});
+            this.debugTab.Image = ((System.Drawing.Image)(resources.GetObject("debugTab.Image")));
+            this.debugTab.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.debugTab.Name = "debugTab";
+            this.debugTab.Size = new System.Drawing.Size(55, 22);
+            this.debugTab.Text = "Debug";
+            // 
+            // justOpenPIBToolStripMenuItem
+            // 
+            this.justOpenPIBToolStripMenuItem.Name = "justOpenPIBToolStripMenuItem";
+            this.justOpenPIBToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.justOpenPIBToolStripMenuItem.Text = "Just Open PIB";
+            this.justOpenPIBToolStripMenuItem.Click += new System.EventHandler(this.justOpenPIBToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(581, 240);
+            this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.changeIdTextbox);
             this.Controls.Add(this.idChangeCheck);
             this.Controls.Add(this.copyTexturesCheck);
@@ -168,6 +202,8 @@
             this.Name = "Form1";
             this.Text = "Pib Converter GUI";
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.toolStrip1.ResumeLayout(false);
+            this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -183,5 +219,8 @@
         private System.Windows.Forms.CheckBox copyTexturesCheck;
         private System.Windows.Forms.CheckBox idChangeCheck;
         private System.Windows.Forms.TextBox changeIdTextbox;
+        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStripDropDownButton debugTab;
+        private System.Windows.Forms.ToolStripMenuItem justOpenPIBToolStripMenuItem;
     }
 }

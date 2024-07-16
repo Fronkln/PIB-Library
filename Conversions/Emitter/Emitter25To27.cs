@@ -13,25 +13,7 @@ namespace PIBLib.Conversions
             PibEmitterv27 emitter = new PibEmitterv27();
             emitterv25.CopyFields(emitter);
 
-            using (DataStream stream = DataStreamFactory.FromMemory())
-            {
-                DataWriter writer = new DataWriter(stream) { Endianness = EndiannessMode.BigEndian };
-                writer.Write(emitter.UnknownMainData);
-                writer.Stream.Position = 72;
-                writer.Insert(28);
-                writer.Write(-7372);
-                writer.Write(-4975);
-                writer.Write(-7372);
-                writer.Write(-4915);
-
-
-                /*
-                writer.Write(0.9999999f);
-                writer.WriteTimes(0, 24);
-                */
-
-                emitter.UnknownMainData = writer.Stream.ToArray();
-            }
+            emitter.OEUnkStructure1 = new OEPibUnkStructure1v27();
 
             return emitter;
         }

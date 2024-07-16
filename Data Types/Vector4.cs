@@ -1,4 +1,6 @@
-﻿namespace PIBLib
+﻿using System;
+
+namespace PIBLib
 {
     public struct Vector4
     {
@@ -23,6 +25,11 @@
         public static implicit operator Vector4(Vector3 vec)
         {
             return new Vector4(vec.x, vec.y, vec.z, 0);
+        }
+
+        public override string ToString()
+        {
+            return $"{MathF.Round(x, 2)}, {MathF.Round(y, 2)}, {MathF.Round(z, 2)}, {MathF.Round(w, 2)}";
         }
     }
 }

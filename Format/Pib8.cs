@@ -56,7 +56,7 @@ namespace PIBLib
             writer.WriteTimes(0, 20);
 
             foreach (var emitter in Emitters)
-                emitter.Write(writer);
+                emitter.Write(writer, Version);
         }
 
         public Pib19 ToV19()
