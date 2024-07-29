@@ -69,7 +69,7 @@ namespace PIBLib.Conversions
             int v27Flags2 = 0;
             int v27Flags3 = 0;
 
-            //Convert old flags to v27 flags
+            //Convert new flags to v27 flags
             foreach (Enum flag in flags.GetFlags())
             {
                 try

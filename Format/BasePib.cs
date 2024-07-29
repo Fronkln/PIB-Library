@@ -28,9 +28,35 @@ namespace PIBLib
         public Matrix4x4 BaseMatrix;
         public Vector3 Scale;
 
+        public PibFadeModule Fade = new PibFadeModule();
+
         public Vector4 UnknownVector;
 
         public List<BasePibEmitter> Emitters = new List<BasePibEmitter>();
+
+        /// <summary>
+        /// Return all textures used by pib emitters.
+        /// </summary>
+        public string[] AllTextures
+        {
+            get
+            {
+                List<string> textures = new List<string>();
+
+                foreach (var emitter in Emitters)
+                    foreach (string str in emitter.Textures)
+                    {
+                        string texFile = str;
+                        if (!texFile.EndsWith(".dds"))
+                            texFile += ".dds";
+
+                        if (!textures.Contains(texFile))
+                            textures.Add(str);
+                    }
+
+                return textures.ToArray();
+            }
+        }
 
         internal virtual void Read(DataReader reader)
         {

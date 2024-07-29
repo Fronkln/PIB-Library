@@ -27,6 +27,8 @@ namespace PIBLib
         public OOEPibBaseUnkStructure4 OOEUnkStructure4 = new OOEPibBaseUnkStructure4();
         public OOEPibBaseUnkStructure5 OOEUnkStructure5 = new OOEPibBaseUnkStructure5();
 
+        public Vector3 UnkRegion1;
+
         protected override void WriteUnknownSection1(DataWriter writer)
         {
             writer.Write(128 + (PropertyAnimationCurve[0].GetDataSize() * PropertyAnimationCurve.Count));

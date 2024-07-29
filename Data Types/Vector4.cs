@@ -29,7 +29,7 @@ namespace PIBLib
 
         public override string ToString()
         {
-            return $"{MathF.Round(x, 2)}, {MathF.Round(y, 2)}, {MathF.Round(z, 2)}, {MathF.Round(w, 2)}";
+            return $"{Math.Round(x, 2)}, {Math.Round(y, 2)}, {Math.Round(z, 2)}, {Math.Round(w, 2)}";
         }
     }
 }

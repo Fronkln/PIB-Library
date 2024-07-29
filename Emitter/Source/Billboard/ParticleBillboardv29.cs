@@ -2,10 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Net;
-using System.Reflection.PortableExecutable;
-using System.Text;
-using System.Threading.Tasks;
 using Yarhl.IO;
 
 namespace PIBLib
@@ -13,6 +9,12 @@ namespace PIBLib
     public class ParticleBillboardDatav29 : BaseParticleBillboardData
     {
         public Vector4 Unknown5;
+
+        public ParticleBillboardDatav29()
+        {
+            Unknown2 = new byte[12];
+            Unknown6 = new byte[12];
+        }
 
         internal override void Read(DataReader reader)
         {

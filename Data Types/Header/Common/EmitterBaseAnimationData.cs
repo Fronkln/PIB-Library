@@ -54,5 +54,32 @@ namespace PIBLib
             writer.Write(UnknownX);
             writer.Write(UnknownY);
         }
+
+        public EmitterAnimationDataDE ToDE()
+        {
+            EmitterAnimationDataDE deDat = new EmitterAnimationDataDE();
+
+            deDat.TickUnknown1 = TickUnknown1;
+            deDat.TickUnknown2 = TickUnknown2;
+
+            deDat.FrameRelated1 = FrameRelated1;
+            deDat.FrameRelated2 = FrameRelated2;
+
+            deDat.UnknownX = UnknownX;
+            deDat.UnknownY = UnknownY;
+
+            deDat.TextureFrames = new float[4] { 1, 1, 1, 1 };
+            deDat.TextureFrames[0] = TextureFrames[0];
+            deDat.TextureFrames[1] = TextureFrames[1];
+
+            deDat.TextureWidths = new float[4] { 1, 1, 1, 1 };
+            deDat.TextureWidths[0] = TextureWidths[0];
+            deDat.TextureWidths[1] = TextureWidths[1];
+
+            deDat.UnkTextureData1 = new float[4] { 1, 1, 1, 1 };
+            deDat.UnkTextureData2 = new float[4] { 1, 1, 1, 1 };
+
+            return deDat;
+        }
     }
 }

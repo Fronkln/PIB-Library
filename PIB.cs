@@ -200,10 +200,8 @@ namespace PIBLib
                     return pib.ToV21().ToV25();
                 case PibVersion.Y0:
                     return pib.ToV21().ToV25().ToV27();
-                    /*
                case PibVersion.Y6:
                    return pib.ToV21().ToV25().ToV27().ToV29();
-                   */
             }
         }
 
@@ -222,8 +220,8 @@ namespace PIBLib
                     return pib.ToV25();
                 case PibVersion.Y0:
                     return pib.ToV25().ToV27();
-                    // case PibVersion.Y6:
-                    //return pib.ToV25().ToV27().ToV29();
+                 case PibVersion.Y6:
+                    return pib.ToV25().ToV27().ToV29();
             }
         }
 
@@ -240,10 +238,10 @@ namespace PIBLib
                     return pib.ToV21().ToV19();
                 case PibVersion.Y5:
                     return pib.ToV21();
-                    // case PibVersion.Y0:
-                    //return pib.ToV27();
-                    //case PibVersion.Y6:
-                    //return pib.ToV27().ToV29();
+                case PibVersion.Y0:
+                    return pib.ToV27();
+                case PibVersion.Y6:
+                    return pib.ToV27().ToV29();
             }
         }
         private static BasePib ConvertFromY0(BasePib basePib, PibVersion outputVersion)
@@ -260,8 +258,8 @@ namespace PIBLib
                     return pib.ToV25().ToV21();
                 case PibVersion.Ishin:
                     return pib.ToV25();
-                    // case PibVersion.Y6:
-                    //  return pib.ToV29();
+                case PibVersion.Y6:
+                    return pib.ToV29();
             }
         }
 
@@ -273,12 +271,12 @@ namespace PIBLib
             {
                 default:
                     return null;
-                //case PibVersion.Y3:
-                //  return pib.ToV27().ToV25().ToV21().ToV19();
-                // case PibVersion.Y5:
-                //   return pib.ToV27().ToV25().ToV21();
-                //  case PibVersion.Ishin:
-                //  return pib.ToV27().ToV25();
+                case PibVersion.Y3:
+                    return pib.ToV27().ToV25().ToV21().ToV19();
+                case PibVersion.Y5:
+                    return pib.ToV27().ToV25().ToV21();
+                case PibVersion.Ishin:
+                    return pib.ToV27().ToV25();
                 case PibVersion.Y0:
                     return pib.ToV27();
 

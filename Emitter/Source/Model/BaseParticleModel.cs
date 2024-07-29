@@ -28,7 +28,7 @@ namespace PIBLib
             model.UnknownField2 = UnknownField2;
             model.Lifetime = Lifetime;
             model.UnknownField3 = UnknownField3;
-            model.UnknownField4 = new float[5];
+            model.UnknownField4 = new float[9];
 
             for(int i= 0; i < 5; i++)
                 model.UnknownField4[i] = UnknownField4[i];

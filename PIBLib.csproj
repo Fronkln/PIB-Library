@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFrameworks>net6.0;net48</TargetFrameworks>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
@@ -13,9 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Conversions\Emitter\Emitter27To29.cs" />
     <Compile Remove="Conversions\Emitter\Emitter8To19.cs" />
-    <Compile Remove="Conversions\Pib27To29.cs" />
     <Compile Remove="Conversions\Pib8To19.cs" />
     <Compile Remove="Emitter\PibEmitterv8.cs" />
     <Compile Remove="Format\Pib8.cs" />

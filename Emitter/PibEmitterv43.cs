@@ -126,7 +126,11 @@ namespace PIBLib
             ReadUnknownSection1(reader, data1Size - 128);
 
             EmitterType emitterType = GetEmitterType();
-            Source = emitterType == EmitterType.Model ? new ParticleModelv29() : new ParticleBillboardv29();
+
+            if (emitterType == EmitterType.Billboard)
+                Source = new ParticleBillboardv29();
+            else
+                Source = new ParticleModelv29();
 
             int textureCount = reader.ReadInt32();
             UnkNumbers_TextureTable_V42 = new int[textureCount];

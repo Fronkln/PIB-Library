@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
-using System.Reflection.PortableExecutable;
 using Yarhl.IO;
 
 namespace PIBLib
@@ -58,7 +57,19 @@ namespace PIBLib
         public ParticleBillboardDatav29 ToV29()
         {
             ParticleBillboardDatav29 convertedDat = new ParticleBillboardDatav29();
-            convertedDat.CopyFields(this);
+            convertedDat.Offset = Offset;
+            convertedDat.Start = Start;
+            convertedDat.MoveDirection = MoveDirection;
+            convertedDat.Color = Color;
+            convertedDat.Unknown1 = Unknown1;
+            convertedDat.Lifetime = Lifetime;
+            convertedDat.Unknown2 = Unknown2;
+            convertedDat.UnknownTimeScaleThing = UnknownTimeScaleThing;
+            convertedDat.Unknown6 = Unknown6;
+            convertedDat.TimeScale = TimeScale;
+            convertedDat.Unknown3 = Unknown3;
+            convertedDat.Scale = Scale;
+            convertedDat.Unknown4 = Unknown4;
 
             return convertedDat;
         }

@@ -21,8 +21,7 @@ namespace PIBLib
             reader.Stream.Position += 1;
             MetaballBlend = reader.ReadByte();
 
-            UnkReg1 = new float[] { reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle() };
-
+            UnkRegion1 = reader.ReadVector3();
             AABoxCenter = reader.ReadVector3();
             AABoxExtent = reader.ReadVector3();
 
@@ -89,7 +88,11 @@ namespace PIBLib
             //End of endian swapped section
 
             EmitterType emitterType = GetEmitterType();
-            Source = emitterType == EmitterType.Model ? new BaseParticleModel() : new BaseParticleBillboard();
+
+            if (emitterType == EmitterType.Billboard)
+                Source = new BaseParticleBillboard();
+            else
+                Source = new BaseParticleModel();
 
             int textureCount = reader.ReadInt32();
 
@@ -123,9 +126,7 @@ namespace PIBLib
             writer.WriteTimes(0, 1);
             writer.Write(MetaballBlend);
 
-            for (int i = 0; i < 3; i++)
-                writer.Write(UnkReg1[i]);
-
+            writer.Write(UnkRegion1);
             writer.Write(AABoxCenter);
             writer.Write(AABoxExtent);
 

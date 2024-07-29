@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
 using Yarhl.IO;
@@ -23,8 +22,9 @@ namespace PIBLib
             //reader.Stream.Position += 1;
             //MetaballBlend = reader.ReadByte();
 
-            reader.Stream.Position += 14;
+            reader.Stream.Position += 2;
 
+            UnkRegion1 = reader.ReadVector3();
             AABoxCenter = reader.ReadVector3();
             AABoxExtent = reader.ReadVector3();
 
@@ -83,7 +83,11 @@ namespace PIBLib
             //End of endian swapped section
 
             EmitterType emitterType = GetEmitterType();
-            Source = emitterType == EmitterType.Model ? new BaseParticleModel() : new BaseParticleBillboard();
+
+            if (emitterType == EmitterType.Billboard)
+                Source = new BaseParticleBillboard();
+            else
+                Source = new BaseParticleModel();
 
             byte textureCount = reader.ReadByte();
             reader.Stream.Position -= 1;
@@ -111,8 +115,9 @@ namespace PIBLib
             writer.Write(Blend);
             writer.Write((byte)Type);
 
-            writer.WriteTimes(0, 14);
+            writer.WriteTimes(0, 2);
 
+            writer.Write(UnkRegion1);
             writer.Write(AABoxCenter);
             writer.Write(AABoxExtent);
 

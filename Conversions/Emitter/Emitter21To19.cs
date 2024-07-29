@@ -27,7 +27,8 @@ namespace PIBLib.Conversions
                 pibEmitter.OOEUnkStructure6.Flag4 |= 16;
             }
 
-            pibEmitter.OOEUnkStructure6.Unknown3 = -0.01666667f;
+            //maybe add metaball cond
+            //pibEmitter.OOEUnkStructure6.Unknown3 = -0.01666667f;
 
             return pibEmitter;
         }

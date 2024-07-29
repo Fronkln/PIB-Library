@@ -9,7 +9,6 @@ namespace PIBLib
 {
     public class Pib21 : Pib19
     {
-        public PibFadeModule Fade = new PibFadeModule();
         public int UnknownFlags_0x3E = 512;
 
         protected override void ReadCorePibData(DataReader reader)
@@ -38,9 +37,9 @@ namespace PIBLib
             BaseMatrix = reader.ReadMatrix4x4();
             Scale = reader.ReadVector4();
 
-            reader.ReadBytes(24);
+            reader.ReadBytes(20);
             Fade = reader.Read<PibFadeModule>();
-            //reader.ReadBytes(4);
+            reader.ReadBytes(4);
         }
 
         internal override void Read(DataReader reader)
@@ -81,9 +80,9 @@ namespace PIBLib
             writer.Write(Unknown_0x3C);
 
             writer.Write(BaseMatrix);
-            writer.Write(Scale);
+            writer.Write((Vector4)Scale);
 
-            writer.WriteTimes(0, 24);
+            writer.WriteTimes(0, 20);
             writer.WriteOfType(Fade);
             writer.WriteTimes(0, 4);
         }

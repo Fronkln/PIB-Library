@@ -29,16 +29,14 @@ namespace PIBLib
                 emitter.Write(writer, Version);
         }
 
-        public Pib25 ToV25()
+        public new Pib25 ToV25()
         {
             return Pib27To25.Convert(this);
         }
 
-        /*
         public Pib29 ToV29()
         {
             return Pib27To29.Convert(this);
         }
-        */
     }
 }

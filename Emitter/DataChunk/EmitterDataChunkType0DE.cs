@@ -11,6 +11,11 @@ namespace PIBLib
     //GEO VTX
     public class EmitterDataChunkType0DE : EmitterBaseDataChunk
     {
+        public EmitterDataChunkType0DE()
+        {
+            Data = new float[70 / 4];
+        }
+
         internal override void Read(DataReader reader, PibVersion version)
         {
             Data = new float[70 / 4];

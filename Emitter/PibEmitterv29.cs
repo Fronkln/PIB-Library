@@ -5,7 +5,9 @@ namespace PIBLib
 {
     public class PibEmitterv29 : BaseDEPibEmitter
     {
-        private byte[] UnkReg1 = new byte[16];
+        //Does note exist after v29
+        public Vector4 UnkRegion1;
+
         private int UnkVar1 = 0;
 
         public List<string> ExtraTextures = new List<string>();
@@ -22,8 +24,8 @@ namespace PIBLib
             MetaballBlend = 2;
 
             reader.Stream.Position++;
-            UnkReg1 = reader.ReadBytes(16);
 
+            UnkRegion1 = reader.ReadVector4();
             AABoxCenter = reader.ReadVector3();
             AABoxExtent = reader.ReadVector3();
 
@@ -90,7 +92,11 @@ namespace PIBLib
             ReadUnknownSection1(reader, data1Size - 128);
 
             EmitterType emitterType = GetEmitterType();
-            Source = emitterType == EmitterType.Model ? new ParticleModelv29() : new ParticleBillboardv29();
+
+            if (emitterType == EmitterType.Billboard)
+                Source = new ParticleBillboardv29();
+            else
+                Source = new ParticleModelv29();
 
             int textureCount = reader.ReadInt32();
 
@@ -130,8 +136,7 @@ namespace PIBLib
             writer.Write(InsVertex);
             writer.Write(MetaballBlend);
 
-            writer.Write(UnkReg1);
-
+            writer.Write(UnkRegion1);
             writer.Write(AABoxCenter);
             writer.Write(AABoxExtent);
 

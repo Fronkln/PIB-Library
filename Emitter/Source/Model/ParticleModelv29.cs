@@ -7,6 +7,13 @@ namespace PIBLib
 {
     public class ParticleModelDatav29 : BaseParticleModelData
     {
+        public ParticleModelDatav29()
+        {
+            UnknownField2 = new byte[12];
+            UnknownField3 = new byte[28];
+            UnknownField4 = new float[9];
+            UnknownFloats = new float[5];
+        }
         public BaseParticleModelData ToV19()
         {
             BaseParticleModelData model = new BaseParticleModelData();

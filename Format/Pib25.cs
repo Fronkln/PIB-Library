@@ -1,5 +1,4 @@
 ﻿using PIBLib.Conversions;
-using System.Reflection.PortableExecutable;
 using Yarhl.IO;
 
 namespace PIBLib

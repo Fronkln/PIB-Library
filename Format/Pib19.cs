@@ -37,7 +37,9 @@ namespace PIBLib
             BaseMatrix = reader.ReadMatrix4x4();
             Scale = reader.ReadVector4();
 
-            reader.ReadBytes(48);
+            reader.ReadBytes(20);
+            Fade = reader.Read<PibFadeModule>();
+            reader.ReadBytes(4);
         }
 
         internal override void Read(DataReader reader)
@@ -89,9 +91,11 @@ namespace PIBLib
             writer.Write(Unknown_0x3C);
 
             writer.Write(BaseMatrix);
-            writer.Write(Scale);
+            writer.Write((Vector4)Scale);
 
-            writer.WriteTimes(0, 52);
+            writer.WriteTimes(0, 20);
+            writer.WriteOfType(Fade);
+            writer.WriteTimes(0, 4);
         }
 
 

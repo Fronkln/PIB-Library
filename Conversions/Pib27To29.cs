@@ -15,11 +15,14 @@ namespace PIBLib.Conversions
             pib27.CopyFields(pib29);
             pib29.Version = PibVersion.Y6;
 
-            pib29.Unknown_0x23C = 1f;
-            pib29.Unknown_0x240 = new byte[16];
-            pib29.Unknown_0x29C = new byte[24];
-            pib29.Unknown0x2B4 = pib27.UnknownVector_0xB4;
-            pib29.UnkFloats = pib27.UnkFloats;
+            pib29.Fade = pib27.Fade;
+            pib29.Fade.NearFadeDistance = 0;
+            pib29.ColorAnimationR = pib27.ColorAnimationR;
+            pib29.ColorAnimationG = pib27.ColorAnimationG;
+            pib29.ColorAnimationB = pib27.ColorAnimationB;
+            pib29.ColorAnimationI = pib27.ColorAnimationI;
+            pib29.ColorTime = 0.0003333333f;
+            pib29.IntensityTime = 0.0003333333f;
 
             pib29.Emitters = new List<BasePibEmitter>();
 
