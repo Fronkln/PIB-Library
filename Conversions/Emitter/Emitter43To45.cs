@@ -14,21 +14,22 @@ namespace PIBLib.Conversions
             emitter43.VAT.CopyFields(emitter.VAT);
 
             EmitterFlag1v43 flags = (EmitterFlag1v43)emitter.Flags;
-            uint de2Flags = 0;
+            int de2Flags = 0;
 
             //Doesnt exist in JE at a first glance? yyj0056 in Y6, YK2 and JE
-            flags &= ~EmitterFlag1v43.eFLG_V27_FLAG;
+            flags &= ~EmitterFlag1v43.eFLG_UNK_V21_FLAG;
+            flags &= ~EmitterFlag1v43.eFLG_UNK_V27_FLAG2;
 
             //Convert old flags to v45 flags
             foreach (Enum flag in flags.GetFlags())
             {
                 string flagStr = flag.ToString();
-                uint de2Value = System.Convert.ToUInt32(Enum.Parse(typeof(EmitterFlag1v45), flagStr));
+                int de2Value = System.Convert.ToInt32(Enum.Parse(typeof(EmitterFlag1v45), flagStr));
 
                 de2Flags |= de2Value;
             }
 
-            emitter.Flags = (int)de2Flags;
+            emitter.Flags = de2Flags;
 
             return emitter;
         }

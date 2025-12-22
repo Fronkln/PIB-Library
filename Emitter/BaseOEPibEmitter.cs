@@ -31,7 +31,7 @@ namespace PIBLib
         public float OEUnknown14 = 1f;
         public float OEUnknown15 = 0f;
 
-        protected override void WriteUnknownSection1(DataWriter writer)
+        protected override void WriteAnimationCurves(DataWriter writer)
         {
             writer.Write(128 + (PropertyAnimationCurve[0].GetDataSize() * PropertyAnimationCurve.Count));
             DDSHeader.Write(writer);

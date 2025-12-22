@@ -54,13 +54,14 @@ namespace PIBLib.Conversions
 
             emitter.Metaball = metaball;
 
-            emitter.AnimationData = (emitter29.AnimationData as EmitterAnimationDataDE).ToOE();
-
             PibBaseCommonUnkStructure2 unkStr2 = new PibBaseCommonUnkStructure2();
             emitter.CommonUnkStructure2.CopyFields(unkStr2);
 
             unkStr2.Unk2 = (emitter29.CommonUnkStructure2 as DEPibCommonUnkStructure2).Unk5;
             emitter.CommonUnkStructure2 = unkStr2;
+            emitter.OOEUnkStructure4.Unknown9 = emitter29.CommonUnkStructure2.Unk3;
+            emitter.OOEUnkStructure4.Unknown5 = emitter29.Gravity;
+
 
             EmitterFlag1v29 flags = (EmitterFlag1v29)emitter29.Flags;
             EmitterFlag2v52 flags2 = (EmitterFlag2v52)emitter29.Flags2;
@@ -103,6 +104,10 @@ namespace PIBLib.Conversions
 
             if (emitter29.AnimationData.TextureFrames.Any(x => x > 1))
                 emitter.OEUnknown9 = 1;
+
+            emitter.AnimationData = (emitter29.AnimationData as EmitterAnimationDataDE).ToOE();
+            emitter.AnimationData.FrameRelated2 = 1;
+            emitter.OOEUnkStructure3.Unk1 = (emitter29.AnimationData as EmitterAnimationDataDE).FrameRelated2;
 
             //Geo VTX Conversion
             EmitterBaseDataChunk[] chunks = emitter.UnknownData1.Cast<EmitterBaseDataChunk>().ToArray();

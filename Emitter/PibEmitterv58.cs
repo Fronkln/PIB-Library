@@ -120,8 +120,13 @@ namespace PIBLib
             UnkStructure2 = new OOEPibBaseUnkStructure2();
             UnkStructure2.Read(reader);
 
-            MinSpread = reader.ReadVector3();
-            MaxSpread = reader.ReadVector3();
+            MinSpread = reader.ReadSingle();
+            UnkMinSpreadRegVal1 = reader.ReadSingle();
+            UnkMinSpreadRegVal2 = reader.ReadSingle();
+
+            MaxSpread = reader.ReadSingle();
+            UnkMaxSpreadRegVal1 = reader.ReadSingle();
+            Gravity = reader.ReadSingle();
 
             UnkVal1 = reader.ReadSingle();
 
@@ -145,7 +150,7 @@ namespace PIBLib
             int floatCount = (data1Size - 128) / 4;
             int chunkCount = (data1Size - 128) / 256;
 
-            ReadUnknownSection1(reader, data1Size - 128);
+            ReadAnimationCurves(reader, data1Size - 128);
 
             EmitterType emitterType = GetEmitterType();
 
@@ -249,7 +254,11 @@ namespace PIBLib
             UnkStructure2.Write(writer);
 
             writer.Write(MinSpread);
+            writer.Write(UnkMinSpreadRegVal1);
+            writer.Write(UnkMinSpreadRegVal2);
             writer.Write(MaxSpread);
+            writer.Write(UnkMaxSpreadRegVal1);
+            writer.Write(Gravity);
 
             writer.Write(UnkVal1);
 
@@ -263,7 +272,7 @@ namespace PIBLib
 
             UnkStructure5.Write(writer);
 
-            WriteUnknownSection1(writer);
+            WriteAnimationCurves(writer);
 
             WriteTextureImports(writer, version);
 
@@ -342,7 +351,7 @@ namespace PIBLib
             return 12;
         }
 
-        protected override void ReadUnknownSection1(DataReader reader, int dataSize)
+        protected override void ReadAnimationCurves(DataReader reader, int dataSize)
         {
             PropertyAnimationCurve = new List<PibEmitterAnimationCurve>();
 

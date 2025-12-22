@@ -4,9 +4,9 @@ namespace PIBLib
 {
     public class DEPibBaseVAT
     {
-        public double BboxLength;
-        public double BboxMin;
-        public uint Frames;
+        public double BboxLength = 2;
+        public double BboxMin = -1;
+        public uint Frames = 100;
 
         internal virtual void Read(DataReader reader)
         {

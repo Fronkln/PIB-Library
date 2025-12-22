@@ -13,6 +13,7 @@ namespace PIBLib.Conversions
         {
             Pib58 pib = new Pib58();
             pib52.CopyFields(pib);
+            pib.Fade = pib52.Fade;
             pib.Flags = 0;
             pib.SoundCuesheet = 0;
             pib.Version = PibVersion.LJ;

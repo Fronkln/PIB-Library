@@ -34,8 +34,8 @@ namespace PIBLib
             ForwardOffset = reader.ReadSingle();
             MaxIntensity = reader.ReadSingle();
 
-            Radius = reader.ReadInt32();
-            Range = reader.ReadInt32();
+            Radius = reader.ReadSingle();
+            Range = reader.ReadSingle();
 
             EVCorrect = reader.ReadSingle();
 

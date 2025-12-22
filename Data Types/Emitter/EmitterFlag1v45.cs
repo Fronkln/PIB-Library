@@ -18,7 +18,7 @@ namespace PIBLib
         eFLG_MESH_VAT = 1 << 7,
         eFLG_LOOP = 1 << 8,
         eFLG_USE_NORMAL = 1 << 9,
-        Flag11 = 1 << 10,
+        eFLG_X_AXIS_NBB = 1 << 10,
         eFLG_GLARE = 1 << 11,
         eFLG_SOFT_PTC = 1 << 12,
         Flag14 = 1 << 13,

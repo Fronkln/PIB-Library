@@ -11,7 +11,6 @@ namespace PIBLib
         public Vector3 UnknownField1;
 
         public byte[] UnknownField2;
-        public byte[] UnknownField3;
         public float[] UnknownField4;
 
         public Vector3 Scale;
@@ -27,10 +26,14 @@ namespace PIBLib
 
             model.UnknownField2 = UnknownField2;
             model.Lifetime = Lifetime;
-            model.UnknownField3 = UnknownField3;
-            model.UnknownField4 = new float[9];
+            model.Unknown2 = Unknown2;
+            model.UnknownTimeScaleThing = UnknownTimeScaleThing;
+            model.Unknown6 = Unknown6;
+            model.TimeScale = TimeScale;
 
-            for(int i= 0; i < 5; i++)
+            model.UnknownField4 = new float[8];
+
+            for(int i= 0; i < 4; i++)
                 model.UnknownField4[i] = UnknownField4[i];
 
             model.Scale = Scale;
@@ -55,11 +58,14 @@ namespace PIBLib
                 modelData.UnknownField2 = reader.ReadBytes(12);
                 modelData.Lifetime = reader.ReadSingle();
 
-                modelData.UnknownField3 = reader.ReadBytes(28);
+                modelData.Unknown2 = reader.ReadBytes(12);
+                modelData.UnknownTimeScaleThing = reader.ReadSingle();
+                modelData.Unknown6 = reader.ReadBytes(12);
+                modelData.TimeScale = reader.ReadSingle();
 
-                modelData.UnknownField4 = new float[5];
+                modelData.UnknownField4 = new float[4];
 
-                for (int k = 0; k < 5; k++)
+                for (int k = 0; k < 4; k++)
                     modelData.UnknownField4[k] = reader.ReadSingle();
 
                 modelData.Scale = reader.ReadVector3();
@@ -87,8 +93,10 @@ namespace PIBLib
 
                 writer.Write(modelData.UnknownField2);
                 writer.Write(modelData.Lifetime);
-
-                writer.Write(modelData.UnknownField3);
+                writer.Write(modelData.Unknown2);
+                writer.Write(modelData.UnknownTimeScaleThing);
+                writer.Write(modelData.Unknown6);
+                writer.Write(modelData.TimeScale);
 
                 foreach (float f in modelData.UnknownField4)
                     writer.Write(f);

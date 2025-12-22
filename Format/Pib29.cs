@@ -37,5 +37,10 @@ namespace PIBLib
         {
             return Pib29To27.Convert(this);
         }
+
+        public Pib43 ToV43()
+        {
+            return Pib29To43.Convert(this);
+        }
     }
 }

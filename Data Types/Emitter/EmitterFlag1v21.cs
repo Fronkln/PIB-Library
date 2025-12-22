@@ -35,10 +35,10 @@ namespace PIBLib
         eFLG_METABALL_R = 1 << 0x18,
         Flag26 = 1 << 0x19,
         Flag27 = 1 << 0x1A,
-        Flag28 = 1 << 0x1B,
+        eFLG_SCREEN = 1 << 0x1B,
         Flag29 = 1 << 0x1C,
         Flag30 = 1 << 0x1D,
         Flag31 = 1 << 0x1E,
-        Flag32 = 1 << 0x1F,
+        eFLG_ON_TOP = 1 << 0x1F,
     }
 }

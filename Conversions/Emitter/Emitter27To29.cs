@@ -37,13 +37,36 @@ namespace PIBLib.Conversions
             emitter.CommonUnkStructure2 = unk2;
 
             EmitterFlag1v27 flags = (EmitterFlag1v27)emitter27.Flags;
+            //flags &= ~(EmitterFlag1v27)(1 << 31);
+
+            if (emitter.DDSHeader.TextureFormatFlag.HasFlag(8))
+            {
+               // emitter.DDSHeader.TextureFormatFlag &= ~8;
+               // emitter.DDSHeader.TextureFormatFlag |= 16;
+
+                //maybe i should always remove this)
+                //flags &= ~(EmitterFlag1v27.eFLG_UNK_V21_FLAG);
+                //flags &= ~(EmitterFlag1v27.eFLG_EMITTER_ANIM);
+            }
+
+
 
             int v29Flags = 0;
-            emitter.Flags3 = 0; //all OE pibs converted to DE had this as zero
+            int v29Flags3 = 0;
+            //2024: all OE pibs converted to DE had this as zero
+            //3.01.2025: me when i lie
 
+
+            if (emitter.Flags3.HasFlag((int)EmitterFlag3v27.Flag7))
+              v29Flags3 = v29Flags3.SetFlag((int)EmitterFlag3v29.eFLG_TEX_B_MODULATE);
+
+            emitter.Flags3 = v29Flags3;
+
+
+            /*
             if (emitter.Blend == 2 || emitter.Blend == 3)
                 emitter.Blend = 1;
-
+            */
 
             //Convert new flags to v27 flags
             foreach (Enum flag in flags.GetFlags())
@@ -61,9 +84,27 @@ namespace PIBLib.Conversions
                 }
             }
 
+            if(v29Flags.HasFlag(1 << 8))
+                emitter.Flags2 |= 72;
+            else
+                emitter.Flags2 |= 64;
+
+            if (emitter27.Flags3.HasFlag(128))
+                emitter.Flags2 |= 64;
+
+            if (emitter27.Flags3.HasFlag(1024))
+                emitter.Flags2 |= 128;
+
             //Fix flags
             //1 << 8 existed on FKs0005(brawler pib) it didnt have color, removing it made it blue (probably better)
             emitter.UnknownFlags_0x8 = emitter.UnknownFlags_0x8.RemoveFlag(1 << 8);
+
+            //Changed default behavor in DE? YAb0041 would use particle colors although it has alpha animation.
+            if(v29Flags.HasFlag((int)EmitterFlag1v29.eFLG_COLOR_ANIM))
+            {
+                foreach (var ptc in emitter.Source.Particles)
+                    ptc.Color.A = 0;
+            }
 
             switch (emitter27.Type)
             {

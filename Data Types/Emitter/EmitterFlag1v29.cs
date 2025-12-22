@@ -18,7 +18,7 @@ namespace PIBLib
         eFLG_LOOP = 1 << 0x7,
         eFLG_UNK_V21_FLAG = 1 << 0x8,
         eFLG_USE_NORMAL = 1 << 0x9,
-        Flag11 = 1 << 0xA,
+        eFLG_X_AXIS_NBB = 1 << 0xA,
         Flag12 = 1 << 0xB,
         eFLG_GLARE = 1 << 0xC,
         eFLG_SOFT_PTC = 1 << 0xD,
@@ -38,7 +38,7 @@ namespace PIBLib
         eFLG_ALWAYS = 1 << 0x1B,
         Flag29 = 1 << 0x1C,
         eFLG_COLOR_ANIM_MULTIPLE = 1 << 0x1D,
-        Flag31 = 1 << 0x1E,
-        Flag32 = 1 << 0x1F,
+        Flag31 = 1 << 30,
+        Flag32 = 1 << 31,
     }
 }

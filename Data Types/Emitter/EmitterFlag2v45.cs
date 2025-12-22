@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace PIBLib
 {
     //First 7 flags match with DE1. unsure about remaining, AAa0000
-    public enum EmitterFlag2v52 : int
+    public enum EmitterFlag2v45 : int
     {
         eFLG_FLOW = 1 << 0x0,
         eFLG_DRAW_SHADOW = 1 << 0x1,
@@ -19,8 +19,8 @@ namespace PIBLib
         eFLG_VTX_QUAD = 1 << 0x7,
         eFLG_COLOR_BLEND_MULTIPLE = 1 << 0x8,
         eFLG_SORT = 1 << 0x9,
-        eFLG_BLUR = 1 << 0xA,
-        eFLG_ATTENUATION_SPEED = 1 << 0xB,
+        Flag11 = 1 << 0xA,
+        eFLG_BLUR = 1 << 0xB,
         eFLG_ATTENUATION_SPEED_MINUS = 1 << 0xC,
         eFLG_COLLISION = 1 << 0xD,
         eFLG_SCALE_ANIM_MULTIPLE = 1 << 0xE,

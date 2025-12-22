@@ -222,6 +222,14 @@ namespace PIBLib
                     return pib.ToV25().ToV27();
                  case PibVersion.Y6:
                     return pib.ToV25().ToV27().ToV29();
+                case PibVersion.YK2:
+                    return pib.ToV25().ToV27().ToV29().ToV43();
+                case PibVersion.JE:
+                    return pib.ToV25().ToV27().ToV29().ToV43().ToV45();
+                case PibVersion.YLAD:
+                    return pib.ToV25().ToV27().ToV29().ToV43().ToV45().ToV52();
+                case PibVersion.LJ:
+                    return pib.ToV25().ToV27().ToV29().ToV43().ToV45().ToV52().ToV58();
             }
         }
 
@@ -260,6 +268,14 @@ namespace PIBLib
                     return pib.ToV25();
                 case PibVersion.Y6:
                     return pib.ToV29();
+                case PibVersion.YK2:
+                    return pib.ToV29().ToV43();
+                case PibVersion.JE:
+                    return pib.ToV29().ToV43().ToV45();
+                case PibVersion.YLAD:
+                    return pib.ToV29().ToV43().ToV45().ToV52();
+                case PibVersion.LJ:
+                    return pib.ToV29().ToV43().ToV45().ToV52().ToV58();
             }
         }
 
@@ -279,6 +295,14 @@ namespace PIBLib
                     return pib.ToV27().ToV25();
                 case PibVersion.Y0:
                     return pib.ToV27();
+                case PibVersion.YK2:
+                    return pib.ToV43();
+                case PibVersion.JE:
+                    return pib.ToV43().ToV45();
+                case PibVersion.YLAD:
+                    return pib.ToV43().ToV45().ToV52();
+                case PibVersion.LJ:
+                    return pib.ToV43().ToV45().ToV52().ToV58();
 
             }
         }
@@ -300,6 +324,8 @@ namespace PIBLib
                     return pib.ToV45();
                 case PibVersion.YLAD:
                     return pib.ToV45().ToV52();
+                case PibVersion.LJ:
+                    return pib.ToV45().ToV52().ToV58();
             }
         }
 
@@ -320,6 +346,8 @@ namespace PIBLib
                     return pib.ToV43();
                 case PibVersion.YLAD:
                     return pib.ToV52();
+                case PibVersion.LJ:
+                    return pib.ToV52().ToV58();
             }
         }
 

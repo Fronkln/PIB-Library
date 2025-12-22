@@ -5,12 +5,12 @@ namespace PIBLib
 {
     public class DEPibMetaballv43 : DEPibBaseMetaball
     {
-        public float LtEmissive;
-        public float LtReflection;
-        public float LtRefraction;
-        public float[] HltBefore = new float[2];
-        public float[] HltAfter = new float[2];
-        public float HltPower;
+        public float LtEmissive = 0;
+        public float LtReflection = 0.1f;
+        public float LtRefraction = 0.02f;
+        public float[] HltBefore = new float[2] { -0.9f, -0.6f };
+        public float[] HltAfter = new float[2] { -0.9f, -0.6f };
+        public float HltPower = 2;
 
         internal override void Read(DataReader reader)
         {

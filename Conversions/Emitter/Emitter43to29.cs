@@ -50,19 +50,18 @@ namespace PIBLib.Conversions
             emitter.PropertyAnimationCurve.RemoveAt(2);
 
             //???? yyj0004
-            if (emitter.DDSHeader.dwHeight >= 8)
-                emitter.DDSHeader.dwHeight = 6;
+            if (emitter.DDSHeader.TextureFormatFlag >= 8)
+                emitter.DDSHeader.TextureFormatFlag = 6;
 
-            if(emitter.Source is ParticleBillboardv29)
+
+            foreach (var ptc in emitter.Source.Particles)
             {
-                var billboardv29 = emitter.Source as ParticleBillboardv29;
+                float oldUnkTimeScale = ptc.UnknownTimeScaleThing;
 
-                foreach (ParticleBillboardDatav29 billboardDat in billboardv29.Particles)
-                {
-                    billboardDat.TimeScale /= 3000f;
-                    billboardDat.UnknownTimeScaleThing /= 1175f;
-                }
+                ptc.TimeScale /= 3000f;
+                ptc.UnknownTimeScaleThing = (float)Math.Round(ptc.TimeScale * oldUnkTimeScale, 8);
             }
+
 
             return emitter;
         }

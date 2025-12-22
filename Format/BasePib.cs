@@ -51,7 +51,7 @@ namespace PIBLib
                             texFile += ".dds";
 
                         if (!textures.Contains(texFile))
-                            textures.Add(str);
+                            textures.Add(texFile);
                     }
 
                 return textures.ToArray();

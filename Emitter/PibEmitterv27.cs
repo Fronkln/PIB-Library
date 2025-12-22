@@ -48,8 +48,16 @@ namespace PIBLib
             OOEUnkStructure2 = new OOEPibBaseUnkStructure2();
             OOEUnkStructure2.Read(reader);
 
-            MinSpread = reader.ReadVector3();
-            MaxSpread = reader.ReadVector3();
+            PositionOffset = reader.ReadVector3();
+            reader.Stream.Position += 4;
+
+            MinSpread = reader.ReadSingle();
+            UnkMinSpreadRegVal1 = reader.ReadSingle();
+            UnkMinSpreadRegVal2 = reader.ReadSingle();
+
+            MaxSpread = reader.ReadSingle();
+            UnkMaxSpreadRegVal1 = reader.ReadSingle();
+            UnkMaxSpreadRegVal2 = reader.ReadSingle();
 
             OEUnknown7 = reader.ReadSingle();
             OEUnknown8 = reader.ReadSingle();
@@ -82,7 +90,7 @@ namespace PIBLib
             int floatCount = (data1Size - 128) / 4;
             int chunkCount = (data1Size - 128) / 256;
 
-            ReadUnknownSection1(reader, data1Size - 128);
+            ReadAnimationCurves(reader, data1Size - 128);
 
             reader.Endianness = EndiannessMode.BigEndian;
             //End of endian swapped section
@@ -146,8 +154,15 @@ namespace PIBLib
             AnimationData.Write(writer);
             OOEUnkStructure2.Write(writer);
 
+            writer.Write(PositionOffset);
+            writer.Write(0);
+
             writer.Write(MinSpread);
+            writer.Write(UnkMinSpreadRegVal1);
+            writer.Write(UnkMinSpreadRegVal2);
             writer.Write(MaxSpread);
+            writer.Write(UnkMaxSpreadRegVal1);
+            writer.Write(UnkMaxSpreadRegVal2);
 
             writer.Write(OEUnknown7);
             writer.Write(OEUnknown8);
@@ -165,7 +180,7 @@ namespace PIBLib
             OOEUnkStructure5.Write(writer);
 
             //End of main data
-            WriteUnknownSection1(writer);
+            WriteAnimationCurves(writer);
 
             writer.Write(Textures.Count);
 

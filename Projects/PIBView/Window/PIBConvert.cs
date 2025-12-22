@@ -117,84 +117,98 @@ namespace PIBView
             PibVersion inputVersion = (PibVersion)Enum.Parse(typeof(PibVersion), inputBox.Items[inputBox.SelectedIndex].ToString());
             PibVersion outputVersion = (PibVersion)Enum.Parse(typeof(PibVersion), outputBox.Items[outputBox.SelectedIndex].ToString());
 
+
+            bool gaidenToLj = inputVersion == PibVersion.Gaiden && inputVersion <= PibVersion.LJ;
+            bool ljToGaiden = inputVersion <= PibVersion.LJ && outputVersion >= PibVersion.Gaiden;
+
 #if !DEBUG
             try
             {
 #endif
 
-                BasePib pib = PIB.Read(m_pibPath);
+            BasePib pib = PIB.Read(m_pibPath);
 
 
-                if (changeIdTextbox.Enabled)
-                    pib.ParticleID = uint.Parse(changeIdTextbox.Text);
+            if (changeIdTextbox.Enabled)
+                pib.ParticleID = uint.Parse(changeIdTextbox.Text);
 
-                if (pib == null)
+            if (pib == null)
+            {
+                throw new Exception("Error reading pib. Invalid or missing file");
+            }
+
+
+            BasePib converted = PIB.Convert(pib, outputVersion);
+
+            if (ljToGaiden || gaidenToLj)
+            {
+                foreach (PibEmitterv43 emitter in converted.Emitters)
                 {
-                    throw new Exception("Error reading pib. Invalid or missing file");
+                    if (ljToGaiden)
+                        emitter.ToGaidenRevision();
+                    else
+                        emitter.ToLJRevision();
                 }
+            }
 
+            PIB.Write(converted, m_outputPath);
 
-                BasePib converted = PIB.Convert(pib, outputVersion);
-                PIB.Write(converted, m_outputPath);
+            if (copyTexturesCheck.Checked)
+            {
+                string inpDir = new FileInfo(m_pibPath).Directory.FullName;
+                string outputDir = new FileInfo(m_outputPath).Directory.FullName;
 
-                if (copyTexturesCheck.Checked)
+                foreach (BasePibEmitter emitter in pib.Emitters)
                 {
-                    string inpDir = new FileInfo(m_pibPath).Directory.FullName;
-                    string outputDir = new FileInfo(m_outputPath).Directory.FullName;
-
-                    foreach (BasePibEmitter emitter in pib.Emitters)
+                    foreach (string texture in emitter.Textures)
                     {
-                        foreach (string texture in emitter.Textures)
+                        string ddsPath = TryFetchTexture(inpDir, texture); //Path.Combine(inpDir, texture);
+
+                        if (!string.IsNullOrEmpty(ddsPath))
                         {
-                            string ddsPath = TryFetchTexture(inpDir, texture); //Path.Combine(inpDir, texture);
-
-                            if (!string.IsNullOrEmpty(ddsPath))
+                            string ddsName = new FileInfo(ddsPath).Name;
+                            try
                             {
-                                string ddsName = new FileInfo(ddsPath).Name;
-                                try
-                                {
-                                    File.Copy(ddsPath, Path.Combine(outputDir, ddsName), true);
-                                }
-                                catch
-                                {
+                                File.Copy(ddsPath, Path.Combine(outputDir, ddsName), true);
+                            }
+                            catch
+                            {
 
-                                }
                             }
                         }
+                    }
 
-                        if (inputVersion >= PibVersion.YLAD)
+                    if (inputVersion >= PibVersion.YLAD)
+                    {
+                        if (emitter.GetEmitterType() == EmitterType.Model)
                         {
-                            if (emitter.GetEmitterType() == EmitterType.Model)
+                            PibEmitterv52 emitterv52 = emitter as PibEmitterv52;
+
+
+                            foreach (TextureImportInfo inf in emitterv52.TextureImports)
                             {
-                                PibEmitterv52 emitterv52 = emitter as PibEmitterv52;
-
-
-                                foreach (TextureImportInfo inf in emitterv52.TextureImports)
+                                foreach (TextureImportResource resource in inf.Resources)
                                 {
-                                    foreach (TextureImportResource resource in inf.Resources)
-                                    {
-                                        string gmdPath = TryFetchModel(inpDir, resource.Name); //Path.Combine(inpDir, texture);
+                                    string gmdPath = TryFetchModel(inpDir, resource.Name); //Path.Combine(inpDir, texture);
 
-                                        if (!string.IsNullOrEmpty(gmdPath))
-                                        {
-                                            string gmdName = new FileInfo(gmdPath).Name;
-                                            File.Copy(gmdPath, Path.Combine(outputDir, gmdName), true);
-                                        }
+                                    if (!string.IsNullOrEmpty(gmdPath))
+                                    {
+                                        string gmdName = new FileInfo(gmdPath).Name;
+                                        File.Copy(gmdPath, Path.Combine(outputDir, gmdName), true);
                                     }
                                 }
                             }
                         }
                     }
                 }
-
-                m_prefs.SetValue("input_game", inputBox.SelectedIndex);
-                m_prefs.SetValue("output_game", outputBox.SelectedIndex);
-                m_prefs.SetValue("last_path", m_pibPath);
-                m_prefs.SetValue("last_output_path", new FileInfo(m_outputPath).Directory.FullName);
-                m_prefs.Flush();
-
-                MessageBox.Show("Conversion complete");
             }
+
+            m_prefs.SetValue("input_game", inputBox.SelectedIndex);
+            m_prefs.SetValue("output_game", outputBox.SelectedIndex);
+            m_prefs.SetValue("last_path", m_pibPath);
+            m_prefs.SetValue("last_output_path", new FileInfo(m_outputPath).Directory.FullName);
+            m_prefs.Flush();
+        }
 #if !DEBUG
             catch (Exception ex)
             {

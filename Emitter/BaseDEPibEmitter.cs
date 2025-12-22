@@ -10,6 +10,8 @@ namespace PIBLib
 
         public DEPibEmitterBlurModule Blur = new DEPibEmitterBlurModule();
 
+        public float Gravity = 0;
+
         public float ShadowRate = -1;
 
         public float DirectivityH = -1;

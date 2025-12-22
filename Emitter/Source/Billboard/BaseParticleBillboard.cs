@@ -12,10 +12,6 @@ namespace PIBLib
         public float Start = 0;
         public Vector3 MoveDirection = new Vector3();
         public Vector3 Unknown1 = new Vector3();
-        public byte[] Unknown2 = new byte[12];
-        public float UnknownTimeScaleThing;
-        public byte[] Unknown6 = new byte[12];
-        public float TimeScale = 0.0003333333f;
         public Vector4 Unknown3;
         public Vector4 Scale = new Vector4(1, 1, 0, 0);
         public Vector4 Unknown4 = new Vector4(1, 1, 0, 0);

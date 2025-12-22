@@ -14,8 +14,9 @@ namespace PIBLib.Conversions
             PibEmitterv52 emitter = new PibEmitterv52();
             emitter58.CopyFields(emitter);
 
-            if (emitter.DDSHeader.dwHeight >= 12)
-                emitter.DDSHeader.dwHeight = 8;
+            //TODO:
+           // if (emitter.DDSHeader.TextureFormatFlag >= 12)
+                //emitter.DDSHeader.TextureFormatFlag = 8;
 
 
             //11.07.2024

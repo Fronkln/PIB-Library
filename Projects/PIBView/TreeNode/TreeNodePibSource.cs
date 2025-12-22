@@ -16,21 +16,10 @@ namespace PIBView
             Source = source;
             Text = "Source";
 
-            if(Source.GetDataType() == EmitterType.Billboard)
+            foreach(ParticleIns ins in source.GetData())
             {
-                foreach(BaseParticleBillboardData datas in source.GetData())
-                {
-                    TreeNodePibSourceDataBillboard billDataNode = new TreeNodePibSourceDataBillboard(datas);
-                    Nodes.Add(billDataNode);
-                }
-            }
-            else
-            {
-                foreach (BaseParticleModelData datas in source.GetData())
-                {
-                    TreeNodePibSourceDataModel modelDataNode = new TreeNodePibSourceDataModel(datas);
-                    Nodes.Add(modelDataNode);
-                }
+                TreeNodePibIns insNode = new TreeNodePibIns(ins);
+                Nodes.Add(insNode);
             }
         }
     }

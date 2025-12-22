@@ -43,8 +43,14 @@ namespace PIBLib
         /// </summary>
         public List<string> Textures = new List<string>();
 
-        public Vector3 MinSpread = new Vector3(0, 0, 0);
-        public Vector3 MaxSpread = new Vector3(1, 0, 0);
+        public float MinSpread = 0;
+        public float UnkMinSpreadRegVal1 = 0;
+        public float UnkMinSpreadRegVal2 = 0;
+
+        public float MaxSpread = 0;
+        public float UnkMaxSpreadRegVal1 = 0;
+
+        public Vector3 PositionOffset;
 
         //Size varies depending on Type
         public List<EmitterBaseDataChunk> UnknownData1 = new List<EmitterBaseDataChunk>();
@@ -68,7 +74,7 @@ namespace PIBLib
         }
 
 
-        protected virtual void ReadUnknownSection1(DataReader reader, int dataSize)
+        protected virtual void ReadAnimationCurves(DataReader reader, int dataSize)
         {
             PropertyAnimationCurve = new List<PibEmitterAnimationCurve>();
 
@@ -101,9 +107,15 @@ namespace PIBLib
             return 6;
         }
 
-        protected virtual void WriteUnknownSection1(DataWriter writer)
+        protected virtual void WriteAnimationCurves(DataWriter writer)
         {
-            writer.Write(128 + (PropertyAnimationCurve[0].GetDataSize() * PropertyAnimationCurve.Count));
+            int sizePerCurve = PropertyAnimationCurve[0].GetDataSize();
+            int expectedCurveCount = GetPropertyAnimationCurveCount();
+
+            if (PropertyAnimationCurve.Count != GetPropertyAnimationCurveCount())
+                throw new System.Exception("Animation curve count mismatch, expected: " + expectedCurveCount + " got: " + PropertyAnimationCurve.Count);
+
+            writer.Write(128 + (sizePerCurve * PropertyAnimationCurve.Count));
             DDSHeader.Write(writer);
 
             foreach (PibEmitterAnimationCurve animCurve in PropertyAnimationCurve)

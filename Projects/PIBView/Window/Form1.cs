@@ -1,4 +1,6 @@
 using PIBLib;
+using PIBView.Window;
+using System.Windows.Forms;
 
 namespace PIBView
 {
@@ -7,7 +9,7 @@ namespace PIBView
         public static PibVersion pibVersion;
         string filePath = null;
 
-        public static Form1 Instance;
+        public static Form1 Instance = null;
 
 
         public Form1()
@@ -93,6 +95,8 @@ namespace PIBView
                     DrawPibEmitter(e.Node as TreeNodePibEmitter);
                 else if (e.Node is TreeNodePib)
                     DrawPib(e.Node as TreeNodePib);
+                else if (e.Node is TreeNodePibIns)
+                    DrawPibParticle(e.Node as TreeNodePibIns);
                 else if (e.Node is TreeNodePibMetaball)
                     MetaballDraw.Draw(this, (e.Node as TreeNodePibMetaball));
                 else if (e.Node is TreeNodePibAnimationData)
@@ -170,6 +174,24 @@ namespace PIBView
             }
         }
 
+
+
+        private void DrawPibParticle(TreeNodePibIns insNode)
+        {
+            CreateHeader("Particle Ins");
+
+            Panel colorPanel = null;
+
+            Color fixedCol = Color.FromArgb(255, insNode.Ins.Color.R, insNode.Ins.Color.G, insNode.Ins.Color.B);
+
+            colorPanel = CreatePanel("Color", fixedCol,
+                delegate (Color col)
+                {
+                    insNode.Ins.Color = col;
+                    colorPanel.BackColor = col;
+                });
+
+        }
         private bool DrawSpecialFlag1(BasePibEmitter emitter)
         {
             string[] flagsList = GetFlag1List().Select(x => x.Replace("eFLG_", "")).ToArray();
@@ -330,8 +352,13 @@ namespace PIBView
         {
             string[] values = null;
 
-            if (pibVersion >= PibVersion.Y6)
+            if (pibVersion >= PibVersion.LJ)
+                values = Enum.GetNames<EmitterFlag2v58>();
+
+            if (pibVersion >= PibVersion.YLAD)
                 values = Enum.GetNames<EmitterFlag2v52>();
+            else if(pibVersion >= PibVersion.Y6)
+                values = Enum.GetNames<EmitterFlag2v45>();
 
             if (pibVersion <= PibVersion.Y5)
                 values = Enum.GetNames<EmitterFlag2v21>();
@@ -380,10 +407,12 @@ namespace PIBView
         {
             string[] values = null;
 
+            /*
             if (pibVersion == PibVersion.Y5)
                 values = Enum.GetNames<EmitterFlag4v21>();
             else if (pibVersion >= PibVersion.Ishin)
                 values = Enum.GetNames<EmitterFlag4v27>();
+            */
 
             if (values == null)
             {
@@ -592,65 +621,76 @@ namespace PIBView
             if (pibTree.SelectedNode == null || pibTree.SelectedNode as TreeNodePibEmitter == null)
                 return;
 
-            TreeNodePibEmitter emitterNode = pibTree.SelectedNode as TreeNodePibEmitter;
-            BasePibEmitter emitter = emitterNode.Emitter;
-
-            Color baseColor = new Color();
-
-            if(emitter.IsUseColorCurve())
+            ColorChangePrompt prompt = new ColorChangePrompt();
+            prompt.Show();
+            prompt.Init(delegate (int mode)
             {
-                PibEmitterAnimationCurveColor colorCurve = emitter.GetColorCurve();
-                baseColor = colorCurve.Values[0];
-            }
-            else if(emitter.IsMetaball())
-            {
-                baseColor = emitter.Metaball.Color;
-            }
-            else
-            {
-                if (emitter.Source.Particles.Count > 0)
-                    baseColor = emitter.Source.Particles[0].Color;
-            }
+                TreeNodePibEmitter emitterNode = pibTree.SelectedNode as TreeNodePibEmitter;
+                BasePibEmitter emitter = emitterNode.Emitter;
 
+                Color baseColor = new Color();
 
-            ColorView colView = new ColorView();
-            colView.Init(baseColor, delegate(Color newCol)
-            {
-                //dont touch alpha
-
-                if (emitter.IsUseColorCurve())
+                switch(mode)
                 {
-                    PibEmitterAnimationCurveColor colorCurve = emitter.GetColorCurve();
-                    RGBA32F newColor = newCol;
-                    
-                    for(int i = 0; i < colorCurve.Values.Length; i++)
+                    case 0:
+                        PibEmitterAnimationCurveColor colorCurve = emitter.GetColorCurve();
+                        baseColor = colorCurve.Values[0];
+                        break;
+                    case 1:
+                        if (emitter.Source.Particles.Count > 0)
+                        {
+                            baseColor = emitter.Source.Particles[0].Color;
+
+                            if (baseColor.A == 0)
+                                baseColor = Color.FromArgb(255, baseColor.R, baseColor.G, baseColor.B);
+                        }
+                        break;
+                    case 2:
+                        baseColor = emitter.Metaball.Color;
+                        break;
+
+                }
+
+                ColorView colView = new ColorView();
+                colView.Init(baseColor, delegate (Color newCol)
+                {
+                    switch(mode)
                     {
-                        RGBA32F col = colorCurve.Values[i];
-                        col.R = newCol.R;
-                        col.G = newCol.G;
-                        col.B = newCol.B;
+                        case 0:
+                            PibEmitterAnimationCurveColor colorCurve = emitter.GetColorCurve();
+                            RGBA32F newColor = newCol;
+                            //dont touch alpha
+                            for (int i = 0; i < colorCurve.Values.Length; i++)
+                            {
+                                RGBA32F col = colorCurve.Values[i];
+                                float oldA = col.A;
+                                col = newCol;
+                                col.A = oldA;
 
-                        colorCurve.Values[i] = col;
-                    }
-                }
-                else if (emitter.IsMetaball())
-                {
-                    emitter.Metaball.Color = newCol;
-                }
-                else
-                {
-                    for (int i = 0; i < emitter.Source.Particles.Count; i++)
-                    {
-                        RGBA col = emitter.Source.Particles[i].Color;
-                        col.R = newCol.R;
-                        col.G = newCol.G;
-                        col.B = newCol.B;
+                                colorCurve.Values[i] = col;
+                            }
+                            break;
+                        case 1:
+                            for (int i = 0; i < emitter.Source.Particles.Count; i++)
+                            {
+                                newCol = colView.GetColor();
 
-                        emitter.Source.Particles[i].Color = col;
+                                RGBA col = emitter.Source.Particles[i].Color;
+                                col.R = newCol.R;
+                                col.G = newCol.G;
+                                col.B = newCol.B;
+
+                                emitter.Source.Particles[i].Color = col;
+                            }
+                            break;
+                        case 2:
+                            emitter.Metaball.Color = newCol;
+                            break;
                     }
-                }
+                });
+                colView.Visible = true;
             });
-            colView.Visible = true;
-        }
+
+       }
     }
 }

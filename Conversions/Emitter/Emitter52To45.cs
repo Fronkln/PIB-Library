@@ -40,6 +40,7 @@ namespace PIBLib.Conversions
                     emitter.Textures[i] += ".dds";
 
             EmitterFlag1v52 flags = (EmitterFlag1v52)emitter52.Flags;
+            int flags2 = (int)emitter52.Flags2;
             EmitterFlag3v52 flags3 = (EmitterFlag3v52)emitter52.Flags3;
             uint de1Flags = 0;
             uint de1Flags3 = 0;
@@ -71,18 +72,52 @@ namespace PIBLib.Conversions
             //Convert new flags to v45 flags
             foreach (Enum flag in flags.GetFlags())
             {
-                string flagStr = flag.ToString();
-                uint de1Value = System.Convert.ToUInt32(Enum.Parse(typeof(EmitterFlag1v45), flagStr));
+                try
+                {
+                    string flagStr = flag.ToString();
+                    uint de1Value = System.Convert.ToUInt32(Enum.Parse(typeof(EmitterFlag1v45), flagStr));
 
-                de1Flags |= de1Value;
+                    de1Flags |= de1Value;
+                }
+                catch
+                {
+
+                }
             }
+
+            //18.11.2024 qsr0265-qsc0265 weirdness?
+            if(flags2.HasFlag((int)EmitterFlag2v52.eFLG_TRACK_CROSS))
+            {
+                flags2 &= (int)~EmitterFlag2v52.eFLG_TRACK_CROSS;
+                flags2 |= (1 << 28);
+            }
+
+            if (flags2.HasFlag((int)EmitterFlag2v52.eFLG_TRACK_OVERWRITE))
+            {
+                flags2 &= (int)~EmitterFlag2v52.eFLG_TRACK_OVERWRITE;
+                flags2 |= (1 << 31);
+            }
+
+            //18.11.2024 qsr0265-qsc0265 weirdness?
+            bool shouldAdjustTextures = emitter.UnkNumbers_TextureTable_V42.Any(x => x <= 2);
+
+            if (shouldAdjustTextures)
+                for (int i = 0; i < emitter.UnkNumbers_TextureTable_V42.Length; i++)
+                    emitter.UnkNumbers_TextureTable_V42[i] += 2;
 
             //Convert new flags3 to v45 flags3
             foreach (Enum flag in flags3.GetFlags())
             {
-                string flagStr = flag.ToString();
-                uint de2Value = System.Convert.ToUInt32(Enum.Parse(typeof(EmitterFlag3v43), flagStr));
-                de1Flags3 |= de2Value;
+                try
+                {
+                    string flagStr = flag.ToString();
+                    uint de2Value = System.Convert.ToUInt32(Enum.Parse(typeof(EmitterFlag3v43), flagStr));
+                    de1Flags3 |= de2Value;
+                }
+                catch
+                {
+
+                }
             }
 
             //09.07.2024 Yyj0056
@@ -93,11 +128,14 @@ namespace PIBLib.Conversions
 
 
             emitter.Flags = (int)de1Flags;
-            emitter.Flags2 = System.Convert.ToInt32(emitter52.Flags2);
+            emitter.Flags2 = (int)flags2;
             emitter.Flags3 = (int)de1Flags3;
 
             emitter.PropertyAnimationCurve.RemoveAt(2);
             emitter.PropertyAnimationCurve.Add(new PibEmitterAnimationCurveGeneric() { Values = new float[emitter.PropertyAnimationCurve[0].GetDataSize() / 4] });
+
+            //DDS header flags
+            emitter.DDSHeader.TextureFormat &= ~4;
 
             //DE 1.0: UV size on Geo VTX Chunk
             if (emitter.UnknownData1.Count == 4)

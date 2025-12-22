@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Yarhl.IO;
 
 namespace PIBLib
@@ -25,6 +26,8 @@ namespace PIBLib
         public Vector3 ModelOffset = Vector3.zero;
 
         public float RimBlendCurve;
+
+        public Vector4 UnkVecV52 = new Vector4(1, 1, 1, 1);
 
         public List<TextureImportInfo> TextureImports = new List<TextureImportInfo>();
 
@@ -116,16 +119,25 @@ namespace PIBLib
             AnimationData = new EmitterAnimationDataDE();
             AnimationData.Read(reader);
 
+            v45Unk1 = new DEPibv45UnkStructure1();
+            v45Unk1.Read(reader);
+
             UnkStructure2 = new OOEPibBaseUnkStructure2();
             UnkStructure2.Read(reader);
 
-            MinSpread = reader.ReadVector3();
-            MaxSpread = reader.ReadVector3();
+            PositionOffset = reader.ReadVector3();
+            ParticleCount2 = reader.ReadInt32();
+
+            MinSpread = reader.ReadSingle();
+            UnkMinSpreadRegVal1 = reader.ReadSingle();
+            UnkMinSpreadRegVal2 = reader.ReadSingle();
+
+            MaxSpread = reader.ReadSingle();
+            UnkVecV52 = reader.ReadVector4();
+            UnkMaxSpreadRegVal1 = reader.ReadSingle();
+            Gravity = reader.ReadSingle();
 
             UnkVal1 = reader.ReadSingle();
-
-            v45Unk1 = new DEPibv52UnkStructure1();
-            v45Unk1.Read(reader);
 
             CommonUnkStructure2 = new DEPibCommonUnkStructure2();
             CommonUnkStructure2.Read(reader);
@@ -144,7 +156,7 @@ namespace PIBLib
             int floatCount = (data1Size - 128) / 4;
             int chunkCount = (data1Size - 128) / 256;
 
-            ReadUnknownSection1(reader, data1Size - 128);
+            ReadAnimationCurves(reader, data1Size - 128);
 
             EmitterType emitterType = GetEmitterType();
 
@@ -258,14 +270,23 @@ namespace PIBLib
             writer.WriteTimes(0, 20);
 
             AnimationData.Write(writer);
+            v45Unk1.Write(writer);
             UnkStructure2.Write(writer);
 
+            writer.Write(PositionOffset);
+            writer.Write(ParticleCount2);
+
             writer.Write(MinSpread);
+            writer.Write(UnkMinSpreadRegVal1);
+            writer.Write(UnkMinSpreadRegVal2);
+
             writer.Write(MaxSpread);
+            writer.Write(UnkVecV52);
+            writer.Write(UnkMaxSpreadRegVal1);
+            writer.Write(Gravity);
 
             writer.Write(UnkVal1);
 
-            v45Unk1.Write(writer);
             CommonUnkStructure2.Write(writer);
 
             writer.Write(UnkVal2);
@@ -275,7 +296,7 @@ namespace PIBLib
 
             UnkStructure5.Write(writer);
 
-            WriteUnknownSection1(writer);
+            WriteAnimationCurves(writer);
 
             WriteTextureImports(writer, version);
 
@@ -299,14 +320,10 @@ namespace PIBLib
                 return count;
             }
 
+            //YLAD does not use texture resources
             List<string> GetAllResources()
             {
-                List<string> resources = new List<string>();
-
-                foreach (var inf in TextureImports)
-                    resources.AddRange(inf.Resources.Select(x => x.Name));
-
-                return resources;
+                return new List<string>();
             }
 
             writer.Write(Textures.Count);
@@ -341,7 +358,7 @@ namespace PIBLib
                 return EmitterType.Model;
         }
 
-        protected override void ReadUnknownSection1(DataReader reader, int dataSize)
+        protected override void ReadAnimationCurves(DataReader reader, int dataSize)
         {
             PropertyAnimationCurve = new List<PibEmitterAnimationCurve>();
 

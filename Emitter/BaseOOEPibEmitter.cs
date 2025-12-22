@@ -29,7 +29,9 @@ namespace PIBLib
 
         public Vector3 UnkRegion1;
 
-        protected override void WriteUnknownSection1(DataWriter writer)
+        public float UnkMaxSpreadRegVal2 = 0;
+
+        protected override void WriteAnimationCurves(DataWriter writer)
         {
             writer.Write(128 + (PropertyAnimationCurve[0].GetDataSize() * PropertyAnimationCurve.Count));
             writer.Endianness = EndiannessMode.LittleEndian;

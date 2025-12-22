@@ -99,21 +99,21 @@
             // pIBConvertToolStripMenuItem
             // 
             pIBConvertToolStripMenuItem.Name = "pIBConvertToolStripMenuItem";
-            pIBConvertToolStripMenuItem.Size = new Size(147, 22);
+            pIBConvertToolStripMenuItem.Size = new Size(180, 22);
             pIBConvertToolStripMenuItem.Text = "PIB Convert";
             pIBConvertToolStripMenuItem.Click += pIBConvertToolStripMenuItem_Click;
             // 
             // findPIBByIDToolStripMenuItem
             // 
             findPIBByIDToolStripMenuItem.Name = "findPIBByIDToolStripMenuItem";
-            findPIBByIDToolStripMenuItem.Size = new Size(147, 22);
+            findPIBByIDToolStripMenuItem.Size = new Size(180, 22);
             findPIBByIDToolStripMenuItem.Text = "Find PIB by ID";
             findPIBByIDToolStripMenuItem.Click += findPIBByIDToolStripMenuItem_Click;
             // 
             // changeColorToolStripMenuItem
             // 
             changeColorToolStripMenuItem.Name = "changeColorToolStripMenuItem";
-            changeColorToolStripMenuItem.Size = new Size(147, 22);
+            changeColorToolStripMenuItem.Size = new Size(180, 22);
             changeColorToolStripMenuItem.Text = "Change Color";
             changeColorToolStripMenuItem.Click += changeColorToolStripMenuItem_Click;
             // 
@@ -175,7 +175,6 @@
         private ToolStripDropDownButton toolStripDropDownButton1;
         private ToolStripMenuItem openToolStripMenuItem;
         private ToolStripMenuItem saveToolStripMenuItem;
-        private TreeView pibTree;
         private TableLayoutPanel varPanel;
         private Panel panel1;
         private ToolStripSplitButton toolStripSplitButton1;
@@ -183,5 +182,6 @@
         private ToolStripMenuItem saveAsToolStripMenuItem;
         private ToolStripMenuItem findPIBByIDToolStripMenuItem;
         private ToolStripMenuItem changeColorToolStripMenuItem;
+        public TreeView pibTree;
     }
 }
