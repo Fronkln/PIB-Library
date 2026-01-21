@@ -50,7 +50,7 @@ namespace PIBLib.Conversions
             long de2Flags3 = 0;
 
             //eFLG_UNK_V43_FLAG which doesnt exist in DE2 at a first glance?
-            flags &= ~EmitterFlag1v45.eFLG_UNK_V43_FLAG;
+            flags &= ~EmitterFlag1v45.eFLG_UNK_V29_FLAG;
 
             //Doesnt exist in DE2 at a first glance?
             flags2 &= ~EmitterFlag2v45.Flag11;
@@ -63,9 +63,9 @@ namespace PIBLib.Conversions
             foreach (Enum flag in flags.GetFlags())
             {
                 string flagStr = flag.ToString();
-                int de2Value = System.Convert.ToInt32(Enum.Parse(typeof(EmitterFlag1v52), flagStr));
+                long de2Value = System.Convert.ToInt64(Enum.Parse(typeof(EmitterFlag1v52), flagStr));
 
-                de2Flags |= (long)de2Value;
+                de2Flags |= de2Value;
             }
 
 
@@ -73,7 +73,7 @@ namespace PIBLib.Conversions
             foreach (Enum flag in flags2.GetFlags())
             {
                 string flagStr = flag.ToString();
-                int de2Value = System.Convert.ToInt32(Enum.Parse(typeof(EmitterFlag2v52), flagStr));
+                long de2Value = System.Convert.ToInt64(Enum.Parse(typeof(EmitterFlag2v52), flagStr));
 
                 de2Flags2 |= (long)de2Value;
             }
@@ -84,7 +84,7 @@ namespace PIBLib.Conversions
                 string flagStr = flag.ToString();
                 try
                 {
-                    int de2Value = System.Convert.ToInt32(Enum.Parse(typeof(EmitterFlag3v52), flagStr));
+                    long de2Value = System.Convert.ToInt64(Enum.Parse(typeof(EmitterFlag3v52), flagStr));
                     de2Flags3 |= (long)de2Value;
                 }
                 catch

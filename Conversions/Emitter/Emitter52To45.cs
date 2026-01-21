@@ -99,11 +99,11 @@ namespace PIBLib.Conversions
             }
 
             //18.11.2024 qsr0265-qsc0265 weirdness?
-            bool shouldAdjustTextures = emitter.UnkNumbers_TextureTable_V42.Any(x => x <= 2);
+            bool shouldAdjustTextures = emitter.TextureShaderIndices.Any(x => x <= 2);
 
             if (shouldAdjustTextures)
-                for (int i = 0; i < emitter.UnkNumbers_TextureTable_V42.Length; i++)
-                    emitter.UnkNumbers_TextureTable_V42[i] += 2;
+                for (int i = 0; i < emitter.TextureShaderIndices.Length; i++)
+                    emitter.TextureShaderIndices[i] += 2;
 
             //Convert new flags3 to v45 flags3
             foreach (Enum flag in flags3.GetFlags())
@@ -120,13 +120,6 @@ namespace PIBLib.Conversions
                 }
             }
 
-            //09.07.2024 Yyj0056
-            if (((EmitterFlag3v52)emitter52.Flags3).HasFlag(EmitterFlag3v52.eFLG_TEX_B_NORMAL_REFRACTION))
-            {
-                de1Flags3 |= (uint)EmitterFlag3v43.eFLG_TEX_REFLECTION;
-            }
-
-
             emitter.Flags = (int)de1Flags;
             emitter.Flags2 = (int)flags2;
             emitter.Flags3 = (int)de1Flags3;
@@ -138,6 +131,30 @@ namespace PIBLib.Conversions
             emitter.DDSHeader.TextureFormat &= ~4;
 
             //DE 1.0: UV size on Geo VTX Chunk
+
+            if(!emitter.IsMetaball())
+            {
+
+            }
+            else
+            {
+                EmitterBaseDataChunk[] chunks = emitter.UnknownData1.Cast<EmitterBaseDataChunk>().ToArray();
+
+                emitter.UnknownData1[2].Data[3] = emitter52.UV.UVSize[0].x;
+                emitter.UnknownData1[3].Data[3] = emitter52.UV.UVSize[0].x;
+                emitter.UnknownData1[1].Data[4] = emitter52.UV.UVSize[0].y;
+                emitter.UnknownData1[2].Data[4] = emitter52.UV.UVSize[0].y;
+
+
+                emitter.UnknownData1[1].Data[5] = emitter52.UV.UVSize[1].x;
+                emitter.UnknownData1[3].Data[5] = emitter52.UV.UVSize[1].x;
+                emitter.UnknownData1[1].Data[6] = emitter52.UV.UVSize[1].y;
+                emitter.UnknownData1[2].Data[6] = emitter52.UV.UVSize[1].y;
+
+                emitter.UnknownData1 = chunks.ToList();
+            }
+
+            /*
             if (emitter.UnknownData1.Count == 4)
             {
                 emitter.UnknownData1[0].Data[7] = emitter.UV.UVSize[1].x;
@@ -172,6 +189,7 @@ namespace PIBLib.Conversions
                 emitter.UnknownData1[3].Data[9] = 0; //??? yjh0038
                 emitter.UnknownData1[3].Data[10] = emitter.UV.UVSize[2].y;
             }
+            */
 
             return emitter;
         }

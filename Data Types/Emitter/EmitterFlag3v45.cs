@@ -1,6 +1,6 @@
 ﻿namespace PIBLib
 {
-    public enum EmitterFlag3v43 : int
+    public enum EmitterFlag3v45 : int
     {
         eFLG_LIGHTING_ONESHOT = 1 << 0x0,
         eFLG_LIGHTING_G_BUFFER = 1 << 0x1,
@@ -22,5 +22,8 @@
         eFLG_TEX_A_PATTERN_BLEND = 1 << 0x11,
         eFLG_TEX_B_PATTERN_BLEND = 1 << 0x12,
         eFLG_TEX_A2_PATTERN_BLEND = 1 << 0x13,
+        eFLG_VAT_TYPE_FLUID = 1 << 0x14,
+        eFLG_VAT_TYPE_SOFT = 1 << 0x15,
+        eFLG_VAT_FRAME_LOOP = 1 << 0x16,
     }
 }

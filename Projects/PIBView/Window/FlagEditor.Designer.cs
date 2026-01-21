@@ -35,17 +35,19 @@
             // checkedListBox1
             // 
             checkedListBox1.FormattingEnabled = true;
-            checkedListBox1.Location = new Point(35, 12);
+            checkedListBox1.Location = new Point(40, 16);
+            checkedListBox1.Margin = new Padding(3, 4, 3, 4);
             checkedListBox1.Name = "checkedListBox1";
-            checkedListBox1.Size = new Size(236, 328);
+            checkedListBox1.Size = new Size(318, 422);
             checkedListBox1.TabIndex = 0;
             checkedListBox1.ItemCheck += checkedListBox1_ItemCheck;
             // 
             // button1
             // 
-            button1.Location = new Point(35, 360);
+            button1.Location = new Point(40, 480);
+            button1.Margin = new Padding(3, 4, 3, 4);
             button1.Name = "button1";
-            button1.Size = new Size(236, 23);
+            button1.Size = new Size(318, 31);
             button1.TabIndex = 1;
             button1.Text = "OK";
             button1.UseVisualStyleBackColor = true;
@@ -53,11 +55,12 @@
             // 
             // FlagEditor
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(324, 395);
+            ClientSize = new Size(370, 527);
             Controls.Add(button1);
             Controls.Add(checkedListBox1);
+            Margin = new Padding(3, 4, 3, 4);
             Name = "FlagEditor";
             Text = "Flag Editor";
             FormClosed += FlagEditor_FormClosed;

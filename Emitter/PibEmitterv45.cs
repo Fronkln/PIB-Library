@@ -127,10 +127,10 @@ namespace PIBLib
                 Source = new ParticleModelv29();
 
             int textureCount = reader.ReadInt32();
-            UnkNumbers_TextureTable_V42 = new int[textureCount];
+            TextureShaderIndices = new int[textureCount];
 
             for (int i = 0; i < textureCount; i++)
-                UnkNumbers_TextureTable_V42[i] = reader.ReadInt32();
+                TextureShaderIndices[i] = reader.ReadInt32();
 
             for (int i = 0; i < textureCount; i++)
                 Textures.Add(reader.ReadString(32).Split(new[] { '\0' }, 2)[0]);
@@ -243,7 +243,7 @@ namespace PIBLib
             writer.Write(Textures.Count);
 
             for (int i = 0; i < Textures.Count; i++)
-                writer.Write(UnkNumbers_TextureTable_V42[i]);
+                writer.Write(TextureShaderIndices[i]);
 
             foreach (string str in Textures)
                 writer.Write(str.ToLength(32));

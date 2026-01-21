@@ -25,7 +25,7 @@ namespace PIBLib
 
         public int ParticleCount2;
 
-        public int[] UnkNumbers_TextureTable_V42;
+        public int[] TextureShaderIndices;
 
         public byte[] UnkReg1_43_45;
 
@@ -143,10 +143,10 @@ namespace PIBLib
                 Source = new ParticleModelv29();
 
             int textureCount = reader.ReadInt32();
-            UnkNumbers_TextureTable_V42 = new int[textureCount];
+            TextureShaderIndices = new int[textureCount];
 
             for (int i = 0; i < textureCount; i++)
-                UnkNumbers_TextureTable_V42[i] = reader.ReadInt32();
+                TextureShaderIndices[i] = reader.ReadInt32();
 
             for (int i = 0; i < textureCount; i++)
                 Textures.Add(reader.ReadString(32).Split(new[] { '\0' }, 2)[0]);
@@ -284,7 +284,7 @@ namespace PIBLib
             writer.Write(Textures.Count);
 
             for (int i = 0; i < Textures.Count; i++)
-                writer.Write(UnkNumbers_TextureTable_V42[i]);
+                writer.Write(TextureShaderIndices[i]);
 
             foreach (string str in Textures)
                 writer.Write(str.ToLength(32));
@@ -368,8 +368,8 @@ namespace PIBLib
         /// </summary>
         public void ToGaidenRevision()
         {
-            for (int i = 0; i < UnkNumbers_TextureTable_V42.Length; i++)
-                UnkNumbers_TextureTable_V42[i] += 2;
+            for (int i = 0; i < TextureShaderIndices.Length; i++)
+                TextureShaderIndices[i] += 2;
         }
 
         /// <summary>
@@ -377,8 +377,8 @@ namespace PIBLib
         /// </summary>
         public void ToLJRevision()
         {
-            for (int i = 0; i < UnkNumbers_TextureTable_V42.Length; i++)
-                UnkNumbers_TextureTable_V42[i] -= 2;
+            for (int i = 0; i < TextureShaderIndices.Length; i++)
+                TextureShaderIndices[i] -= 2;
         }   
     }
 }

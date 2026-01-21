@@ -117,21 +117,25 @@ namespace PIBLib
             AnimationData = new EmitterAnimationDataDE();
             AnimationData.Read(reader);
 
+            v45Unk1 = new DEPibv45UnkStructure1();
+            v45Unk1.Read(reader);
+
             UnkStructure2 = new OOEPibBaseUnkStructure2();
             UnkStructure2.Read(reader);
+
+            PositionOffset = reader.ReadVector3();
+            ParticleCount2 = reader.ReadInt32();
 
             MinSpread = reader.ReadSingle();
             UnkMinSpreadRegVal1 = reader.ReadSingle();
             UnkMinSpreadRegVal2 = reader.ReadSingle();
 
             MaxSpread = reader.ReadSingle();
+            UnkVecV52 = reader.ReadVector4();
             UnkMaxSpreadRegVal1 = reader.ReadSingle();
             Gravity = reader.ReadSingle();
 
             UnkVal1 = reader.ReadSingle();
-
-            v45Unk1 = new DEPibv52UnkStructure1();
-            v45Unk1.Read(reader);
 
             CommonUnkStructure2 = new DEPibCommonUnkStructure2();
             CommonUnkStructure2.Read(reader);
@@ -251,18 +255,23 @@ namespace PIBLib
             writer.Write(UnkVec_58_1);
 
             AnimationData.Write(writer);
+            v45Unk1.Write(writer);
             UnkStructure2.Write(writer);
+
+            writer.Write(PositionOffset);
+            writer.Write(ParticleCount2);
 
             writer.Write(MinSpread);
             writer.Write(UnkMinSpreadRegVal1);
             writer.Write(UnkMinSpreadRegVal2);
+
             writer.Write(MaxSpread);
+            writer.Write(UnkVecV52);
             writer.Write(UnkMaxSpreadRegVal1);
             writer.Write(Gravity);
 
             writer.Write(UnkVal1);
 
-            v45Unk1.Write(writer);
             CommonUnkStructure2.Write(writer);
 
             writer.Write(UnkVal2);
@@ -286,10 +295,10 @@ namespace PIBLib
 
         internal protected override void ReadTextureImports(DataReader reader, int textureCount)
         {
-            UnkNumbers_TextureTable_V42 = new int[textureCount];
+            TextureShaderIndices = new int[textureCount];
 
             for (int i = 0; i < textureCount; i++)
-                UnkNumbers_TextureTable_V42[i] = reader.ReadInt32();
+                TextureShaderIndices[i] = reader.ReadInt32();
 
             for (int i = 0; i < textureCount; i++)
                 Textures.Add(reader.ReadString(32).Split(new[] { '\0' }, 2)[0]);
@@ -323,7 +332,7 @@ namespace PIBLib
             writer.Write(Textures.Count);
 
             for (int i = 0; i < Textures.Count; i++)
-                writer.Write(UnkNumbers_TextureTable_V42[i]);
+                writer.Write(TextureShaderIndices[i]);
 
             foreach (string str in Textures)
                 writer.Write(str.ToLength(32));

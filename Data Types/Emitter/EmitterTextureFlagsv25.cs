@@ -1,16 +1,16 @@
 ﻿namespace PIBLib
 {
-    public enum EmitterFlag4v27 : int
+    public enum EmitterTextureFlagsv25 : int
     {
         Flag1 = 1 << 0,
-        UNK_V21_FLAG_1 = 1 << 1,
+        NO_EXTRA_COLOR = 1 << 1,
         Flag3 = 1 << 2,
-        Flag4 = 1 << 3,
+        APPEAR_BEHIND_MODEL = 1 << 3,
         Flag5 = 1 << 4,
-        UNK_V21_FLAG_6 = 1 << 5,
-        Flag7 = 1 << 6,
-        UNK_V21_FLAG_7 = 1 << 7,
-        Flag9 = 1 << 8,
+        ENABLE_SECOND_TEXTURE = 1 << 5,
+        SECOND_TEXTURE_NORMALMAP = 1 << 6,
+        Flag8 = 1 << 7,
+        SECOND_TEXTURE_FLOW = 1 << 8,
         Flag10 = 1 << 9,
         Flag11 = 1 << 10,
         Flag12 = 1 << 11,

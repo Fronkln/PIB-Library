@@ -5,8 +5,6 @@ namespace PIBLib
 {
     public class PibEmitterv27 : PibEmitterv25
     {
-        public int UnknownV27 = 0;
-
         public OEPibUnkStructure1v27 OEUnkStructure1 = new OEPibUnkStructure1v27();
 
         internal override void Read(DataReader reader, PibVersion version)
@@ -15,7 +13,7 @@ namespace PIBLib
             Flags2 = reader.ReadInt32();
             Flags3 = reader.ReadInt32();
 
-            UnknownV27 = reader.ReadInt32();
+            TextureFlags = reader.ReadInt32();
             Blend = reader.ReadByte();
             Type = reader.ReadByte();
             reader.Stream.Position += 1;
@@ -128,7 +126,7 @@ namespace PIBLib
             writer.Write(Flags2);
             writer.Write(Flags3);
 
-            writer.Write(UnknownV27);
+            writer.Write(TextureFlags);
             writer.Write(Blend);
             writer.Write((byte)Type);
             writer.WriteTimes(0, 1);

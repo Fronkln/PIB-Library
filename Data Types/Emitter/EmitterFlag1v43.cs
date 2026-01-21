@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PIBLib
+﻿namespace PIBLib
 {
     public enum EmitterFlag1v43 : int
     {
@@ -15,16 +9,16 @@ namespace PIBLib
         eFLG_UV_ANIM = 1 << 4,
         eFLG_AXIS_ANIM = 1 << 5,
         eFLG_BILLBOARD = 1 << 6,
-        Flag8 = 1 << 7,
+        eFLG_MESH_VAT = 1 << 7,
         eFLG_LOOP = 1 << 8,
         eFLG_UNK_V21_FLAG = 1 << 9,
         eFLG_USE_NORMAL = 1 << 10,
         eFLG_X_AXIS_NBB = 1 << 11,
-        Flag13 = 1 << 12,
+        eFLG_UNK_V29_FLAG = 1 << 12,
         eFLG_GLARE = 1 << 13,
         eFLG_SOFT_PTC = 1 << 14,
-        Flag16 = 1 << 15,
-        Flag17 = 1 << 16,
+        eFLG_SHELTER = 1 << 15,
+        eFLG_POINT_LIGHT = 1 << 16,
         eFLG_WRITE_Z = 1 << 17,
         eFLG_TRIANGLE_LIST = 1 << 18,
         eFLG_UNK_V27_FLAG2 = 1 << 19,
@@ -34,10 +28,10 @@ namespace PIBLib
         eFLG_METABALL_E = 1 << 23,
         eFLG_PTC_BB = 1 << 24,
         eFLG_PTC_BB_Y = 1 << 25,
-        Flag27 = 1 << 26,
+        eFLG_NO_EXTRA_COLOR = 1 << 26,
         eFLG_SMALL_BUF = 1 << 27,
         eFLG_ALWAYS = 1 << 28,
-        eFLG_UNK_V43_FLAG = 1 << 29,
+        eFLG_UNK_V29_FLAG2 = 1 << 29,
         eFLG_COLOR_ANIM_MULTIPLE = 1 << 30,
         Flag32 = 1 << 31,
     }

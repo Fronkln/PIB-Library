@@ -130,7 +130,10 @@ namespace PIBView
             DrawSpecialFlag3(treeEmitter);
 
             if (!IsDEPib() && pibVersion >= PibVersion.Y3)
+            {
                 DrawSpecialOEFlag4(treeEmitter);
+                DrawOETextureFlags(treeEmitter);
+            }
 
             CreateInput("Blend", treeEmitter.Emitter.Blend.ToString(), delegate (string val) { treeEmitter.Emitter.Blend = byte.Parse(val); }, NumberBox.NumberMode.Byte);
 
@@ -226,10 +229,12 @@ namespace PIBView
         }
         private bool DrawSpecialFlag2(TreeNodePibEmitter treeEmitter)
         {
-            string[] flagsList = GetFlag2List().Select(x => x.Replace("eFLG_", "")).ToArray();
+            string[] flagsList = GetFlag2List();
 
             if (flagsList == null || flagsList.Length <= 0)
                 return false;
+
+            flagsList = flagsList.Select(x => x.Replace("eFLG_", "")).ToArray();
 
             PibEmitterv52 de2Emitter = treeEmitter.Emitter as PibEmitterv52;
 
@@ -316,6 +321,37 @@ namespace PIBView
             return true;
         }
 
+        private bool DrawOETextureFlags(TreeNodePibEmitter treeEmitter)
+        {
+            string[] flagsList = GetOETexFlagList();
+
+            if (flagsList == null)
+                return false;
+            
+            flagsList.Select(x => x.Replace("eFLG_", "")).ToArray();
+
+            if (flagsList == null || flagsList.Length <= 0)
+                return false;
+
+            CreateButton("TextureFlags",
+                delegate
+                {
+                    PibEmitterv25 emitter = treeEmitter.Emitter as PibEmitterv25;
+
+                    int textureFlag = 0;
+                    textureFlag = emitter.TextureFlags;
+
+                    FlagEditor form = new FlagEditor();
+                    form.Init(flagsList, textureFlag, delegate (long val)
+                    {
+                        emitter.TextureFlags = (int)val;
+                    });
+                    form.Show();
+                }, 40, 14);
+
+            return true;
+        }
+
         private string[] GetFlag1List()
         {
             string[] values = null;
@@ -352,6 +388,9 @@ namespace PIBView
         {
             string[] values = null;
 
+            if (pibVersion == PibVersion.Ishin)
+                return null;
+
             if (pibVersion >= PibVersion.LJ)
                 values = Enum.GetNames<EmitterFlag2v58>();
 
@@ -385,8 +424,10 @@ namespace PIBView
 
             if (pibVersion >= PibVersion.YLAD)
                 values = Enum.GetNames<EmitterFlag3v52>();
-            else if (pibVersion > PibVersion.Y6)
+            else if (pibVersion == PibVersion.YK2)
                 values = Enum.GetNames<EmitterFlag3v43>();
+            else if(pibVersion == PibVersion.JE)
+                values = Enum.GetNames<EmitterFlag3v45>();
             else if (pibVersion == PibVersion.Y6)
                 values = Enum.GetNames<EmitterFlag3v29>();
 
@@ -426,6 +467,19 @@ namespace PIBView
 
             return values;
         }
+
+        private string[] GetOETexFlagList()
+        {
+            string[] values = null;
+
+            if (pibVersion >= PibVersion.Ishin)
+                values = Enum.GetNames<EmitterTextureFlagsv25>();
+            else
+                return null;
+
+            return values;
+        }
+
 
         public Control CreateText(string label, bool left = false)
         {

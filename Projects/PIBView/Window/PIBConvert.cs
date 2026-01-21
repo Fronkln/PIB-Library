@@ -118,8 +118,8 @@ namespace PIBView
             PibVersion outputVersion = (PibVersion)Enum.Parse(typeof(PibVersion), outputBox.Items[outputBox.SelectedIndex].ToString());
 
 
-            bool gaidenToLj = inputVersion == PibVersion.Gaiden && inputVersion <= PibVersion.LJ;
-            bool ljToGaiden = inputVersion <= PibVersion.LJ && outputVersion >= PibVersion.Gaiden;
+            bool gaidenToLj = inputVersion == PibVersion.Gaiden && inputVersion <= PibVersion.LJ && outputVersion > PibVersion.Y0;
+            bool ljToGaiden = inputVersion <= PibVersion.LJ && outputVersion >= PibVersion.Gaiden && outputVersion > PibVersion.Y0;
 
 #if !DEBUG
             try

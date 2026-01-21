@@ -37,6 +37,8 @@ namespace PIBLib.Conversions
             emitter.CommonUnkStructure2 = unk2;
 
             EmitterFlag1v27 flags = (EmitterFlag1v27)emitter27.Flags;
+            EmitterTextureFlagsv25 textureFlags = (EmitterTextureFlagsv25)emitter27.TextureFlags;
+
             //flags &= ~(EmitterFlag1v27)(1 << 31);
 
             if (emitter.DDSHeader.TextureFormatFlag.HasFlag(8))
@@ -53,14 +55,11 @@ namespace PIBLib.Conversions
 
             int v29Flags = 0;
             int v29Flags3 = 0;
+            
             //2024: all OE pibs converted to DE had this as zero
             //3.01.2025: me when i lie
-
-
             if (emitter.Flags3.HasFlag((int)EmitterFlag3v27.Flag7))
               v29Flags3 = v29Flags3.SetFlag((int)EmitterFlag3v29.eFLG_TEX_B_MODULATE);
-
-            emitter.Flags3 = v29Flags3;
 
 
             /*
@@ -84,7 +83,20 @@ namespace PIBLib.Conversions
                 }
             }
 
-            if(v29Flags.HasFlag(1 << 8))
+            bool isFlow = textureFlags.HasFlag(EmitterTextureFlagsv25.SECOND_TEXTURE_FLOW);
+
+            if (isFlow)
+                emitter.Flags2 |= (int)EmitterFlag2v45.eFLG_FLOW;
+            else
+            {
+                if (textureFlags.HasFlag(EmitterTextureFlagsv25.SECOND_TEXTURE_NORMALMAP))
+                    v29Flags3 |= (int)EmitterFlag3v29.eFLG_TEX_A2_NORMAL_LIGHT;
+            }
+
+            if (textureFlags.HasFlag(EmitterTextureFlagsv25.NO_EXTRA_COLOR))
+                v29Flags |= (int)EmitterFlag1v29.eFLG_NO_EXTRA_COLOR;
+
+            if (v29Flags.HasFlag(1 << 8))
                 emitter.Flags2 |= 72;
             else
                 emitter.Flags2 |= 64;
@@ -180,6 +192,7 @@ namespace PIBLib.Conversions
             }
 
             emitter.Flags = v29Flags;
+            emitter.Flags3 = v29Flags3;
 
             return emitter;
         }

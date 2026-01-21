@@ -13,7 +13,7 @@ namespace PIBLib
         eFLG_PTC_SRC_ANIM = 1 << 0x2,
         eFLG_COLOR_ANIM  = 1 << 0x3,
         eFLG_UV_ANIM = 1 << 0x4,
-        Flag6 = 1 << 0x5,
+        eFLG_AXIS_ANIM = 1 << 0x5,
         eFLG_BILLBOARD = 1 << 0x7,
         eFLG_LOOP = 1 << 0x7,
         eFLG_UNK_V21_FLAG = 1 << 0x8,

@@ -16,23 +16,6 @@ namespace PIBLib.Conversions
             // CommonUnkStructure2.Read(reader);
 
             emitter.UnkStructure5.Unk7 = (int)emitter.Source.Particles.OrderByDescending(x => x.Lifetime).ElementAt(0).Lifetime;
-            emitter.UnkStructure5.Unk8 = 0;
-            emitter.UnkStructure5.Unk9 = 0;
-            emitter.UnkStructure5.Unk10 = 0;
-            emitter.UnkStructure5.Unk11 = 0;
-            emitter.UnkStructure5.Unk12 = 0;
-            emitter.UnkStructure5.Unk13 = 0;
-            emitter.UnkStructure5.Unk14 = 0;
-            emitter.UnkStructure5.Unk15 = 0;
-            emitter.UnkStructure5.Unk16 = 0;
-            emitter.UnkStructure5.Unk17 = 0;
-            emitter.UnkStructure5.Unk18 = 0;
-            emitter.UnkStructure5.Unk19 = 0;
-            emitter.UnkStructure5.Unk20 = 0;
-            emitter.UnkStructure5.Unk21 = 0;
-            emitter.UnkStructure5.Unk22 = 0;
-            emitter.UnkStructure5.Unk23 = 0;
-            emitter.UnkStructure5.Unk24 = 0;
 
             var metaball = new DEPibMetaballv43();
             emitter.Metaball = metaball;
@@ -77,9 +60,33 @@ namespace PIBLib.Conversions
             emitter.Flags = v43Flags;
             emitter.Flags3 = v43Flags3;
 
-            //???? yyj0004
-            if (emitter.DDSHeader.TextureFormatFlag >= 6)
-                emitter.DDSHeader.TextureFormatFlag = 8;
+            //We do not know how to determine when to fill out VF and null out UnkStructure5 consistently yet
+            //So we're gonna fill the values no matter what as a default
+            emitter.VF.VelocityScale = 1;
+            emitter.VF.Life = 10;
+
+            /*
+            emitter.UnkStructure5.Unk8 = 0;
+            emitter.UnkStructure5.Unk9 = 0;
+            emitter.UnkStructure5.Unk10 = 0;
+            emitter.UnkStructure5.Unk11 = 0;
+            emitter.UnkStructure5.Unk12 = 0;
+            emitter.UnkStructure5.Unk13 = 0;
+            emitter.UnkStructure5.Unk14 = 0;
+            emitter.UnkStructure5.Unk15 = 0;
+            emitter.UnkStructure5.Unk16 = 0;
+            emitter.UnkStructure5.Unk17 = 0;
+            emitter.UnkStructure5.Unk18 = 0;
+            emitter.UnkStructure5.Unk19 = 0;
+            emitter.UnkStructure5.Unk20 = 0;
+            emitter.UnkStructure5.Unk21 = 0;
+            emitter.UnkStructure5.Unk22 = 0;
+            emitter.UnkStructure5.Unk23 = 0;
+            emitter.UnkStructure5.Unk24 = 0;
+            */
+
+            if (emitter.DDSHeader.TextureFormat == 6)
+                emitter.DDSHeader.TextureFormat = 8;
 
            foreach(var ptc in emitter.Source.Particles)
             {
@@ -109,14 +116,14 @@ namespace PIBLib.Conversions
            // emitter.PropertyAnimationCurve.Add(newCurve2);
             emitter.PropertyAnimationCurve.Add(newCurve3);
 
-            emitter.UnkNumbers_TextureTable_V42 = new int[emitter.Textures.Count];
+            emitter.TextureShaderIndices = new int[emitter.Textures.Count];
 
             int start = 4;
 
-            for(int i = 0; i < emitter.UnkNumbers_TextureTable_V42.Length; i++ )
+            for(int i = 0; i < emitter.TextureShaderIndices.Length; i++ )
             {
-                emitter.UnkNumbers_TextureTable_V42[i] = start;
-                start += 2;
+                emitter.TextureShaderIndices[i] = start;
+                start++;
             }
 
             return emitter;

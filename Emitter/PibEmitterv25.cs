@@ -8,6 +8,7 @@ namespace PIBLib
     //No change to the data at all, only the way some stuff are written
     public class PibEmitterv25 : PibEmitterv21
     {
+        public int TextureFlags = 0;
         public uint Culling = 2;
 
         public List<string> UnknownExtraTextures = new List<string>();
@@ -15,8 +16,9 @@ namespace PIBLib
         internal override void Read(DataReader reader, PibVersion version)
         {
             Flags = reader.ReadInt32();
-            Flags2 = reader.ReadInt32();
             Flags3 = reader.ReadInt32();
+            TextureFlags = reader.ReadInt32();
+            //Flags3 = reader.ReadInt32();
 
             Blend = reader.ReadByte();
             Type = reader.ReadByte();
@@ -125,8 +127,8 @@ namespace PIBLib
         internal override void Write(DataWriter writer, PibVersion version)
         {
             writer.Write(Flags);
-            writer.Write(Flags2);
             writer.Write(Flags3);
+            writer.Write(TextureFlags);
 
             writer.Write(Blend);
             writer.Write((byte)Type);

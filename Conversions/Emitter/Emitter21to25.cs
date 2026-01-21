@@ -34,6 +34,27 @@ namespace PIBLib.Conversions
             emitter.Flags2 = flag2;
             emitter.Flags3 = flag3;
 
+            //setting UnknownV27 improperly will cause pib to not be visible or broken
+
+            if (emitter.Textures.FirstOrDefault(x => x.Contains("_nml")) != null)
+                emitter.TextureFlags |= 96;
+
+            //Y5 and Y0 YAc0024, just an assumption
+            if (emitter.Flags2.HasFlag(16))
+            {
+                emitter.TextureFlags |= 2;
+                emitter.Flags2 &= ~16;
+            }
+
+            //Y5 and Y0 YAb0038, Emitter 1
+            if (emitter.Flags2.HasFlag(1))
+            {
+                emitter.TextureFlags |= 32;
+                emitter.Flags2 &= ~(1);
+                emitter.Flags3 |= 8; //unsure about this one, YAb0038 Emitter 1
+            }
+
+
             return emitter;
         }
     }
