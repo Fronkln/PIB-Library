@@ -122,9 +122,6 @@ namespace PIBLib
             v45Unk1 = new DEPibv45UnkStructure1();
             v45Unk1.Read(reader);
 
-            UnkStructure2 = new OOEPibBaseUnkStructure2();
-            UnkStructure2.Read(reader);
-
             PositionOffset = reader.ReadVector3();
             ParticleCount2 = reader.ReadInt32();
 
@@ -271,7 +268,6 @@ namespace PIBLib
 
             AnimationData.Write(writer);
             v45Unk1.Write(writer);
-            UnkStructure2.Write(writer);
 
             writer.Write(PositionOffset);
             writer.Write(ParticleCount2);

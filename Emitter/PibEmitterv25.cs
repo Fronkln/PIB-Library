@@ -61,8 +61,8 @@ namespace PIBLib
             UnkMaxSpreadRegVal1 = reader.ReadSingle();
             UnkMaxSpreadRegVal2 = reader.ReadSingle();
 
+            OEUnknown6 = reader.ReadSingle();
             OEUnknown7 = reader.ReadSingle();
-            OEUnknown8 = reader.ReadSingle();
             TextureAnimationSpeed[0] = reader.ReadSingle();
             TextureAnimationSpeed[1] = reader.ReadSingle();
             TextureUnknown[0] = reader.ReadSingle();
@@ -164,8 +164,8 @@ namespace PIBLib
             writer.Write(UnkMaxSpreadRegVal1);
             writer.Write(UnkMaxSpreadRegVal2);
 
+            writer.Write(OEUnknown6);
             writer.Write(OEUnknown7);
-            writer.Write(OEUnknown8);
 
             foreach(float f in TextureAnimationSpeed)
                 writer.Write(f);

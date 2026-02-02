@@ -64,9 +64,6 @@ namespace PIBLib
             UnkStructure1 = new PibBaseUnkStructure1();
             UnkStructure1.Read(reader);
 
-            UnkStructure2 = new OOEPibBaseUnkStructure2();
-            UnkStructure2.Read(reader);
-
             PositionOffset = reader.ReadVector3();
             reader.Stream.Position += 4;
 
@@ -176,7 +173,6 @@ namespace PIBLib
 
             AnimationData.Write(writer);
             UnkStructure1.Write(writer);
-            UnkStructure2.Write(writer);
 
             writer.Write(PositionOffset);
             writer.Write(0);

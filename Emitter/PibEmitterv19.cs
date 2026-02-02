@@ -55,8 +55,6 @@ namespace PIBLib
 
             OEUnknown6 = reader.ReadSingle();
             OEUnknown7 = reader.ReadSingle();
-            OEUnknown8 = reader.ReadSingle();
-            OEUnknown9 = reader.ReadSingle();
             TextureAnimationSpeed[0] = reader.ReadSingle();
             TextureAnimationSpeed[1] = reader.ReadSingle();
             TextureUnknown[0] = reader.ReadSingle();
@@ -152,8 +150,6 @@ namespace PIBLib
 
             writer.Write(OEUnknown6);
             writer.Write(OEUnknown7);
-            writer.Write(OEUnknown8);
-            writer.Write(OEUnknown9);
 
             foreach (float f in TextureAnimationSpeed)
                 writer.Write(f);

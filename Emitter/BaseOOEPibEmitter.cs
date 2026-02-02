@@ -15,8 +15,6 @@ namespace PIBLib
         public ushort Type;
         public float OEUnknown6 = 1;
         public float OEUnknown7 = 1;
-        public float OEUnknown8 = 0f;
-        public float OEUnknown9 = 0f;
         public float[] TextureAnimationSpeed = new float[2];
         public float[] TextureUnknown = new float[2];
 

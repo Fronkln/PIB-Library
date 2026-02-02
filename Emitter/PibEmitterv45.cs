@@ -81,9 +81,6 @@ namespace PIBLib
             AnimationData = new EmitterAnimationDataDE();
             AnimationData.Read(reader);
 
-            UnkStructure2 = new OOEPibBaseUnkStructure2();
-            UnkStructure2.Read(reader);
-
             v45Unk1 = new DEPibv45UnkStructure1();
             v45Unk1.Read(reader);
 
@@ -214,7 +211,6 @@ namespace PIBLib
             writer.WriteTimes(0, 8);
 
             AnimationData.Write(writer);
-            UnkStructure2.Write(writer);
             v45Unk1.Write(writer);
 
             writer.Write(PositionOffset);
