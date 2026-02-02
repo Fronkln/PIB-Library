@@ -63,10 +63,10 @@ namespace PIBLib
 
             OEUnknown7 = reader.ReadSingle();
             OEUnknown8 = reader.ReadSingle();
-            OEUnknown9 = reader.ReadSingle();
-            OEUnknown10 = reader.ReadSingle();
-            OEUnknown11 = reader.ReadSingle();
-            OEUnknown12 = reader.ReadSingle();
+            TextureAnimationSpeed[0] = reader.ReadSingle();
+            TextureAnimationSpeed[1] = reader.ReadSingle();
+            TextureUnknown[0] = reader.ReadSingle();
+            TextureUnknown[1] = reader.ReadSingle();
 
             OOEUnkStructure3 = new OOEPibBaseUnkStructure3();
             OOEUnkStructure3.Read(reader);
@@ -166,10 +166,12 @@ namespace PIBLib
 
             writer.Write(OEUnknown7);
             writer.Write(OEUnknown8);
-            writer.Write(OEUnknown9);
-            writer.Write(OEUnknown10);
-            writer.Write(OEUnknown11);
-            writer.Write(OEUnknown12);
+
+            foreach(float f in TextureAnimationSpeed)
+                writer.Write(f);
+
+            foreach(float f in TextureUnknown)
+                writer.Write(f);
 
             OOEUnkStructure3.Write(writer);
             CommonUnkStructure2.Write(writer);

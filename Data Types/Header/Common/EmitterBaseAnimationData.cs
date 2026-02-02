@@ -13,8 +13,7 @@ namespace PIBLib
         public float[] TextureFrames;
         public float[] TextureWidths;
 
-        public float UnknownX;
-        public float UnknownY;
+        public Vector2[] TextureFrameSizes;
 
         public virtual void Read(DataReader reader)
         {
@@ -26,6 +25,7 @@ namespace PIBLib
 
             TextureFrames = new float[2];
             TextureWidths = new float[2];
+            TextureFrameSizes = new Vector2[2];
 
             for(int i = 0; i < 2; i++)
                 TextureFrames[i] = reader.ReadSingle();
@@ -33,8 +33,8 @@ namespace PIBLib
             for(int i = 0; i < 2; ++i) 
                 TextureWidths[i] = reader.ReadSingle();
 
-            UnknownX = reader.ReadSingle();
-            UnknownY = reader.ReadSingle();
+            for (int i = 0; i < 2; ++i)
+                TextureFrameSizes[i] = reader.ReadVector2();
         }
 
         public virtual void Write(DataWriter writer)
@@ -51,8 +51,8 @@ namespace PIBLib
             for(int i = 0; i < 2; i++)
                 writer.Write(TextureWidths[i]);
 
-            writer.Write(UnknownX);
-            writer.Write(UnknownY);
+            for (int i = 0; i < 2; i++)
+                writer.Write(TextureFrameSizes[i]);
         }
 
         public EmitterAnimationDataDE ToDE()
@@ -65,8 +65,9 @@ namespace PIBLib
             deDat.FrameRelated1 = FrameRelated1;
             deDat.FrameRelated2 = FrameRelated2;
 
-            deDat.UnknownX = UnknownX;
-            deDat.UnknownY = UnknownY;
+            deDat.TextureFrameSizes = new Vector2[4];
+            deDat.TextureFrameSizes[0] = TextureFrameSizes[0];
+            deDat.TextureFrameSizes[1] = TextureFrameSizes[1];
 
             deDat.TextureFrames = new float[4] { 1, 1, 1, 1 };
             deDat.TextureFrames[0] = TextureFrames[0];
@@ -77,7 +78,7 @@ namespace PIBLib
             deDat.TextureWidths[1] = TextureWidths[1];
 
             deDat.UnkTextureData1 = new float[4] { 1, 1, 1, 1 };
-            deDat.UnkTextureData2 = new float[4] { 1, 1, 1, 1 };
+            deDat.TextureSpeeds = new float[4];
 
             return deDat;
         }

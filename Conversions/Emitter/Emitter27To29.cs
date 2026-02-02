@@ -26,6 +26,16 @@ namespace PIBLib.Conversions
             emitter.Metaball = metaball;
 
             EmitterAnimationDataDE deAnim = emitter.AnimationData.ToDE();
+
+            deAnim.TextureSpeeds[0] = emitter27.TextureAnimationSpeed[0];
+            deAnim.TextureSpeeds[1] = emitter27.TextureAnimationSpeed[1];
+
+            deAnim.UnkTextureData1[0] = emitter.AnimationData.FrameRelated1;
+            deAnim.UnkTextureData1[1] = emitter.AnimationData.FrameRelated2;
+
+            deAnim.FrameRelated1 = 1;
+            deAnim.FrameRelated2 = emitter27.OOEUnkStructure3.Unk1;
+
             emitter.AnimationData = deAnim;
 
             DEPibCommonUnkStructure2 unk2 = new DEPibCommonUnkStructure2();

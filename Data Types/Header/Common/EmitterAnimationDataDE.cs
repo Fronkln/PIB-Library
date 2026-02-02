@@ -10,7 +10,7 @@ namespace PIBLib
     public class EmitterAnimationDataDE : EmitterBaseAnimationData
     {
         public float[] UnkTextureData1;
-        public float[] UnkTextureData2;
+        public float[] TextureSpeeds;
 
         public override void Read(DataReader reader)
         {
@@ -23,7 +23,8 @@ namespace PIBLib
             TextureFrames = new float[4];
             TextureWidths = new float[4];
             UnkTextureData1 = new float[4];
-            UnkTextureData2 = new float[4];
+            TextureSpeeds = new float[4];
+            TextureFrameSizes = new Vector2[4];
 
 
             for (int i = 0; i < 4; ++i)
@@ -36,10 +37,10 @@ namespace PIBLib
                 TextureWidths[i] = reader.ReadSingle();
 
             for (int i = 0; i < 4; ++i)
-                UnkTextureData2[i] = reader.ReadSingle();
+                TextureSpeeds[i] = reader.ReadSingle();
 
-            UnknownX = reader.ReadSingle();
-            UnknownY = reader.ReadSingle();
+            for (int i = 0; i < 4; ++i)
+                TextureFrameSizes[i] = reader.ReadVector2();
         }
 
         public override void Write(DataWriter writer)
@@ -60,10 +61,10 @@ namespace PIBLib
                 writer.Write(TextureWidths[i]);
 
             for (int i = 0; i < 4; i++)
-                writer.Write(UnkTextureData2[i]);
+                writer.Write(TextureSpeeds[i]);
 
-            writer.Write(UnknownX);
-            writer.Write(UnknownY);
+            foreach(var vec in  TextureFrameSizes)
+                writer.Write(vec);
         }
 
         public EmitterBaseAnimationData ToOE()
@@ -82,9 +83,10 @@ namespace PIBLib
             oeDat.TextureWidths = new float[2];
             oeDat.TextureWidths[0] = TextureWidths[0];
             oeDat.TextureWidths[1] = TextureWidths[1];
-
-            oeDat.UnknownX = UnknownX;
-            oeDat.UnknownY = UnknownY;
+           
+            oeDat.TextureFrameSizes = new Vector2[2];
+            oeDat.TextureFrameSizes[0] = TextureFrameSizes[0];
+            oeDat.TextureFrameSizes[1] = TextureFrameSizes[1];
 
             oeDat.FrameRelated1 = UnkTextureData1[0];
 

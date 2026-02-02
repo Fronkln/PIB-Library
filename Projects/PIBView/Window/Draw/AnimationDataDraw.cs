@@ -31,14 +31,14 @@ namespace PIBView
                 if(deAnimDat != null)
                 {
                     form.CreateInput($"Texture {i + 1} Unknown 1", deAnimDat.UnkTextureData1[i].ToString(), delegate (string val) { deAnimDat.UnkTextureData1[k] = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-                    form.CreateInput($"Texture {i + 1} Unknown 2", deAnimDat.UnkTextureData2[i].ToString(), delegate (string val) { deAnimDat.UnkTextureData2[k] = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                    form.CreateInput($"Texture {i + 1} Unknown 2", deAnimDat.TextureSpeeds[i].ToString(), delegate (string val) { deAnimDat.TextureSpeeds[k] = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
                 }
             }
 
             form.CreateSpace(10);
 
-            form.CreateInput("Unknown X", animDat.UnknownX.ToString(), delegate (string val) { animDat.UnknownX = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-            form.CreateInput("Unknown Y", animDat.UnknownY.ToString(), delegate (string val) { animDat.UnknownY = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+          //  form.CreateInput("Unknown X", animDat.UnknownX.ToString(), delegate (string val) { animDat.UnknownX = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+          //  form.CreateInput("Unknown Y", animDat.UnknownY.ToString(), delegate (string val) { animDat.UnknownY = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
         }
     }
 }

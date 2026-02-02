@@ -102,8 +102,10 @@ namespace PIBLib.Conversions
             emitter.Flags2 = v27Flags2;
             emitter.Flags3 = v27Flags3;
 
-            if (emitter29.AnimationData.TextureFrames.Any(x => x > 1))
-                emitter.OEUnknown9 = 1;
+            var deAnimData = (EmitterAnimationDataDE)emitter29.AnimationData;
+
+            emitter.TextureAnimationSpeed[0] = deAnimData.TextureSpeeds[0];
+            emitter.TextureAnimationSpeed[1] = deAnimData.TextureSpeeds[1];
 
             emitter.AnimationData = (emitter29.AnimationData as EmitterAnimationDataDE).ToOE();
             emitter.AnimationData.FrameRelated2 = 1;

@@ -13,12 +13,13 @@ namespace PIBLib
         /// Determines type of data contained
         /// </summary>
         public ushort Type;
+        public float OEUnknown6 = 1;
         public float OEUnknown7 = 1;
         public float OEUnknown8 = 0f;
         public float OEUnknown9 = 0f;
-        public float OEUnknown10 = 0f;
-        public float OEUnknown11 = 0f;
-        public float OEUnknown12 = 0f;
+        public float[] TextureAnimationSpeed = new float[2];
+        public float[] TextureUnknown = new float[2];
+
         public float OEUnknown16 = 0f;
 
         public OOEPibBaseUnkStructure6 OOEUnkStructure6 = new OOEPibBaseUnkStructure6();

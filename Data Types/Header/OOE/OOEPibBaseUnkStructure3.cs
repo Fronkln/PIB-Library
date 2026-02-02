@@ -14,14 +14,14 @@ namespace PIBLib
         public float Unk1 = 1;
         public float Unk2 = 1;
         public float Unk3 = 1;
-        public float Unk4 = 3000;
+        public float Duration = 3000; //Usually the particles in the emitters have this valeu as well.
 
         internal virtual void Read(DataReader reader)
         {
             Unk1 = reader.ReadSingle();
             Unk2 = reader.ReadSingle();
             Unk3 = reader.ReadSingle();
-            Unk4 = reader.ReadSingle();
+            Duration = reader.ReadSingle();
         }
 
         internal virtual void Write(DataWriter writer)
@@ -29,7 +29,7 @@ namespace PIBLib
             writer.Write(Unk1);
             writer.Write(Unk2);
             writer.Write(Unk3);
-            writer.Write(Unk4);
+            writer.Write(Duration);
         }
     }
 }

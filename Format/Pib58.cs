@@ -1,9 +1,5 @@
 ﻿using PIBLib.Conversions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Yarhl.IO;
 
 namespace PIBLib
@@ -24,6 +20,11 @@ namespace PIBLib
         public Pib52 ToV52()
         {
             return Pib58To52.Convert(this);
+        }
+
+        public Pib59 ToV59()
+        {
+            return Pib58to59.Convert(this);
         }
     }
 }

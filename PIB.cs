@@ -88,6 +88,8 @@ namespace PIBLib
                     return new Pib52();
                 case 58:
                     return new Pib58();
+                case 59:
+                    return new Pib59();
             }
         }
 
@@ -148,6 +150,9 @@ namespace PIBLib
                     break;
                 case PibVersion.LJ:
                     result = ConvertFromLJ(source, target);
+                    break;
+                case PibVersion.YK3:
+                    result = ConvertFromYK3(source, target);
                     break;
             }
 
@@ -400,6 +405,32 @@ namespace PIBLib
                     return pib.ToV52().ToV45();
                 case PibVersion.YLAD:
                     return pib.ToV52();
+                case PibVersion.YK3:
+                    return pib.ToV59();
+            }
+        }
+
+        private static BasePib ConvertFromYK3(BasePib basePib, PibVersion outputVersion)
+        {
+            Pib59 pib = (Pib59)basePib;
+
+            switch (outputVersion)
+            {
+                default:
+                    return null;
+
+                case PibVersion.Y0:
+                    return pib.ToV52().ToV45().ToV43().ToV29().ToV27();
+                case PibVersion.Y6:
+                    return pib.ToV52().ToV45().ToV43().ToV29();
+                case PibVersion.YK2:
+                    return pib.ToV52().ToV45().ToV43();
+                case PibVersion.JE:
+                    return pib.ToV52().ToV45();
+                case PibVersion.YLAD:
+                    return pib.ToV52();
+                case PibVersion.LJ:
+                    return pib.ToV58();
             }
         }
     }
