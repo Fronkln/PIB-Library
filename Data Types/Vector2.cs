@@ -2,16 +2,10 @@
 
 namespace PIBLib
 {
-    [Serializable]
-    public class Vector2
+    public struct Vector2
     {
-        public float x { get; set; }
-        public float y { get; set; }
-
-        public Vector2()
-        {
-
-        }
+        public float x;
+        public float y;
 
         public Vector2(float x, float y)
         {

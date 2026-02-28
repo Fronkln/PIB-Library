@@ -29,8 +29,6 @@ namespace PIBLib
 
         public byte[] UnkReg1_43_45;
 
-        public DEPibv45UnkStructure1 v45Unk1 = new DEPibv45UnkStructure1();
-
         public DEPibv43UnkStructure1 UnkStructure5 = new DEPibv43UnkStructure1();
 
         internal override void Read(DataReader reader, PibVersion version)
@@ -358,23 +356,5 @@ namespace PIBLib
         {
             return ((EmitterFlag1v43)Flags).HasFlag(EmitterFlag1v43.eFLG_METABALL);
         }
-
-        /// <summary>
-        /// Converts a v58 pib texture numbers to Gaiden revision (texture indices were changed)
-        /// </summary>
-        public void ToGaidenRevision()
-        {
-            for (int i = 0; i < TextureShaderIndices.Length; i++)
-                TextureShaderIndices[i] += 2;
-        }
-
-        /// <summary>
-        /// Converts a v58 pib texture numbers to LJ revision
-        /// </summary>
-        public void ToLJRevision()
-        {
-            for (int i = 0; i < TextureShaderIndices.Length; i++)
-                TextureShaderIndices[i] -= 2;
-        }   
     }
 }

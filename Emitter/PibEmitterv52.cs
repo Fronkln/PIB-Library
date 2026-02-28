@@ -165,10 +165,10 @@ namespace PIBLib
             int textureCount = reader.ReadInt32();
             ReadTextureImports(reader, textureCount);
 
-            int unknownCount2 = reader.ReadInt32();
+            int particleCount = reader.ReadInt32();
 
             ReadUnknownData1(reader, GeoVertex, geoVertexCount, version);
-            Source.Read(reader, this, (int)Flags, unknownCount2, (uint)version);
+            Source.Read(reader, this, (int)Flags, particleCount, (uint)version);
         }
 
 
@@ -186,8 +186,17 @@ namespace PIBLib
 
             int resourcesCount = reader.ReadInt32();
 
+            TextureImports = new List<TextureImportInfo>();
+            TextureImports.Add(new TextureImportInfo());
+
             for (int i = 0; i < resourcesCount; i++)
-                ExtraTextures.Add(reader.ReadString(36));
+            {
+                TextureImportResource res = new TextureImportResource();
+                res.ID = reader.ReadInt32();
+                res.Name = reader.ReadString(32);
+
+                TextureImports[0].Resources.Add(res);
+            }
 
             reader.Stream.Position += 4;
         }
@@ -306,20 +315,12 @@ namespace PIBLib
 
         internal protected virtual void WriteTextureImports(DataWriter writer, PibVersion version)
         {
+            if (TextureImports.Count <= 0)
+                TextureImports.Add(new TextureImportInfo());
+
             int GetResourceCount()
             {
-                int count = 0;
-
-                foreach (var inf in TextureImports)
-                    count += inf.Resources.Count;
-
-                return count;
-            }
-
-            //YLAD does not use texture resources
-            List<string> GetAllResources()
-            {
-                return new List<string>();
+                return TextureImports[0].Resources.Count;
             }
 
             writer.Write(Textures.Count);
@@ -333,15 +334,16 @@ namespace PIBLib
             int resourcesCount = GetResourceCount();
 
             writer.WriteTimes(0, (36 * Textures.Count) - 4);
-            writer.Write(GetResourceCount());
+            writer.Write(resourcesCount);
 
             writer.Write(ExtraTextures.Count + resourcesCount);
 
-            foreach(string str in GetAllResources())
-                writer.Write(str.ToLength(36), false);
 
-            foreach (string str in ExtraTextures)
-                writer.Write(str.ToLength(36), false);
+            foreach(var res in TextureImports[0].Resources)
+            {
+                writer.Write(res.ID);
+                writer.Write(res.Name.ToLength(32));
+            }
 
             writer.WriteTimes(0, 4);
         }

@@ -139,18 +139,6 @@ namespace PIBView
 
 
             BasePib converted = PIB.Convert(pib, outputVersion);
-
-            if (ljToGaiden || gaidenToLj)
-            {
-                foreach (PibEmitterv43 emitter in converted.Emitters)
-                {
-                    if (ljToGaiden)
-                        emitter.ToGaidenRevision();
-                    else
-                        emitter.ToLJRevision();
-                }
-            }
-
             PIB.Write(converted, m_outputPath);
 
             if (copyTexturesCheck.Checked)

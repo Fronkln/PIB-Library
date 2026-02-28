@@ -63,7 +63,7 @@ namespace PIBLib
             for (int i = 0; i < 4; i++)
                 writer.Write(TextureSpeeds[i]);
 
-            foreach(var vec in  TextureFrameSizes)
+            foreach(var vec in TextureFrameSizes)
                 writer.Write(vec);
         }
 

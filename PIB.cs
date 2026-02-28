@@ -19,7 +19,7 @@ namespace PIBLib
             DataWriter writer = new DataWriter(new DataStream()) { Endianness = (pib.Version >= PibVersion.Y6 ? EndiannessMode.LittleEndian : EndiannessMode.BigEndian) };
 
             writer.Write("PIBX", false);
-            writer.Write((pib.Version < PibVersion.Y6 || pib.Version == PibVersion.Kenzan) ? 0x2010000 : 0x2000000);
+            writer.Write((pib.Version < PibVersion.Y6 || pib.Version == PibVersion.Kenzan) ? 0x2010000 : 2);
             writer.Write((uint)pib.Version);
             writer.WriteTimes(0, 4);
 
@@ -151,6 +151,9 @@ namespace PIBLib
                 case PibVersion.LJ:
                     result = ConvertFromLJ(source, target);
                     break;
+                case PibVersion.Gaiden:
+                    result = ConvertFromGaiden(source, target);
+                    break;
                 case PibVersion.YK3:
                     result = ConvertFromYK3(source, target);
                     break;
@@ -243,6 +246,8 @@ namespace PIBLib
                     return pib.ToV25().ToV27().ToV29().ToV43().ToV45().ToV52();
                 case PibVersion.LJ:
                     return pib.ToV25().ToV27().ToV29().ToV43().ToV45().ToV52().ToV58();
+                case PibVersion.YK3:
+                    return pib.ToV25().ToV27().ToV29().ToV43().ToV45().ToV52().ToV58().ToV59();
             }
         }
 
@@ -408,6 +413,23 @@ namespace PIBLib
                 case PibVersion.YK3:
                     return pib.ToV59();
             }
+        }
+
+        private static BasePib ConvertFromGaiden(BasePib basePib, PibVersion outputVersion)
+        {
+            var outPib = ConvertFromLJ(basePib, outputVersion);
+
+            //No shader indices or is new format
+            if (outPib.Version < PibVersion.YK2 || outPib.Version >= PibVersion.YK3)
+                return outPib;
+
+            foreach(PibEmitterv43 emitter in outPib.Emitters)
+            {
+                for (int i = 0; i < emitter.TextureShaderIndices.Length; i++)
+                    emitter.TextureShaderIndices[i] -= 2;
+            }
+
+            return outPib;
         }
 
         private static BasePib ConvertFromYK3(BasePib basePib, PibVersion outputVersion)

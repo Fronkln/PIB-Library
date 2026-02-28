@@ -10,6 +10,8 @@ namespace PIBLib
 
         private int UnkVar1 = 0;
 
+        public DEPibv45UnkStructure1 v45Unk1 = new DEPibv45UnkStructure1();
+
         public List<string> ExtraTextures = new List<string>();
 
         internal override void Read(DataReader reader, PibVersion version)
@@ -61,8 +63,8 @@ namespace PIBLib
             AnimationData = new EmitterAnimationDataDE();
             AnimationData.Read(reader);
 
-            UnkStructure1 = new PibBaseUnkStructure1();
-            UnkStructure1.Read(reader);
+            v45Unk1 = new DEPibv45UnkStructure1();
+            v45Unk1.Read(reader);
 
             PositionOffset = reader.ReadVector3();
             reader.Stream.Position += 4;
@@ -172,7 +174,7 @@ namespace PIBLib
             writer.WriteTimes(0, 12);
 
             AnimationData.Write(writer);
-            UnkStructure1.Write(writer);
+            v45Unk1.Write(writer);
 
             writer.Write(PositionOffset);
             writer.Write(0);

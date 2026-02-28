@@ -13,6 +13,7 @@ namespace PIBLib.Conversions
         {
             Pib52 pib = new Pib52();
             pib58.CopyFields(pib);
+            pib.Fade = pib58.Fade;
             pib.Version = PibVersion.YLAD;
 
             pib.Emitters = new List<BasePibEmitter>();

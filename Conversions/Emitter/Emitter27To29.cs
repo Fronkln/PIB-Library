@@ -100,8 +100,11 @@ namespace PIBLib.Conversions
             else
             {
                 if (textureFlags.HasFlag(EmitterTextureFlagsv25.SECOND_TEXTURE_NORMALMAP))
-                    v29Flags3 |= (int)EmitterFlag3v29.eFLG_TEX_A2_NORMAL_LIGHT;
+                        v29Flags3 |= (int)EmitterFlag3v29.eFLG_TEX_A2_NORMAL_LIGHT;
             }
+
+            if (emitter.Flags.HasFlag((int)EmitterFlag1v27.eFLG_USE_NORMAL_REFRACT))
+                v29Flags3 |= (int)EmitterFlag3v29.eFLG_TEX_B_NORMAL_REFRACTION;
 
             if (textureFlags.HasFlag(EmitterTextureFlagsv25.NO_EXTRA_COLOR))
                 v29Flags |= (int)EmitterFlag1v29.eFLG_NO_EXTRA_COLOR;

@@ -55,12 +55,10 @@ namespace PIBLib.Conversions
 
             flags3 &= ~EmitterFlag3v52.eFLG_TEX_A1_WRAP_CLAMP;
             flags3 &= ~EmitterFlag3v52.eFLG_TEX_A_PATTERN_ONESHOT;
-            flags3 &= ~EmitterFlag3v52.eFLG_TEX_B_NORMAL_LIGHT;
             flags3 &= ~EmitterFlag3v52.eFLG_LIGHTING_EMISSIVE_CURVE_RGB;
             flags3 &= ~EmitterFlag3v52.eFLG_BILLBOARD_AXIS_Y;
             flags3 &= ~EmitterFlag3v52.eFLG_STAGE_REFLECTION;
             flags3 &= ~ EmitterFlag3v52.eFLG_LIGHTING_EMISSIVE_CURVE_A;
-            flags3 &= ~EmitterFlag3v52.eFLG_TEX_B_NORMAL_REFRACTION;
 
             /*
             if (flags3.HasFlag(EmitterFlag3v52.eFLG_TEX_B_NORMAL_LIGHT))

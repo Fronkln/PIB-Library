@@ -12,7 +12,7 @@
         JE = 45,
         YLAD = 52,
         LJ = 58,
-        Gaiden = 58,
+        Gaiden = 588,
         YK3 = 59, //same fucking format as Gaiden except pib version is edited
     }
 }

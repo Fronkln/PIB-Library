@@ -19,7 +19,7 @@ namespace PIBLib
         eFLG_UNK_V21_FLAG = 1 << 0x8,
         Flag10 = 1 << 0x9,
         eFLG_USE_NORMAL = 1 << 0xA,
-        Flag12 = 1 << 0xB,
+        eFLG_USE_NORMAL_REFRACT = 1 << 0xB,
         Flag13 = 1 << 0xC,
         eFLG_UNK_V27_FLAG2 = 1 << 0xD,
         Flag15 = 1 << 0xE,

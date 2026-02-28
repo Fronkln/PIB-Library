@@ -13,7 +13,7 @@ namespace PIBLib
         {
             Pib58 pib = new Pib58();
             pib59.CopyFields(pib);
-            pib.Version = PibVersion.Gaiden;
+            pib.Version = PibVersion.LJ;
 
             pib.Emitters = new List<BasePibEmitter>();
 

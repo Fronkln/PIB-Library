@@ -49,8 +49,9 @@ namespace PIBLib.Conversions
             long de2Flags2 = 0;
             long de2Flags3 = 0;
 
-            //eFLG_UNK_V43_FLAG which doesnt exist in DE2 at a first glance?
+            //eFLG_UNK_V43_FLAG and 2 which doesnt exist in DE2 at a first glance?
             flags &= ~EmitterFlag1v45.eFLG_UNK_V29_FLAG;
+            flags &= ~EmitterFlag1v45.eFLG_UNK_V29_FLAG2;
 
             //Doesnt exist in DE2 at a first glance?
             flags2 &= ~EmitterFlag2v45.Flag11;

@@ -163,6 +163,14 @@ namespace PIBLib
             int textureCount = reader.ReadInt32();
             ReadTextureImports(reader, textureCount);
 
+            //Checked all emitters on Gaiden. All first textures use 6 (diffuse)
+            //Except for the oyb pib family, which is a RGGS error (they didnt convert them properly if at all)
+            /*
+            if (TextureShaderIndices.Length > 0)
+                if (TextureShaderIndices[0] == 6)
+                    IsGaidenRevision = true;
+            */
+
             int unknownCount2 = reader.ReadInt32();
 
             ReadUnknownData1(reader, GeoVertex, geoVertexCount, version);

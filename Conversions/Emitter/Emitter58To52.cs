@@ -14,10 +14,11 @@ namespace PIBLib.Conversions
             PibEmitterv52 emitter = new PibEmitterv52();
             emitter58.CopyFields(emitter);
 
-            //TODO:
-           // if (emitter.DDSHeader.TextureFormatFlag >= 12)
-                //emitter.DDSHeader.TextureFormatFlag = 8;
+            //Ran query on all LJ pibs. They were all 12
+            if (emitter.DDSHeader.TextureFormat == 12)
+                emitter.DDSHeader.TextureFormat = 8;
 
+            emitter.DDSHeader.UnkBoolean = 0;
 
             //11.07.2024
             //if LJ to YLAD pib is no longer working. this was the culprit

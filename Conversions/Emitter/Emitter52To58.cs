@@ -57,6 +57,11 @@ namespace PIBLib.Conversions
             emitter.PropertyAnimationCurve.Add(newChunk1);
             emitter.PropertyAnimationCurve.Add(newChunk1);
 
+            if (emitter.DDSHeader.TextureFormatFlag == 8)
+                emitter.DDSHeader.TextureFormatFlag = 12;
+
+            emitter.DDSHeader.UnkBoolean = 1;
+
             return emitter;
         }
     }

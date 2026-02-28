@@ -16,6 +16,9 @@ namespace PIBLib
         public int dwFlags;
         public int TextureFormat;
         public int TextureFormatFlag;
+        public int Unk1;
+        public int Unk2;
+        public int UnkBoolean; //1 since LJ
         public byte[] irrelevantDat;
 
         internal void Read(DataReader reader)
@@ -25,7 +28,10 @@ namespace PIBLib
             dwFlags = reader.ReadInt32();
             TextureFormat = reader.ReadInt32();
             TextureFormatFlag = reader.ReadInt32();
-            irrelevantDat = reader.ReadBytes(108);
+            Unk1 = reader.ReadInt32();
+            Unk2 = reader.ReadInt32();
+            UnkBoolean = reader.ReadInt32();
+            irrelevantDat = reader.ReadBytes(96);
         }
 
         internal void Write(DataWriter writer)
@@ -35,6 +41,9 @@ namespace PIBLib
             writer.Write(dwFlags);
             writer.Write(TextureFormat);
             writer.Write(TextureFormatFlag);
+            writer.Write(Unk1);
+            writer.Write(Unk2);
+            writer.Write(UnkBoolean);
             writer.Write(irrelevantDat);
         }
     }
