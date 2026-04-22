@@ -33,7 +33,7 @@ namespace PIBLib.Conversions
             foreach (Enum flag in flags2.GetFlags())
             {
                 string flagStr = flag.ToString();
-                int de2Value = System.Convert.ToInt32(Enum.Parse(typeof(EmitterFlag2v58), flagStr));
+                long de2Value = System.Convert.ToInt64(Enum.Parse(typeof(EmitterFlag2v58), flagStr));
 
                 de2Flags2 |= (long)de2Value;
             }
@@ -57,8 +57,8 @@ namespace PIBLib.Conversions
             emitter.PropertyAnimationCurve.Add(newChunk1);
             emitter.PropertyAnimationCurve.Add(newChunk1);
 
-            if (emitter.DDSHeader.TextureFormatFlag == 8)
-                emitter.DDSHeader.TextureFormatFlag = 12;
+            if (emitter.DDSHeader.TextureFormat == 8)
+                emitter.DDSHeader.TextureFormat = 12;
 
             emitter.DDSHeader.UnkBoolean = 1;
 

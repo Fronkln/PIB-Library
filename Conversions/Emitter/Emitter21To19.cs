@@ -27,6 +27,11 @@ namespace PIBLib.Conversions
                 pibEmitter.OOEUnkStructure6.Flag4 |= 16;
             }
 
+
+            //These flags dont exist in Y3. Were added on Y5
+            for (int i = 0x1A; i < 0x20; i++)
+                pibEmitter.Flags = pibEmitter.Flags.RemoveFlag(1 << i);
+
             //maybe add metaball cond
             //pibEmitter.OOEUnkStructure6.Unknown3 = -0.01666667f;
 

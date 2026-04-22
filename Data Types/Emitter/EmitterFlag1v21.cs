@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace PIBLib
 {
+    //Added: Screen
     public enum EmitterFlag1v21 : int
     {
         eFLG_GLOBAL_AXIS = 1 << 0,

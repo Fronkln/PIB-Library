@@ -21,6 +21,10 @@ namespace PIBLib.Conversions
             foreach (PibEmitterv21 emitter in pib21.Emitters)
                 pib.Emitters.Add(Emitter21To19.Convert(emitter));
 
+            //YYt0017 Y3 - all zeroes
+            //YYt0017 Y5 - -1, -1 present
+            pib.Fade = new PibFadeModule();
+
             return pib;
         }
     }
