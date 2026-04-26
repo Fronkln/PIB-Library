@@ -391,10 +391,9 @@ namespace PIBView
             if (pibVersion == PibVersion.Ishin)
                 return null;
 
-            if (pibVersion >= PibVersion.LJ)
+            if (pibVersion >= PibVersion.LJ || pibVersion == PibVersion.Gaiden)
                 values = Enum.GetNames<EmitterFlag2v58>();
-
-            if (pibVersion >= PibVersion.YLAD)
+            else if (pibVersion >= PibVersion.YLAD)
                 values = Enum.GetNames<EmitterFlag2v52>();
             else if(pibVersion >= PibVersion.Y6)
                 values = Enum.GetNames<EmitterFlag2v45>();

@@ -109,6 +109,9 @@ namespace PIBLib.Conversions
             if (textureFlags.HasFlag(EmitterTextureFlagsv25.NO_EXTRA_COLOR))
                 v29Flags |= (int)EmitterFlag1v29.eFLG_NO_EXTRA_COLOR;
 
+            //YYi0082, prevented it from appearing
+            v29Flags = v29Flags.RemoveFlag((int)EmitterFlag1v29.eFLG_USE_NORMAL);
+
             if (v29Flags.HasFlag(1 << 8))
                 emitter.Flags2 |= 72;
             else
