@@ -37,9 +37,5 @@ namespace PIBLib
         eFLG_CURL_NOISE = 1 << 0x19,
         eFLG_TIME_FADE = 1 << 0x1A,
         eFLG_GATHER = 1 <<  0x1B,
-        Flag28 = 1 << 28,
-        Flag29 = 1 << 29,
-        Flag30 = 1 << 30,
-        Flag31 = 1 << 31,
     }
 }
