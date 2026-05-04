@@ -302,18 +302,19 @@ namespace PIBView
             if (flagsList == null || flagsList.Length <= 0)
                 return false;
 
-            CreateButton("Flag 4",
+            CreateButton("Metaball Flags",
                 delegate
                 {
                     PibEmitterv19 emitter = treeEmitter.Emitter as PibEmitterv19;
+                    OOEPibMetaballv19 ooeMetaball = treeEmitter.Emitter.Metaball as OOEPibMetaballv19;
 
                     int flag4 = 0;
-                    flag4 = emitter.OOEUnkStructure6.Flag4;
+                    flag4 = ooeMetaball.Flags;
 
                     FlagEditor form = new FlagEditor();
                     form.Init(flagsList, flag4, delegate (long val)
                     {
-                        emitter.OOEUnkStructure6.Flag4 = (int)val;
+                        ooeMetaball.Flags = (int)val;
                     });
                     form.Show();
                 }, 40, 14);

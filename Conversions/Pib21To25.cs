@@ -23,7 +23,7 @@ namespace PIBLib.Conversions
                 pib.ColorAnimationI[i] = 1f;
             }
 
-            int flags = pib21.UnknownFlags_0x3E;
+            int flags = (int)pib21.Flags;
 
             if (flags.HasFlag(1 << 9))
             {

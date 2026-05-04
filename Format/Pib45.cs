@@ -6,8 +6,6 @@ using Yarhl.IO;
 
 namespace PIBLib
 {
-    //Changed:
-    //Emitter main data (564 > 596 bytes)
     public class Pib45 : Pib43
     {
         protected override void ReadCorePibData(DataReader reader)

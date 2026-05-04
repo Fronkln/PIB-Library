@@ -30,7 +30,8 @@ namespace PIBLib
             TimeScale = reader.ReadSingle();
             Unknown3 = reader.ReadVector4();
             Unknown5 = reader.ReadVector4();
-            Scale = reader.ReadVector4();
+            Scale = reader.ReadVector2();
+            Angle = reader.ReadVector2();
             Unknown4 = reader.ReadVector4();
         }
 
@@ -49,6 +50,7 @@ namespace PIBLib
             writer.Write(Unknown3);
             writer.Write(Unknown5);
             writer.Write(Scale);
+            writer.Write(Angle);
             writer.Write(Unknown4);
         }
     }

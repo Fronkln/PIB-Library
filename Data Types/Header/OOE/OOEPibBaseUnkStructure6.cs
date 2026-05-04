@@ -14,8 +14,6 @@ namespace PIBLib
         public float Unknown3;
         public int Unknown4;
         public float Unknown5;
-        public int Flag4;
-
         public virtual void Read(DataReader reader)
         {
             Unknown1 = reader.ReadInt32();
@@ -23,7 +21,6 @@ namespace PIBLib
             Unknown3 = reader.ReadSingle();
             Unknown4 = reader.ReadInt32();
             Unknown5 = reader.ReadSingle();
-            Flag4 = reader.ReadInt32();
         }
 
         public virtual void Write(DataWriter writer)
@@ -33,7 +30,6 @@ namespace PIBLib
             writer.Write(Unknown3);
             writer.Write(Unknown4);
             writer.Write(Unknown5);
-            writer.Write(Flag4);
         }
     }
 }

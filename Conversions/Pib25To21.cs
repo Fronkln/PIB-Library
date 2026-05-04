@@ -14,13 +14,7 @@ namespace PIBLib.Conversions
             pib25.CopyFields(pib);
 
 
-            pib.UnknownFlag_0x38 = 128;
-
-            if (pib.UnknownFlags_0x3E.HasFlag(1024))
-            {
-                pib.UnknownFlags_0x3E = pib.UnknownFlags_0x3E.RemoveFlag(1024);
-                pib.UnknownFlags_0x3E |= 512;
-            }
+            pib.UnknownV19 = 128;
 
             pib.Emitters = new List<BasePibEmitter>();
 

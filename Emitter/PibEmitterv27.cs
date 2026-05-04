@@ -28,7 +28,7 @@ namespace PIBLib
             OOEUnkStructure6 = new OOEPibBaseUnkStructure6();
             OOEUnkStructure6.Read(reader);
 
-            Metaball = new PibBaseMetaball();
+            Metaball = new OOEPibMetaballv19();
             Metaball.Read(reader);
 
             DirectivityH = reader.ReadSingle();

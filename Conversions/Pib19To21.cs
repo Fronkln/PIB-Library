@@ -16,7 +16,7 @@ namespace PIBLib.Conversions
 
             pib19.CopyFields(pib);
 
-            pib.UnknownFlags_0x3E = 512;
+            pib.Flags = 512;
 
             pib.Fade.NearFadeDistanceAll = -1;
             pib.Fade.NearFadeOffsetAll = -1;

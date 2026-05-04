@@ -26,6 +26,7 @@ namespace PIBLib.Conversions
             // if (pibEmitter.Flags.HasFlag(1 << 23))
             // pibEmitter.Flags = pibEmitter.Flags.RemoveFlag(1 << 23);
 
+            /*
             if (pibEmitter.Flags.HasFlag(1 << 23))
             {
                 pibEmitter.Flags |= 1 << 8;
@@ -33,9 +34,32 @@ namespace PIBLib.Conversions
                 pibEmitter.Flags |= 1 << 3;
                 pibEmitter.Flags |= 1 << 4;
 
-                pibEmitter.OOEUnkStructure6.Flag4 = 0;
+                pibEmitter.OOEUnkStructure6.MetaballFlags = 0;
 
             }
+            */
+
+            var ooeMetaball = emitter19.Metaball as OOEPibMetaballv19;
+            var newMetaball = pibEmitter.Metaball as OOEPibMetaballv19;
+
+            EmitterMetaballFlagv19 v19MetaballFlags = (EmitterMetaballFlagv19)ooeMetaball.Flags;
+            int metaballFlags = 0;
+
+            foreach (Enum flag in v19MetaballFlags.GetFlags())
+            {
+                try
+                {
+                    string flagStr = flag.ToString();
+                    int value = System.Convert.ToInt32(Enum.Parse(typeof(EmitterMetaballFlagv21), flagStr));
+
+                    metaballFlags |= value;
+                }
+                catch
+                {
+                }
+            }
+
+            newMetaball.Flags = metaballFlags;
 
             return pibEmitter;
         }

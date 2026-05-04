@@ -26,7 +26,7 @@ namespace PIBLib
         public Vector3 AABoxCenter;
         public Vector3 AABoxExtent;
 
-        public PibBaseMetaball Metaball = new PibBaseMetaball();
+        public PibBaseMetaball Metaball = new OOEPibMetaballv19();
         public EmitterBaseAnimationData AnimationData = new EmitterBaseAnimationData();
         public PibBaseUnkStructure1 UnkStructure1 = new PibBaseUnkStructure1();
         public PibBaseCommonUnkStructure2 CommonUnkStructure2 = new PibBaseCommonUnkStructure2();

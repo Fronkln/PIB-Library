@@ -27,9 +27,10 @@ namespace PIBView
 
             if(Form1.pibVersion < PibVersion.Y6)
             {
-                form.CreateInput("OE Unknown 1", metaball.OEUnknown1.ToString(), delegate (string val) { metaball.OEUnknown1 = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-                form.CreateInput("OE Unknown 2", metaball.OEUnknown2.ToString(), delegate (string val) { metaball.OEUnknown1 = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-                form.CreateInput("OE Unknown 3", metaball.OEUnknown3.ToString(), delegate (string val) { metaball.OEUnknown1 = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                OOEPibMetaballv19 ooeMetaball = metaball as OOEPibMetaballv19;
+                form.CreateInput("OE Unknown 1", ooeMetaball.OEUnknown1.ToString(), delegate (string val) { ooeMetaball.OEUnknown1 = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                form.CreateInput("OE Unknown 2", ooeMetaball.OEUnknown2.ToString(), delegate (string val) { ooeMetaball.OEUnknown1 = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                form.CreateInput("OE Unknown 3", ooeMetaball.OEUnknown3.ToString(), delegate (string val) { ooeMetaball.OEUnknown1 = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
             }
             else
             {

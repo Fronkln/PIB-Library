@@ -43,7 +43,7 @@ namespace PIBLib
 
             Unkv25_1 = reader.ReadSingle();
             IntensityTime = reader.ReadSingle();
-            UnknownFlags_0x3E = reader.ReadInt32();
+            Flags = reader.ReadUInt32();
 
             BaseMatrix = reader.ReadMatrix4x4();
             Scale = reader.ReadVector3();
@@ -96,7 +96,7 @@ namespace PIBLib
 
             writer.Write(Unkv25_1);
             writer.Write(IntensityTime);
-            writer.Write(UnknownFlags_0x3E);
+            writer.Write(Flags);
 
             writer.Write(BaseMatrix);
             writer.Write(Scale);

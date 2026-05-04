@@ -25,7 +25,6 @@ namespace PIBLib.Conversions
                 {
                     BaseParticleBillboardData datay = new BaseParticleBillboardData();
                     dat.CopyFields(datay);
-                    datay.Scale.z /= 2.93f;
                     billboard.Particles.Add(datay);
                 }
 
@@ -44,8 +43,11 @@ namespace PIBLib.Conversions
             }
 
 
-            PibBaseMetaball metaball = new PibBaseMetaball();
+            OOEPibMetaballv19 metaball = new OOEPibMetaballv19();
             emitter.Metaball.CopyFields(metaball);
+
+            if(emitter29.IsMetaball())
+                metaball.Flags = 418;
 
             DEPibBaseMetaball deMetaball = emitter29.Metaball as DEPibBaseMetaball;
 

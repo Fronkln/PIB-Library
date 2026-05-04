@@ -14,7 +14,7 @@ namespace PIBLib.Conversions
             PibEmitterv25 emitter = new PibEmitterv25();
             emitterv21.CopyFields(emitter);
 
-            emitter.Metaball = new PibBaseMetaball();
+            emitter.Metaball = new OOEPibMetaballv19();
             emitterv21.Metaball.CopyFields(emitter.Metaball);
 
             int flag2 = emitter.Flags3;

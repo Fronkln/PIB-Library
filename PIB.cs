@@ -218,6 +218,9 @@ namespace PIBLib
                     return pib.ToV21().ToV25().ToV27().ToV29().ToV43().ToV45().ToV52();
                 case PibVersion.LJ:
                     return pib.ToV21().ToV25().ToV27().ToV29().ToV43().ToV45().ToV52().ToV58();
+                case PibVersion.Gaiden:
+                case PibVersion.YK3:
+                    return pib.ToV21().ToV25().ToV27().ToV29().ToV43().ToV45().ToV52().ToV58().ToV59();
             }
         }
 
@@ -246,6 +249,7 @@ namespace PIBLib
                     return pib.ToV25().ToV27().ToV29().ToV43().ToV45().ToV52();
                 case PibVersion.LJ:
                     return pib.ToV25().ToV27().ToV29().ToV43().ToV45().ToV52().ToV58();
+                case PibVersion.Gaiden:
                 case PibVersion.YK3:
                     return pib.ToV25().ToV27().ToV29().ToV43().ToV45().ToV52().ToV58().ToV59();
             }
@@ -268,6 +272,17 @@ namespace PIBLib
                     return pib.ToV27();
                 case PibVersion.Y6:
                     return pib.ToV27().ToV29();
+                case PibVersion.YK2:
+                    return pib.ToV27().ToV29().ToV43();
+                case PibVersion.JE:
+                    return pib.ToV27().ToV29().ToV43().ToV45();
+                case PibVersion.YLAD:
+                    return pib.ToV27().ToV29().ToV43().ToV45().ToV52();
+                case PibVersion.LJ:
+                    return pib.ToV27().ToV29().ToV43().ToV45().ToV52().ToV58();
+                case PibVersion.Gaiden:
+                case PibVersion.YK3:
+                    return pib.ToV27().ToV29().ToV43().ToV45().ToV52().ToV58().ToV59();
             }
         }
         private static BasePib ConvertFromY0(BasePib basePib, PibVersion outputVersion)
@@ -293,6 +308,9 @@ namespace PIBLib
                 case PibVersion.YLAD:
                     return pib.ToV29().ToV43().ToV45().ToV52();
                 case PibVersion.LJ:
+                    return pib.ToV29().ToV43().ToV45().ToV52().ToV58();
+                case PibVersion.Gaiden:
+                case PibVersion.YK3:
                     return pib.ToV29().ToV43().ToV45().ToV52().ToV58();
             }
         }
@@ -321,7 +339,9 @@ namespace PIBLib
                     return pib.ToV43().ToV45().ToV52();
                 case PibVersion.LJ:
                     return pib.ToV43().ToV45().ToV52().ToV58();
-
+                case PibVersion.Gaiden:
+                case PibVersion.YK3:
+                    return pib.ToV43().ToV45().ToV52().ToV58().ToV59();
             }
         }
 
@@ -344,6 +364,9 @@ namespace PIBLib
                     return pib.ToV45().ToV52();
                 case PibVersion.LJ:
                     return pib.ToV45().ToV52().ToV58();
+                case PibVersion.Gaiden:
+                case PibVersion.YK3:
+                    return pib.ToV45().ToV52().ToV58().ToV59();
             }
         }
 
@@ -366,6 +389,9 @@ namespace PIBLib
                     return pib.ToV52();
                 case PibVersion.LJ:
                     return pib.ToV52().ToV58();
+                case PibVersion.Gaiden:
+                case PibVersion.YK3:
+                    return pib.ToV52().ToV58().ToV59();
             }
         }
 
@@ -388,6 +414,9 @@ namespace PIBLib
                     return pib.ToV45();
                 case PibVersion.LJ:
                     return pib.ToV58();
+                case PibVersion.Gaiden:
+                case PibVersion.YK3:
+                    return pib.ToV58().ToV59();
             }
         }
 
@@ -410,6 +439,7 @@ namespace PIBLib
                     return pib.ToV52().ToV45();
                 case PibVersion.YLAD:
                     return pib.ToV52();
+                case PibVersion.Gaiden:
                 case PibVersion.YK3:
                     return pib.ToV59();
             }
@@ -436,6 +466,13 @@ namespace PIBLib
         {
             Pib59 pib = (Pib59)basePib;
 
+            if(outputVersion != PibVersion.Gaiden && outputVersion < PibVersion.YK3)
+                foreach (PibEmitterv58 emitter in basePib.Emitters)
+                {
+                    for (int i = 0; i < emitter.TextureShaderIndices.Length; i++)
+                        emitter.TextureShaderIndices[i] -= 2;
+                }
+
             switch (outputVersion)
             {
                 default:
@@ -453,6 +490,8 @@ namespace PIBLib
                     return pib.ToV52();
                 case PibVersion.LJ:
                     return pib.ToV58();
+                case PibVersion.Gaiden:
+                    return pib;
             }
         }
     }

@@ -5,11 +5,10 @@ namespace PIBLib
 {
     public class Pib19 : BasePib
     {
-        public RGB Color;
+        public RGB LightColor;
 
         public int Unknown_0x34;
-        public uint UnknownFlag_0x38;
-        public int Unknown_0x3C;
+        public float UnknownV19;
 
         protected override void ReadCorePibData(DataReader reader)
         {
@@ -21,18 +20,15 @@ namespace PIBLib
             Speed = reader.ReadSingle();
             ForwardOffset = reader.ReadSingle();
             MaxIntensity = reader.ReadSingle();
-            Color = reader.ReadRGB();
+            LightColor = reader.ReadRGB();
 
             reader.ReadByte();
 
             Radius = reader.ReadInt32();
             Range = reader.ReadInt32();
 
-            reader.Endianness = EndiannessMode.LittleEndian;
-            UnknownFlag_0x38 = reader.ReadUInt32();
-            reader.Endianness = EndiannessMode.BigEndian;
-
-            Unknown_0x3C = reader.ReadInt32();
+            UnknownV19 = reader.ReadSingle();
+            Flags = reader.ReadUInt32();
 
             BaseMatrix = reader.ReadMatrix4x4();
             Scale = reader.ReadVector4();
@@ -50,7 +46,7 @@ namespace PIBLib
 
         protected override void ReadEmitters(DataReader reader, int count)
         {
-           
+  
             for (int i = 0; i < count; i++)
             {
                 PibEmitterv19 emitter = new PibEmitterv19();
@@ -77,7 +73,7 @@ namespace PIBLib
             writer.Write(Speed);
             writer.Write(ForwardOffset);
             writer.Write(MaxIntensity);
-            writer.Write(Color);
+            writer.Write(LightColor);
 
             writer.WriteTimes(0, 1);
 
@@ -85,10 +81,10 @@ namespace PIBLib
             writer.Write(Range);
 
             writer.Endianness = EndiannessMode.LittleEndian;
-            writer.Write(UnknownFlag_0x38);
+            writer.Write(UnknownV19);
             writer.Endianness = EndiannessMode.BigEndian;
 
-            writer.Write(Unknown_0x3C);
+            writer.Write(Flags);
 
             writer.Write(BaseMatrix);
             writer.Write((Vector4)Scale);

@@ -22,6 +22,8 @@ namespace PIBLib.Conversions
             pib27.ColorAnimationB = pib29.ColorAnimationB;
             pib27.ColorAnimationI = pib29.ColorAnimationI;
 
+            pib27.Flags = 1024;
+
             pib27.Emitters = new List<BasePibEmitter>();
 
             foreach (PibEmitterv29 emitter in pib29.Emitters)

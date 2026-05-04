@@ -68,7 +68,7 @@ namespace PIBLib.Conversions
             
             //2024: all OE pibs converted to DE had this as zero
             //3.01.2025: me when i lie
-            if (emitter.Flags3.HasFlag((int)EmitterFlag3v27.Flag7))
+            if (emitter.Flags3.HasFlag((int)EmitterFlag3v27.UNK_V21_FLAG8))
               v29Flags3 = v29Flags3.SetFlag((int)EmitterFlag3v29.eFLG_TEX_B_MODULATE);
 
 

@@ -15,17 +15,41 @@ namespace PIBLib.Conversions
             PibEmitterv19 pibEmitter = new PibEmitterv19();
             emitter21.CopyFields(pibEmitter);
 
-            pibEmitter.Metaball = new PibBaseMetaball();
+            pibEmitter.Metaball = new OOEPibMetaballv19();
             emitter21.Metaball.CopyFields(pibEmitter.Metaball);
 
             if (pibEmitter.OOEUnkStructure6.Unknown1 == 5)
                 pibEmitter.OOEUnkStructure6.Unknown1 = 6;
 
-            if (pibEmitter.OOEUnkStructure6.Flag4.HasFlag(64))
+            var ooeMetaball = emitter21.Metaball as OOEPibMetaballv19;
+            var newMetaball = pibEmitter.Metaball as OOEPibMetaballv19;
+
+            EmitterMetaballFlagv21 v21MetaballFlags = (EmitterMetaballFlagv21)ooeMetaball.Flags;
+            int metaballFlags = 0;
+
+            foreach (Enum flag in v21MetaballFlags.GetFlags())
             {
-                pibEmitter.OOEUnkStructure6.Flag4 &= ~64;
-                pibEmitter.OOEUnkStructure6.Flag4 |= 16;
+                try
+                {
+                    string flagStr = flag.ToString();
+                    int value = System.Convert.ToInt32(Enum.Parse(typeof(EmitterMetaballFlagv19), flagStr));
+
+                    metaballFlags |= value;
+                }
+                catch
+                {
+                }
             }
+
+            newMetaball.Flags = metaballFlags;
+
+            /*
+            if (pibEmitter.OOEUnkStructure6.MetaballFlags.HasFlag(64))
+            {
+                pibEmitter.OOEUnkStructure6.MetaballFlags &= ~64;
+                pibEmitter.OOEUnkStructure6.MetaballFlags |= 16;
+            }
+            */
 
 
             //These flags dont exist in Y3. Were added on Y5

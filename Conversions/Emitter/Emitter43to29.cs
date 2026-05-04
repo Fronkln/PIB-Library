@@ -50,8 +50,8 @@ namespace PIBLib.Conversions
             emitter.PropertyAnimationCurve.RemoveAt(2);
 
             //???? yyj0004
-            if (emitter.DDSHeader.TextureFormatFlag >= 8)
-                emitter.DDSHeader.TextureFormatFlag = 6;
+            if (emitter.DDSHeader.TextureFormat >= 8)
+                emitter.DDSHeader.TextureFormat = 6;
 
 
             foreach (var ptc in emitter.Source.Particles)

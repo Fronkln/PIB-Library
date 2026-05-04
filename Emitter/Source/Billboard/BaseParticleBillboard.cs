@@ -13,7 +13,8 @@ namespace PIBLib
         public Vector3 MoveDirection = new Vector3();
         public Vector3 Unknown1 = new Vector3();
         public Vector4 Unknown3;
-        public Vector4 Scale = new Vector4(1, 1, 0, 0);
+        public Vector2 Scale = new Vector2(1, 1);
+        public Vector2 Angle = new Vector2();
         public Vector4 Unknown4 = new Vector4(1, 1, 0, 0);
 
         internal virtual void Read(DataReader reader)
@@ -29,7 +30,8 @@ namespace PIBLib
             Unknown6 = reader.ReadBytes(12);
             TimeScale = reader.ReadSingle();
             Unknown3 = reader.ReadVector4();
-            Scale = reader.ReadVector4();
+            Scale = reader.ReadVector2();
+            Angle = reader.ReadVector2();
             Unknown4 = reader.ReadVector4();
         }
 
@@ -47,6 +49,7 @@ namespace PIBLib
             writer.Write(TimeScale);
             writer.Write(Unknown3);
             writer.Write(Scale);
+            writer.Write(Angle);
             writer.Write(Unknown4);
         }
 
@@ -65,6 +68,7 @@ namespace PIBLib
             convertedDat.TimeScale = TimeScale;
             convertedDat.Unknown3 = Unknown3;
             convertedDat.Scale = Scale;
+            convertedDat.Angle = Angle;
             convertedDat.Unknown4 = Unknown4;
 
             return convertedDat;
