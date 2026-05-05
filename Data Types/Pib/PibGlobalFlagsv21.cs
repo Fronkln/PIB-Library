@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PIBLib
 {
-    public enum PibGlobalFlagsv21 : uint
+    public enum PibGlobalFlagsv21 : int
     {
        UNKNOWN_V21_10 = 1 << 10
     }

@@ -8,20 +8,31 @@ using Yarhl.IO;
 namespace PIBLib
 {
 
-    //GEO VTX
-    public class EmitterDataChunkType0DE : EmitterBaseDataChunk
+    //Same data as Type 1? Extra data was all zeroes??? bsl0001
+    public class EmitterDataChunkType0DE : EmitterDataChunkType1
     {
+        public byte[] UnknownData;
+
         public EmitterDataChunkType0DE()
         {
-            Data = new float[70 / 4];
+            UnknownData = new byte[24];
         }
 
         internal override void Read(DataReader reader, PibVersion version)
         {
-            Data = new float[70 / 4];
+            base.Read(reader, version);
 
-            for (int i = 0; i < Data.Length; i++)
-                Data[i] = reader.ReadSingle();
+            UnknownData = new byte[24];
+
+            for (int i = 0; i < UnknownData.Length; i++)
+                UnknownData[i] = reader.ReadByte();
+        }
+
+        internal override void Write(DataWriter writer)
+        {
+            base.Write(writer);
+
+            writer.Write(UnknownData);
         }
     }
 }

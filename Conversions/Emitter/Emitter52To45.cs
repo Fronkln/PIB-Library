@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PIBLib.Conversions
 {
@@ -19,20 +17,9 @@ namespace PIBLib.Conversions
 
             DEPibv45UnkStructure1 unkStr1 = new DEPibv45UnkStructure1();
             emitter52.v45Unk1.CopyFields(unkStr1);
-
             emitter.v45Unk1 = unkStr1;
 
-            /*
-            DEPibv45UnkStructure3 v52Struct3 = emitter52.UnkStructure3 as DEPibv45UnkStructure3;
-
-            unkStructure3.Unk6 = v52Struct3.Unk10;
-            unkStructure3.Unk7 = v52Struct3.Unk11;
-            unkStructure3.Unk8 = v52Struct3.Unk12;
-
-            emitter.UnkStructure3 = unkStructure3;
-            */
-
-            emitter.GeoVertex = 1;
+            emitter.GeoVertex = 1;        
 
             //Textures have dds prefix
             for (int i = 0; i < emitter.Textures.Count; i++)
@@ -40,9 +27,10 @@ namespace PIBLib.Conversions
                     emitter.Textures[i] += ".dds";
 
             EmitterFlag1v52 flags = (EmitterFlag1v52)emitter52.Flags;
-            int flags2 = (int)emitter52.Flags2;
+            EmitterFlag2v52 flags2 = (EmitterFlag2v52)emitter52.Flags2;
             EmitterFlag3v52 flags3 = (EmitterFlag3v52)emitter52.Flags3;
             uint de1Flags = 0;
+            int de1Flags2 = 0;
             uint de1Flags3 = 0;
 
             //Flags that dont exist in JE
@@ -83,6 +71,9 @@ namespace PIBLib.Conversions
                 }
             }
 
+
+
+            /*
             //18.11.2024 qsr0265-qsc0265 weirdness?
             if(flags2.HasFlag((int)EmitterFlag2v52.eFLG_TRACK_CROSS))
             {
@@ -95,6 +86,7 @@ namespace PIBLib.Conversions
                 flags2 &= (int)~EmitterFlag2v52.eFLG_TRACK_OVERWRITE;
                 flags2 |= (1 << 31);
             }
+            */
 
             //18.11.2024 qsr0265-qsc0265 weirdness?
             bool shouldAdjustTextures = emitter.TextureShaderIndices.Any(x => x <= 2);
@@ -102,6 +94,15 @@ namespace PIBLib.Conversions
             if (shouldAdjustTextures)
                 for (int i = 0; i < emitter.TextureShaderIndices.Length; i++)
                     emitter.TextureShaderIndices[i] += 2;
+
+            //Convert new flags2 to v45 flags2
+            foreach (Enum flag in flags2.GetFlags())
+            {
+                string flagStr = flag.ToString();
+
+                if (Enum.IsDefined(typeof(EmitterFlag2v45), flagStr))
+                    de1Flags2 |= System.Convert.ToInt32(Enum.Parse(typeof(EmitterFlag2v45), flagStr));
+            }
 
             //Convert new flags3 to v45 flags3
             foreach (Enum flag in flags3.GetFlags())
@@ -119,7 +120,7 @@ namespace PIBLib.Conversions
             }
 
             emitter.Flags = (int)de1Flags;
-            emitter.Flags2 = (int)flags2;
+            emitter.Flags2 = (int)de1Flags2;
             emitter.Flags3 = (int)de1Flags3;
 
             emitter.PropertyAnimationCurve.RemoveAt(2);
@@ -128,28 +129,35 @@ namespace PIBLib.Conversions
             //DDS header flags
             emitter.DDSHeader.TextureFormat &= ~4;
 
+            EmitterDataChunkType1[] chunks = emitter.UnknownData1.Cast<EmitterDataChunkType1>().ToArray();
+
             //DE 1.0: UV size on Geo VTX Chunk
 
-            if(!emitter.IsMetaball())
+            if (!emitter.IsMetaball())
             {
+                //UV1 & 2
+                chunks[1].UV01 = new Vector4(0, emitter.UV.UVSize[0].y, 0, emitter.UV.UVSize[1].y);
+                chunks[2].UV01 = new Vector4(emitter.UV.UVSize[0].x, emitter.UV.UVSize[0].y, emitter.UV.UVSize[1].x, emitter.UV.UVSize[1].y);
+                chunks[3].UV01 = new Vector4(emitter.UV.UVSize[0].x, 0, emitter.UV.UVSize[1].x, 0);
 
+                //UV3
+                chunks[0].UV23 = new Vector4(emitter.UV.UVSize[2].x, emitter.UV.UVSize[2].y, emitter.UV.UVSize[2].x, emitter.UV.UVSize[2].y);
+                chunks[1].UV23 = new Vector4(emitter.UV.UVSize[2].x, 0, emitter.UV.UVSize[2].y, 0);
+                chunks[3].UV23 = new Vector4(0, emitter.UV.UVSize[2].x, 0, emitter.UV.UVSize[2].y);
+               
+                chunks[2].UV23 = new Vector4();
+
+                emitter.UnknownData1 = chunks.Cast<EmitterBaseDataChunk>().ToList();
             }
             else
             {
-                EmitterBaseDataChunk[] chunks = emitter.UnknownData1.Cast<EmitterBaseDataChunk>().ToArray();
+                for (int i = 0; i < chunks.Length; i++)
+                    chunks[i].UV01 = new Vector4(0, 0, 1, 1);
 
-                emitter.UnknownData1[2].Data[3] = emitter52.UV.UVSize[0].x;
-                emitter.UnknownData1[3].Data[3] = emitter52.UV.UVSize[0].x;
-                emitter.UnknownData1[1].Data[4] = emitter52.UV.UVSize[0].y;
-                emitter.UnknownData1[2].Data[4] = emitter52.UV.UVSize[0].y;
-
-
-                emitter.UnknownData1[1].Data[5] = emitter52.UV.UVSize[1].x;
-                emitter.UnknownData1[3].Data[5] = emitter52.UV.UVSize[1].x;
-                emitter.UnknownData1[1].Data[6] = emitter52.UV.UVSize[1].y;
-                emitter.UnknownData1[2].Data[6] = emitter52.UV.UVSize[1].y;
-
-                emitter.UnknownData1 = chunks.ToList();
+                chunks[0].UV23 = new Vector4();
+                chunks[1].UV23 = new Vector4(0, 0, 0, emitter.UV.UVSize[0].y);
+                chunks[2].UV23 = new Vector4(0, 0, emitter.UV.UVSize[0].x, emitter.UV.UVSize[0].y);
+                chunks[3].UV23 = new Vector4(0, 0, emitter.UV.UVSize[0].x, 0);
             }
 
             /*

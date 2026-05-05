@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PIBLib
+﻿namespace PIBLib
 {
-    public enum PibGlobalFlagsv25 : uint
+    public enum PibGlobalFlagsv25 : int
     {
         UNKNOWN_V21_10 = 1 << 11
     }

@@ -15,13 +15,19 @@ namespace PIBLib
 
         public EmitterDataChunkType1()
         {
-
+           // Data = new float[44 / 4];
         }
         internal override void Read(DataReader reader, PibVersion version)
         {
             Position = reader.ReadVector3();
             UV01 = reader.ReadVector4();
             UV23 = reader.ReadVector4();
+
+            
+           // Data = new float[44 / 4];
+
+           // for(int i = 0; i < Data.Length; i++)
+                //Data[i] = reader.ReadSingle();
         }
 
         internal override void Write(DataWriter writer)

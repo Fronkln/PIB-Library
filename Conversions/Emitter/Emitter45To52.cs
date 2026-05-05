@@ -2,7 +2,6 @@
 using System.Reflection;
 using System.Collections.Generic;
 using Yarhl.IO;
-using System.Buffers.Binary;
 using System.Linq;
 
 namespace PIBLib.Conversions
@@ -23,10 +22,6 @@ namespace PIBLib.Conversions
             emitter.Flags = (ulong)emitterv45.Flags;
             emitter.Flags2 = (ulong)emitterv45.Flags2;
             emitter.Flags3 = (ulong)emitterv45.Flags3;
-
-            //Important: else it causes crashing
-            //Tested on various pibs between JE and YLAD
-            emitter.GeoVertex = 0;
 
             //Textures no longer have dds prefix
             for (int i = 0; i < emitter.Textures.Count; i++)
@@ -100,147 +95,78 @@ namespace PIBLib.Conversions
             emitter.Flags2 = (ulong)de2Flags2;
             emitter.Flags3 = (ulong)de2Flags3;
 
-            //DE 1.0: UV size on Geo VTX Chunk
-            if (emitter.UnknownData1.Count == 4)
-            {
-                //Metaball GeoVTX is different
-                if(!emitter.IsMetaball())
-                {
-                    emitter.UV.UVSize[0].x = emitter.UnknownData1[2].Data[3];
-                    emitter.UV.UVSize[0].y = emitter.UnknownData1[1].Data[4];
 
-                    emitter.UV.UVSize[1].x = emitter.UnknownData1[3].Data[5];
-                    emitter.UV.UVSize[1].y = emitter.UnknownData1[2].Data[6];
-                }
-                else
-                {
-                    emitter.UV.UVSize[0].x = emitter.UnknownData1[2].Data[9];
-                    emitter.UV.UVSize[0].y = emitter.UnknownData1[2].Data[10];
-                }
+            EmitterBaseDataChunk[] chunksPre = emitter.UnknownData1.Cast<EmitterBaseDataChunk>().ToArray();
 
-                /*
-                emitter.UV.UVSize[0].x = emitter.UnknownData1[2].Data[3];
-                emitter.UV.UVSize[0].y = emitter.UnknownData1[2].Data[4];
-
-                emitter.UV.UVSize[1].x = emitter.UnknownData1[2].Data[5];
-                emitter.UV.UVSize[1].y = emitter.UnknownData1[2].Data[6];
-
-                emitter.UV.UVSize[2].x = emitter.UnknownData1[2].Data[7];
-                emitter.UV.UVSize[2].y = emitter.UnknownData1[2].Data[8];
-                */
-
-                //Not present data, defaults to 1,1
-                //21.12.2015: Are you sure about that
-                emitter.UV.UVSize[3].x = 1;
-                emitter.UV.UVSize[3].y = 1;
-            }
-
-            /*
-            //and now fix them to defaults appopriately if we messed it up)
-            if (emitter.UV.UVSize[0].x == 0 || emitter.UV.UVSize[0].y == 0)
-            {
-                emitter.UV.UVSize[0].x = 1;
-                emitter.UV.UVSize[0].y = 1;
-            }
-
-            if (emitter.UV.UVSize[1].x == 0 || emitter.UV.UVSize[1].y == 0)
-            {
-                emitter.UV.UVSize[1].x = 1;
-                emitter.UV.UVSize[1].y = 1;
-            }
-
-            if (emitter.UV.UVSize[2].x == 0 || emitter.UV.UVSize[2].y == 0)
-            {
-                emitter.UV.UVSize[2].x = 1;
-                emitter.UV.UVSize[2].y = 1;
-            }
-            */
-
-
-            //Geo VTX Conversion
-            EmitterBaseDataChunk[] chunks = emitter.UnknownData1.Cast<EmitterBaseDataChunk>().ToArray();
-            
             //shrink geovertex 0 to 44 bytes
-            if(emitter.GeoVertex == 0)
+            if (emitter.GeoVertex == 0)
             {
-                EmitterBaseDataChunk[] newChunks = new EmitterBaseDataChunk[chunks.Length];
-                for(int i = 0; i < chunks.Length; i++)
+                //throw new Exception("Dont know how to handle geo vtx 0 conversion");
+
+
+                EmitterBaseDataChunk[] newChunks = new EmitterBaseDataChunk[chunksPre.Length];
+
+                for (int i = 0; i < chunksPre.Length; i++)
                 {
+                    EmitterDataChunkType1 oldChunk = chunksPre[i] as EmitterDataChunkType0DE;
                     EmitterDataChunkType1 chunk = new EmitterDataChunkType1();
-                    Array.Copy(chunks[i].Data, chunk.Data, chunk.Data.Length);
+                    chunk.Position = oldChunk.Position;
+                    chunk.UV01 = oldChunk.UV01;
+                    chunk.UV23 = oldChunk.UV23;
+
                     newChunks[i] = chunk;
                 }
 
-                chunks = newChunks;
+                chunksPre = newChunks;
                 emitter.UnknownData1 = newChunks.ToList();
             }
-            
-            if(!emitter.IsMetaball())
+
+
+            EmitterDataChunkType1[] chunks = emitter.UnknownData1.Cast<EmitterDataChunkType1>().ToArray();
+
+            if (!emitter.IsMetaball())
             {
-                for (int i = 2; i < chunks[0].Data.Length; i++)
-                    chunks[0].Data[i] = 0;
+                //UV1
+                emitter.UV.UVSize[0].x = chunks[2].UV01.x;
+                emitter.UV.UVSize[0].y = chunks[2].UV01.y;
 
-                for (int i = 2; i < chunks[3].Data.Length; i++)
-                    chunks[3].Data[i] = 0;
+                //UV2
+                emitter.UV.UVSize[1].x = chunks[2].UV01.z;
+                emitter.UV.UVSize[1].y = chunks[2].UV01.w;
 
-                chunks[3].Data[9] = 1;
+                //UV3
+                emitter.UV.UVSize[2].x = chunks[2].UV23.x;
+                emitter.UV.UVSize[2].y = chunks[2].UV23.y;
 
-                for (int i = 2; i < chunks[1].Data.Length; i++)
-                    chunks[1].Data[i] = 0;
-
-                chunks[1].Data[chunks[1].Data.Length - 1] = 1;
-
-                chunks[2].Data[9] = 1;
-                chunks[2].Data[10] = 1;
-
-                for (int i = 2; i < 9; i++)
-                    chunks[2].Data[i] = 0;
-            }
-
-            /*
-            //Having troubles converting this properly. Need to compare more pibs
-            if((emitter.Flags & (ulong)EmitterFlag1v52.eFLG_METABALL) != 0)
-            {
-                chunks[0].Data[1] = -chunks[0].Data[1];
-
-                for (int i = 7; i < chunks[0].Data.Length; i++)
-                    chunks[0].Data[i] = 0;
-
-                chunks[0].Data[10] = 1;
-
-                for (int i = 2; i < chunks[3].Data.Length; i++)
-                    chunks[3].Data[i] = 0;
-
-                chunks[3].Data[9] = 1;
+                //UV01s are zeroed out after moving it to the DE 2.0 UV struct
+                for (int i = 0; i < chunks.Length; i++)
+                    chunks[i].UV01 = new Vector4();
             }
             else
             {
-                for (int i = 2; i < chunks[0].Data.Length; i++)
-                    chunks[0].Data[i] = 0;
+                //UV1
+                emitter.UV.UVSize[0].x = chunks[2].UV01.z;
+                emitter.UV.UVSize[0].y = chunks[2].UV01.w;
 
-                for (int i = 2; i < chunks[3].Data.Length; i++)
-                    chunks[3].Data[i] = 0;
-
-                chunks[3].Data[9] = 1;
+                chunks[2].UV01.z = 1;
+                chunks[2].UV01.w = 1;
             }
 
-            for (int i = 2; i < chunks[1].Data.Length; i++)
-                chunks[1].Data[i] = 0;
-
-            chunks[1].Data[chunks[1].Data.Length - 1] = 1;
-
-            chunks[2].Data[9] = 1;
-            chunks[2].Data[10] = 1;
-
-            for (int i = 2; i < 9; i++)
-                chunks[2].Data[i] = 0;
-            */
+            //Both in metaball and normal pibs
+            chunks[0].UV23 = new Vector4(0, 0, 0, 0);
+            chunks[1].UV23 = new Vector4(0, 0, 0, 1);
+            chunks[2].UV23 = new Vector4(0, 0, 1, 1);
+            chunks[3].UV23 = new Vector4(0, 0, 1, 0);
 
             //v52: Shift happened at the 3rd curve, Color Curve is now the 7th one instead of 6th
             //8th curve seems to be new. used to be empty data. Compare: JE and YLAD AAa0000.pib AAa0001.pib
             emitter.PropertyAnimationCurve.Insert(2, emitter.PropertyAnimationCurve[2]);
             emitter.PropertyAnimationCurve.RemoveAt(emitter.PropertyAnimationCurve.Count - 1);
 
+            //Important: else it causes crashing
+            //Tested on various pibs between JE and YLAD
+            emitter.GeoVertex = 0;
+   
             return emitter;
         }
     }

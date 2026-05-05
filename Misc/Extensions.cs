@@ -24,6 +24,13 @@ namespace PIBLib
            return val &= ~flag;
         }
 
+        internal static uint RemoveFlag(this uint val, int flag)
+        {
+            int vali = (int)val;
+            vali &= ~flag;
+            return (uint)vali;
+        }
+
         internal static IEnumerable<Enum> GetFlags(this Enum e)
         {
             return Enum.GetValues(e.GetType()).Cast<Enum>().Where(e.HasFlag);

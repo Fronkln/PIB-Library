@@ -143,16 +143,6 @@ namespace PIBLib
 
             ReadUnknownData1(reader, GeoVertex, geoVertexCount, version);
             Source.Read(reader, this, (int)Flags, unknownCount2, (uint)version);
-
-            //DE 1.0: UV size on Geo VTX Chunk
-            UV.UVSize[0].x = UnknownData1[2].Data[3];
-            UV.UVSize[0].y = UnknownData1[2].Data[4];
-            UV.UVSize[1].x = UnknownData1[2].Data[5];
-            UV.UVSize[1].y = UnknownData1[2].Data[6];
-            UV.UVSize[2].x = UnknownData1[2].Data[7];
-            UV.UVSize[2].y = UnknownData1[2].Data[8];
-            UV.UVSize[3].x = 1;
-            UV.UVSize[3].y = 1;
         }
 
         internal override void Write(DataWriter writer, PibVersion version)

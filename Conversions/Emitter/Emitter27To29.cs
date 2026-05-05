@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using Yarhl.IO;
 
-
 namespace PIBLib.Conversions
 {
     internal static class Emitter27To29
