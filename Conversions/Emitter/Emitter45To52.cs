@@ -38,7 +38,7 @@ namespace PIBLib.Conversions
             EmitterType type = emitterv45.GetEmitterType();
 
             EmitterFlag1v45 flags = (EmitterFlag1v45)emitter.Flags;
-            EmitterFlag2v45 flags2 = (EmitterFlag2v45)emitter.Flags2;
+            EmitterFlag2v43 flags2 = (EmitterFlag2v43)emitter.Flags2;
             EmitterFlag3v43 flags3 = (EmitterFlag3v43)emitter.Flags3;
             long de2Flags = 0;
             long de2Flags2 = 0;
@@ -49,7 +49,7 @@ namespace PIBLib.Conversions
             flags &= ~EmitterFlag1v45.eFLG_UNK_V29_FLAG2;
 
             //Doesnt exist in DE2 at a first glance?
-            flags2 &= ~EmitterFlag2v45.Flag11;
+            flags2 &= ~EmitterFlag2v43.Flag11;
 
             //All metaballs i've looked into were given this flag when converted to DE
             if (emitter.IsMetaball())
@@ -101,9 +101,6 @@ namespace PIBLib.Conversions
             //shrink geovertex 0 to 44 bytes
             if (emitter.GeoVertex == 0)
             {
-                //throw new Exception("Dont know how to handle geo vtx 0 conversion");
-
-
                 EmitterBaseDataChunk[] newChunks = new EmitterBaseDataChunk[chunksPre.Length];
 
                 for (int i = 0; i < chunksPre.Length; i++)

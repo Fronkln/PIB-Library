@@ -100,8 +100,8 @@ namespace PIBLib.Conversions
             {
                 string flagStr = flag.ToString();
 
-                if (Enum.IsDefined(typeof(EmitterFlag2v45), flagStr))
-                    de1Flags2 |= System.Convert.ToInt32(Enum.Parse(typeof(EmitterFlag2v45), flagStr));
+                if (Enum.IsDefined(typeof(EmitterFlag2v43), flagStr))
+                    de1Flags2 |= System.Convert.ToInt32(Enum.Parse(typeof(EmitterFlag2v43), flagStr));
             }
 
             //Convert new flags3 to v45 flags3

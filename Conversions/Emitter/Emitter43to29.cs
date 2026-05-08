@@ -19,8 +19,10 @@ namespace PIBLib.Conversions
             emitter43.Track.CopyFields(emitter.Track);
 
             EmitterFlag1v43 flags = (EmitterFlag1v43)emitter43.Flags;
+            EmitterFlag2v43 flags2 = (EmitterFlag2v43)emitter43.Flags2;
             EmitterFlag3v43 flags3 = (EmitterFlag3v43)emitter43.Flags3;
             uint v29Flags = 0;
+            int v29Flags2 = 0;
             uint v29Flags3 = 0;
 
             flags &= ~EmitterFlag1v43.eFLG_UNK_V29_FLAG2;
@@ -34,6 +36,15 @@ namespace PIBLib.Conversions
                 v29Flags |= v29Value;
             }
 
+            //Convert v43 flags2 to v29 flags2
+            foreach (Enum flag in flags2.GetFlags())
+            {
+                string flagStr = flag.ToString();
+
+                if (Enum.IsDefined(typeof(EmitterFlag2v29), flagStr))
+                    v29Flags2 |= System.Convert.ToInt32(Enum.Parse(typeof(EmitterFlag2v29), flagStr));
+            }
+
             //Convert v43 flags3 to v29 flags3
             foreach (Enum flag in flags3.GetFlags())
             {
@@ -43,7 +54,15 @@ namespace PIBLib.Conversions
                 v29Flags3 |= v29Value;
             }
 
+            //hmmm?? ynb0007
+            if(flags.HasFlag(EmitterFlag1v43.eFLG_METABALL_E))
+            {
+                v29Flags |= (int)EmitterFlag1v29.eFLG_METABALL_R;
+                v29Flags = v29Flags.RemoveFlag((int)EmitterFlag1v29.eFLG_METABALL_E);
+            }
+
             emitter.Flags = (int)v29Flags;
+            emitter.Flags2 = (int)v29Flags2;
             emitter.Flags3 = (int)v29Flags3;
 
             emitter.PropertyAnimationCurve.RemoveAt(7);
@@ -52,7 +71,6 @@ namespace PIBLib.Conversions
             //???? yyj0004
             if (emitter.DDSHeader.TextureFormat >= 8)
                 emitter.DDSHeader.TextureFormat = 6;
-
 
             foreach (var ptc in emitter.Source.Particles)
             {

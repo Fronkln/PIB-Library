@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PIBLib
+﻿namespace PIBLib
 {
-    //First 7 flags match with DE1. unsure about remaining, AAa0000
-    public enum EmitterFlag2v45 : int
+    public enum EmitterFlag2v43 : int
     {
         eFLG_FLOW = 1 << 0x0,
         eFLG_DRAW_SHADOW = 1 << 0x1,
@@ -27,13 +20,13 @@ namespace PIBLib
         eFLG_SCALE_ANIM_MULTIPLE = 1 << 15,
         eFLG_CHECK_DRAW_MASK = 1 << 16,
         eFLG_BLUR_MULTI = 1 << 17,
-        eFLG_UNKV45_1 = 1 << 18,
-        eFLG_UNKV45_2 = 1 << 19,
-        eFLG_UNKV45_3 = 1 << 20,
+        eFLG_UNKV29_1 = 1 << 18,
+        eFLG_UNKV43_2 = 1 << 19,
+        eFLG_UNKV43_3 = 1 << 20,
         eFLG_VECTOR_FIELD = 1 << 21,
         eFLG_VECTOR_FIELD_ANIM = 1 << 22,
         eFLG_VECTOR_FIELD_LIFE = 1 << 23,
-        eFLG_UNKV45_4 = 1 << 24,
+        eFLG_UNKV43_4 = 1 << 24,
         eFLG_TRACK = 1 << 25,
         eFLG_TRACK_CROSS = 1 << 26,
         eFLG_TRACK_OVERWRITE = 1 << 27,

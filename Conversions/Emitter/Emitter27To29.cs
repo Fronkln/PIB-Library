@@ -95,7 +95,7 @@ namespace PIBLib.Conversions
             bool isFlow = textureFlags.HasFlag(EmitterTextureFlagsv25.SECOND_TEXTURE_FLOW);
 
             if (isFlow)
-                emitter.Flags2 |= (int)EmitterFlag2v45.eFLG_FLOW;
+                emitter.Flags2 |= (int)EmitterFlag2v43.eFLG_FLOW;
             else
             {
                 if (textureFlags.HasFlag(EmitterTextureFlagsv25.SECOND_TEXTURE_NORMALMAP))
