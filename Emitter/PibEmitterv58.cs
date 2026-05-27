@@ -343,8 +343,11 @@ namespace PIBLib
 
             writer.Write(0);
 
-            foreach (TextureImportInfo inf in TextureImports)
+
+            for(int i = 0; i < Textures.Count; i++)
             {
+                var inf = TextureImports[i];
+
                 writer.Write(inf.Data);
                 writer.Write(inf.Resources.Count);
 
@@ -353,7 +356,7 @@ namespace PIBLib
                     writer.Write(res.ID);
                     writer.Write(res.Name.ToLength(36), false);
                 }
-            }   
+            }
 
             //bruh moment?
             writer.Write(0);

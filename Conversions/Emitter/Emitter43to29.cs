@@ -25,8 +25,6 @@ namespace PIBLib.Conversions
             int v29Flags2 = 0;
             uint v29Flags3 = 0;
 
-            flags &= ~EmitterFlag1v43.eFLG_UNK_V29_FLAG2;
-
             //Convert v43 flags to v29 flags
             foreach (Enum flag in flags.GetFlags())
             {

@@ -21,7 +21,7 @@
         eFLG_POINT_LIGHT = 1 << 16,
         eFLG_WRITE_Z = 1 << 17,
         eFLG_TRIANGLE_LIST = 1 << 18,
-        eFLG_UNK_V27_FLAG2 = 1 << 19,
+        eFLG_TEX_REFLECTION = 1 << 19,
         eFLG_METABALL = 1 << 20,
         eFLG_METABALL_B = 1 << 21,
         eFLG_METABALL_R = 1 << 22,
@@ -31,7 +31,7 @@
         eFLG_NO_EXTRA_COLOR = 1 << 26,
         eFLG_SMALL_BUF = 1 << 27,
         eFLG_ALWAYS = 1 << 28,
-        eFLG_UNK_V29_FLAG2 = 1 << 29,
+        eFLG_STAGE_REFLECTION = 1 << 29,
         eFLG_COLOR_ANIM_MULTIPLE = 1 << 30,
         Flag32 = 1 << 31,
     }

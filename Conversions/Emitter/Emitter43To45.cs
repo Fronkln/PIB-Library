@@ -18,7 +18,8 @@ namespace PIBLib.Conversions
 
             //Doesnt exist in JE at a first glance? yyj0056 in Y6, YK2 and JE
             flags &= ~EmitterFlag1v43.eFLG_UNK_V21_FLAG;
-            flags &= ~EmitterFlag1v43.eFLG_UNK_V27_FLAG2;
+            
+            //flags &= ~EmitterFlag1v43.eFLG_UNK_V27_FLAG2;
 
             //Convert old flags to v45 flags
             foreach (Enum flag in flags.GetFlags())

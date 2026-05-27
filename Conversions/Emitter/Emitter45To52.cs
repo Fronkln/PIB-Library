@@ -44,9 +44,15 @@ namespace PIBLib.Conversions
             long de2Flags2 = 0;
             long de2Flags3 = 0;
 
-            //eFLG_UNK_V43_FLAG and 2 which doesnt exist in DE2 at a first glance?
-            flags &= ~EmitterFlag1v45.eFLG_UNK_V29_FLAG;
-            flags &= ~EmitterFlag1v45.eFLG_UNK_V29_FLAG2;
+
+            if (flags.HasFlag(EmitterFlag1v45.eFLG_TEX_REFLECTION))
+                de2Flags3 |= (long)EmitterFlag3v52.eFLG_TEX_REFLECTION;
+
+            if (flags.HasFlag(EmitterFlag1v45.eFLG_STAGE_REFLECTION))
+                de2Flags3 |= (long)EmitterFlag3v52.eFLG_STAGE_REFLECTION;
+
+            flags &= ~EmitterFlag1v45.eFLG_TEX_REFLECTION;
+            flags &= ~EmitterFlag1v45.eFLG_STAGE_REFLECTION;
 
             //Doesnt exist in DE2 at a first glance?
             flags2 &= ~EmitterFlag2v43.Flag11;
