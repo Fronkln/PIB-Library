@@ -21,6 +21,7 @@ namespace PIBLib.Conversions
             metaball.LtShininess = emitter27.Metaball.LtShininess * 2f;
             metaball.LtIoe = emitter27.Metaball.LtIoe * 2f;
             metaball.NmlRange *= 2;
+            metaball.NmlZ = -((OOEPibMetaballv19)emitter27.Metaball).NmlZ;
 
             emitter.Metaball = metaball;
 
@@ -32,7 +33,7 @@ namespace PIBLib.Conversions
             deAnim.UnkTextureData1[0] = emitter.AnimationData.FrameRelated1;
             deAnim.UnkTextureData1[1] = emitter.AnimationData.FrameRelated2;
 
-            deAnim.FrameRelated1 = 1;
+            deAnim.FrameRelated1 = emitter27.TextureUnknown[0];
             deAnim.FrameRelated2 = emitter27.OOEUnkStructure3.Unk1;
 
             emitter.AnimationData = deAnim;

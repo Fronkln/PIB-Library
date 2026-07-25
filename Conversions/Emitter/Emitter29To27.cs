@@ -53,6 +53,7 @@ namespace PIBLib.Conversions
 
             metaball.LtShininess = deMetaball.LtShininess / 2f;
             metaball.LtIoe = deMetaball.LtIoe / 2f;
+            metaball.NmlZ = -deMetaball.NmlZ;
 
             emitter.Metaball = metaball;
 

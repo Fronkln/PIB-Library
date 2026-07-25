@@ -10,7 +10,7 @@ namespace PIBLib
     public class OOEPibMetaballv19 : PibBaseMetaball
     {
         public int Flags;
-        public float OEUnknown1 = -1f;
+        public float NmlZ;
         public float OEUnknown2 = 566;
         public float OEUnknown3 = 1f;
 
@@ -20,7 +20,7 @@ namespace PIBLib
             Rate = reader.ReadSingle();
             Color = reader.ReadRGBA();
             NmlRange = reader.ReadSingle();
-            OEUnknown1 = reader.ReadSingle();
+            NmlZ = reader.ReadSingle();
             OEUnknown2 = reader.ReadSingle();
             OEUnknown3 = reader.ReadSingle();
             LtShininess = reader.ReadSingle();
@@ -33,7 +33,7 @@ namespace PIBLib
             writer.Write(Rate);
             writer.Write(Color);
             writer.Write(NmlRange);
-            writer.Write(OEUnknown1);
+            writer.Write(NmlZ);
             writer.Write(OEUnknown2);
             writer.Write(OEUnknown3);
             writer.Write(LtShininess);
